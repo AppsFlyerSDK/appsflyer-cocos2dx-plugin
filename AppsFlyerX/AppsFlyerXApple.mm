@@ -175,8 +175,9 @@ void AppsFlyerXApple::trackEvent(const std::string& eventName, const std::string
 }
 
 void AppsFlyerXApple::trackEvent(const std::string& eventName, cocos2d::ValueMap values) {
-    [[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:eventName.c_str()]
-                                      withValues:AppsFlyerXAppleHelper::valueMap2nsDictionary(values)];
+    NSDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(values);
+    NSString *event = [NSString stringWithUTF8String:eventName.c_str()];
+    [[AppsFlyerTracker sharedTracker] trackEvent:event withValues:dictionary];
 }
 
 void AppsFlyerXApple::validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce)) {
