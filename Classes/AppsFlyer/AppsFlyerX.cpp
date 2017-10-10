@@ -281,11 +281,21 @@ void AppsFlyerX::trackEvent(const std::string& eventName, cocos2d::ValueMap valu
 #endif
 }
 
-void AppsFlyerX::validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce)) {
+void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentifier,
+                                               const std::string& price,
+                                               const std::string& currency,
+                                               const std::string& tranactionId,
+                                               cocos2d::ValueMap params,
+                                               std::function<void(cocos2d::ValueMap)> successBlock,
+                                               std::function<void(cocos2d::ValueMap)> failureBlock) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::validateAndTrackInAppPurchase(productIdentifier, price, currency, tranactionId, params, successBlock, failedBlock);
+    AppsFlyerXApple::validateAndTrackInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
+        successBlock(result);
+    }, [&] (cocos2d::ValueMap error) {
+        successBlock(error);
+    });
 #endif
 }
 
@@ -398,7 +408,7 @@ unsigned long AppsFlyerX::getMinTimeBetweenSessions() {
 #endif
 }
 
-
+// Delegates methods proxy
 
 void AppsFlyerX::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

@@ -175,12 +175,44 @@ void AppsFlyerXApple::trackEvent(const std::string& eventName, const std::string
 }
 
 void AppsFlyerXApple::trackEvent(const std::string& eventName, cocos2d::ValueMap values) {
-    [[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:eventName.c_str()]
-                                      withValues:AppsFlyerXAppleHelper::valueMap2nsDictionary(values)];
+    NSDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(values);
+    NSString *event = [NSString stringWithUTF8String:eventName.c_str()];
+    [[AppsFlyerTracker sharedTracker] trackEvent:event withValues:dictionary];
 }
 
-void AppsFlyerXApple::validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce)) {
-    // Unimplemented
+void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productIdentifier,
+                                                    const std::string& price,
+                                                    const std::string& currency,
+                                                    const std::string& tranactionId,
+                                                    cocos2d::ValueMap params,
+                                                    std::function<void(cocos2d::ValueMap)> successBlock,
+                                                    std::function<void(cocos2d::ValueMap)> failureBlock) {
+    
+    NSString *lProductIdentifier = [NSString stringWithUTF8String:productIdentifier.c_str()];
+    NSString *lPrice = [NSString stringWithUTF8String:price.c_str()];
+    NSString *lCurrency = [NSString stringWithUTF8String:currency.c_str()];
+    NSString *lTranactionId = [NSString stringWithUTF8String:tranactionId.c_str()];
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
+    
+    [[AppsFlyerTracker sharedTracker] validateAndTrackInAppPurchase:lProductIdentifier
+                                                              price:lPrice
+                                                           currency:lCurrency
+                                                      transactionId:lTranactionId
+                                               additionalParameters:lParams success:^(NSDictionary *response) {
+        cocos2d::ValueMap lResponce = AppsFlyerXAppleHelper::nsDictionary2ValueMap(response);
+        successBlock(lResponce);
+    } failure:^(NSError *error, id response) {
+        NSMutableDictionary *errorDictionary = @{}.mutableCopy;
+        if (error) {
+            errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:error.code];
+            errorDictionary[@"errorDescription"] = error.localizedDescription;
+        }
+        if (response && [response isKindOfClass:[NSString class]]) {
+            errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:-1];
+            errorDictionary[@"errorDescription"] = response;
+        }
+        failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
+    }];
 }
 
 void AppsFlyerXApple::trackLocation(double longitude, double latitude) {

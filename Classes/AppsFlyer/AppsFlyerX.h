@@ -11,18 +11,8 @@
 
 #include "cocos2d.h"
 #include <iostream>
-#include <vector>
 
 #include "EmailCryptTypeX.h"
-
-
-//enum AppsFlyerLogLevelX {
-//    AppsFlyerLogLevelXVerbose    = 5,
-//    AppsFlyerLogLevelXDebug      = 4,
-//    AppsFlyerLogLevelXInfo       = 3,
-//    AppsFlyerLogLevelXWarn       = 2,
-//    AppsFlyerLogLevelXError      = 1
-//};
 
 class AppsFlyerX {
 public:
@@ -46,7 +36,6 @@ public:
     static bool isDisableAppleAdSupportTracking();
     
     static void setIsDebug(bool isDebug);
-    //static void setLogLevel(AppsFlyerLogLevelX logLevel);
     static bool isDebug();
     
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
@@ -73,12 +62,18 @@ public:
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
     static void trackAppLaunch();
-
+    
     static void trackEvent(const std::string& eventName, const std::string& value);
     
     static void trackEvent(const std::string& eventName, cocos2d::ValueMap values);
     
-    static void validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
+    static void validateAndTrackInAppPurchase(const std::string& productIdentifier,
+                                              const std::string& price,
+                                              const std::string& currency,
+                                              const std::string& tranactionId,
+                                              cocos2d::ValueMap params,
+                                              std::function<void(cocos2d::ValueMap)> successBlock,
+                                              std::function<void(cocos2d::ValueMap)> failureBlock);
     
     static void trackLocation(double longitude, double latitude);
     
@@ -112,7 +107,7 @@ public:
     static unsigned long getMinTimeBetweenSessions();
     
     // Delegates methods proxy
-//    static void init(std::string appsFlyerDevKey, void(*callback)(cocos2d::ValueMap installData));
+    
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
