@@ -13,7 +13,10 @@ LOCAL_MODULE_FILENAME := libMyGame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../../Classes/AppDelegate.cpp \
-                   ../../../Classes/HelloWorldScene.cpp
+                   ../../../Classes/HelloWorldScene.cpp \
+                   ../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
+                   ../../../Classes/AppsFlyer/AppsFlyerProxyX.cpp \
+                   ../../../Classes/AppsFlyer/AppsFlyerX.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

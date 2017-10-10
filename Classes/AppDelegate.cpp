@@ -16,7 +16,7 @@ using namespace cocos2d::experimental;
 using namespace CocosDenshion;
 #endif
 
-#include "AppsFlyerX.h"
+#include "AppsFlyer/AppsFlyerX.h"
 
 USING_NS_CC;
 
@@ -66,10 +66,19 @@ static void onConversionDataReceived(cocos2d::ValueMap installData) {
 
 bool AppDelegate::applicationDidFinishLaunching() {
 
+    AppsFlyerX::setIsDebug(true);
     AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("942960987");
+#endif
+
     AppsFlyerX::setOnConversionDataReceived(onConversionDataReceived);
-    
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::trackAppLaunch();
+#endif
+
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
