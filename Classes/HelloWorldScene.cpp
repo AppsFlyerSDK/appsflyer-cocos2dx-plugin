@@ -46,8 +46,6 @@ bool HelloWorld::init()
     button->getTitleLabel()->setPosition(45, 10);
     button->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
         switch (type) {
-            case Widget::TouchEventType::BEGAN:
-                break;
             case Widget::TouchEventType::ENDED: {
                 std::cout << "Track event raised" << std::endl;
                 ValueMap map;
@@ -78,6 +76,34 @@ bool HelloWorld::init()
                 break;
         }
     });
+    auto validatePurchase = Button::create("CloseNormal.png", "CloseSelected.png", "");
+    validatePurchase->setTitleText("Validate");
+    validatePurchase->setPosition(Vec2(origin.x + 40, origin.y + size.height - 140));
+    // todo: change positioning logic
+    validatePurchase->getTitleLabel()->setPosition(40, 10);
+    
+    validatePurchase->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
+        switch (type) {
+            case Widget::TouchEventType::ENDED: {
+                std::cout << "Track event raised" << std::endl;
+                
+                ValueMap params;
+                AppsFlyerX::validateAndTrackInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
+                    for (auto& t : result)
+                        std::cout << t.first << " "
+                                  << t.second.asString() << "\n";
+                }, [&](cocos2d::ValueMap error) {
+                    for (auto& t : error)
+                        std::cout << t.first << " "
+                                  << t.second.asString() << "\n";
+                });
+                break;
+            }
+            default:
+                break;
+        }
+    });
+    addChild(validatePurchase, 1);
     addChild(exitButton, 1);
     addChild(button, 1);
     return true;

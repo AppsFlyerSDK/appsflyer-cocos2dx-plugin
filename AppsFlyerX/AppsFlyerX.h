@@ -67,7 +67,13 @@ public:
     
     static void trackEvent(const std::string& eventName, cocos2d::ValueMap values);
     
-    static void validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
+    static void validateAndTrackInAppPurchase(const std::string& productIdentifier,
+                                              const std::string& price,
+                                              const std::string& currency,
+                                              const std::string& tranactionId,
+                                              cocos2d::ValueMap params,
+                                              std::function<void(cocos2d::ValueMap)> successBlock,
+                                              std::function<void(cocos2d::ValueMap)> failureBlock);
     
     static void trackLocation(double longitude, double latitude);
     
