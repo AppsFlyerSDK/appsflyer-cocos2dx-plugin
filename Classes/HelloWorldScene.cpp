@@ -4,8 +4,10 @@
 USING_NS_CC;
 
 #include <iostream>
+#include <cstdlib>
 #include "ui/CocosGUI.h"
 #include "AppsFlyer/AppsFlyerX.h"
+#include "../cocos2d/cocos/ui/UIWidget.h"
 
 using namespace ui;
 
@@ -28,6 +30,7 @@ bool HelloWorld::init()
     if (!Scene::init()) {
         return false;
     }
+
 
     auto size = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();

@@ -17,6 +17,7 @@ using namespace CocosDenshion;
 #endif
 
 #include "AppsFlyer/AppsFlyerX.h"
+#include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 USING_NS_CC;
 
@@ -58,10 +59,11 @@ static int register_all_packages()
 }
 
 static void onConversionDataReceived(cocos2d::ValueMap installData) {
-    std::cout << "AppDelegate.cpp got conversion data!\n";
-    for (auto& t : installData)
-        std::cout << t.first << " "
-                  << t.second.asString() << "\n";
+    CCLOG("%s", "AppDelegate.cpp got conversion data!");
+
+    for (auto t : installData){
+        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+    }
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -142,6 +144,12 @@ void AppDelegate::applicationDidEnterBackground() {
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
+
+    //CCLOG("%s", "~+~+~+~+~   applicationWillEnterForeground ~+~+~+~+~");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::trackAppLaunch();
+#endif
 
 #if USE_AUDIO_ENGINE
     AudioEngine::resumeAll();

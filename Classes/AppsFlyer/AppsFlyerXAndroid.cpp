@@ -6,8 +6,9 @@
 #include "AppsFlyerXAndroid.h"
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
 #include "AppsFlyerProxyX.h"
+#include "../../cocos2d/external/flatbuffers/reflection_generated.h"
 
- std::string afDevKey;
+std::string afDevKey;
 
 
 /* Null, because instance will be initialized on demand. */
@@ -134,9 +135,9 @@ void AppsFlyerXAndroid::startTracking() {
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        cocos2d::JniMethodInfo miGetContext;
+        cocos2d::JniMethodInfo jniGetContext;
 
-        if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext,
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
                                                      "org/cocos2dx/lib/Cocos2dxActivity",
                                                      "getContext",
                                                      "()Landroid/content/Context;")) {
@@ -144,7 +145,7 @@ void AppsFlyerXAndroid::startTracking() {
         }
 
 
-        jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+        jobject jContext = (jobject)jniGetContext.env->CallStaticObjectMethod(jniGetContext.classID, jniGetContext.methodID);
 
         //public void trackAppLaunch(Context ctx, String devKey)
         jmethodID startTrackingMethodId = jniGetInstance.env->GetMethodID(cls,
@@ -156,7 +157,8 @@ void AppsFlyerXAndroid::startTracking() {
         // This is what we actually do: afLib.startTracking((Application) context.getApplicationContext())
         jniGetInstance.env->CallVoidMethod(afInstance, startTrackingMethodId, jContext, jAppsFlyerDevKey);
 
-        //jniGetInstance.env->DeleteLocalRef(jniGetInstance);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
     }
     else{
         CCLOGERROR("%s","'AppsFlyerLib' is not loaded");
@@ -165,6 +167,89 @@ void AppsFlyerXAndroid::startTracking() {
 
 void AppsFlyerXAndroid::trackEvent(const std::string &eventName, const std::string &value) {
 
+}
+
+void AppsFlyerXAndroid::trackEvent(const std::string& eventName, cocos2d::ValueMap values){
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject)jniGetInstance.env->CallStaticObjectMethod(jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        CCLOG("%s","com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+
+
+        jobject jContext = (jobject)jniGetContext.env->CallStaticObjectMethod(jniGetContext.classID, jniGetContext.methodID);
+
+        jclass hashMapClass= jniGetInstance.env->FindClass("java/util/HashMap");
+        jmethodID hashMapInit = jniGetInstance.env->GetMethodID(hashMapClass, "<init>", "(I)V");
+        jobject hashMapObj = jniGetInstance.env->NewObject(hashMapClass, hashMapInit, values.size());
+
+        //javap -s -p java.util.HashMap  | grep -A 1 put\(
+        jmethodID hashMapId = jniGetInstance.env->GetMethodID(hashMapClass, "put",
+                                                "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+
+
+        for (auto it : values) {   //https://github.com/cocos2d/cocos2d-x/blob/v3/cocos/base/CCValue.h
+            switch (it.second.getType()) {
+                case cocos2d::Value::Type::STRING:
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                                                         jniGetInstance.env->NewStringUTF(
+                                                                 it.first.c_str()),
+                                                         jniGetInstance.env->NewStringUTF(
+                                                                 it.second.asString().c_str()));
+                    break;
+
+                case cocos2d::Value::Type::BOOLEAN:
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                                                         jniGetInstance.env->NewStringUTF(
+                                                                 it.first.c_str()),
+                                                         it.second.asBool());
+                    break;
+                case cocos2d::Value::Type::INTEGER:
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                                                         jniGetInstance.env->NewStringUTF(
+                                                                 it.first.c_str()),
+                                                         it.second.asInt());
+                    break;
+                case cocos2d::Value::Type::DOUBLE:
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                                                         jniGetInstance.env->NewStringUTF(
+                                                                 it.first.c_str()),
+                                                         it.second.asDouble());
+                    break;
+
+
+                default:
+                    break;
+            }
+        }
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "trackEvent","(Landroid/content/Context;Ljava/lang/String;Ljava/util/HashMap;)V");
+
+        jstring jEventName = jniGetInstance.env->NewStringUTF(eventName.c_str());
+
+        //public void trackEvent(Context context, String eventName, Map<String,Object> eventValues)
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jEventName, hashMapObj);
+
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    }
+    else{
+        CCLOGERROR("%s","'AppsFlyerLib' is not loaded");
+    }
 }
 
 void AppsFlyerXAndroid::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {

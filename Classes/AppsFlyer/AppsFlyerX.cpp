@@ -267,7 +267,7 @@ void AppsFlyerX::trackAppLaunch() {
 
 void AppsFlyerX::trackEvent(const std::string& eventName, const std::string& value) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
+    AppsFlyerXAndroid::trackEvent(eventName, value);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerXApple::trackEvent(eventName, value);
 #endif
@@ -275,7 +275,7 @@ void AppsFlyerX::trackEvent(const std::string& eventName, const std::string& val
 
 void AppsFlyerX::trackEvent(const std::string& eventName, cocos2d::ValueMap values) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
+    AppsFlyerXAndroid::trackEvent(eventName, values);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerXApple::trackEvent(eventName, values);
 #endif
