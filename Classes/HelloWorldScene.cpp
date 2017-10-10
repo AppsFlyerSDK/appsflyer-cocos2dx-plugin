@@ -5,7 +5,7 @@ USING_NS_CC;
 
 #include <iostream>
 #include "ui/CocosGUI.h"
-#include "AppsFlyerX.h"
+#include "AppsFlyer/AppsFlyerX.h"
 
 using namespace ui;
 
