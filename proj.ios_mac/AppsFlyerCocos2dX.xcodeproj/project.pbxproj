@@ -60,11 +60,11 @@
 		521A8EAA19F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B47A461A53D09B004E4C60 /* Security.framework */; };
 		551900D91F8BBE7300150B9D /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 551900D71F8BBE7300150B9D /* logo.png */; };
-		55224A621F8267D900E3068D /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55224A611F8267D900E3068D /* libAppsFlyerLib.a */; };
-		55224A651F8271BE00E3068D /* AppsFlyerX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55224A641F8271BE00E3068D /* AppsFlyerX.cpp */; };
-		55224A671F827C0400E3068D /* AppsFlyerXApple.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224A661F827C0400E3068D /* AppsFlyerXApple.mm */; };
-		55224A7D1F863CD100E3068D /* AppsFlyerXAppleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224A7C1F863CD100E3068D /* AppsFlyerXAppleHelper.mm */; };
-		55224A811F89697800E3068D /* AppsFlyerXAppleDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224A801F89697800E3068D /* AppsFlyerXAppleDelegate.mm */; };
+		551900EA1F8CCFF500150B9D /* AppsFlyerX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */; };
+		551900EB1F8CCFF500150B9D /* AppsFlyerXApple.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */; };
+		551900EC1F8CCFF500150B9D /* AppsFlyerXAppleDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */; };
+		551900ED1F8CCFF500150B9D /* AppsFlyerXAppleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E21F8CCFF400150B9D /* AppsFlyerXAppleHelper.mm */; };
+		551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
@@ -167,20 +167,20 @@
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		551900D71F8BBE7300150B9D /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		55224A5D1F8267D900E3068D /* AppsFlyerCrossPromotionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerCrossPromotionHelper.h; sourceTree = "<group>"; };
-		55224A5E1F8267D900E3068D /* AppsFlyerLinkGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerLinkGenerator.h; sourceTree = "<group>"; };
-		55224A5F1F8267D900E3068D /* AppsFlyerShareInviteHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerShareInviteHelper.h; sourceTree = "<group>"; };
-		55224A601F8267D900E3068D /* AppsFlyerTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerTracker.h; sourceTree = "<group>"; };
-		55224A611F8267D900E3068D /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
-		55224A631F826B8F00E3068D /* AppsFlyerX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerX.h; sourceTree = "<group>"; };
-		55224A641F8271BE00E3068D /* AppsFlyerX.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppsFlyerX.cpp; sourceTree = "<group>"; };
-		55224A661F827C0400E3068D /* AppsFlyerXApple.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXApple.mm; sourceTree = "<group>"; };
-		55224A681F84BC3600E3068D /* AppsFlyerXApple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXApple.h; sourceTree = "<group>"; };
-		55224A7B1F84C08900E3068D /* EmailCryptTypeX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmailCryptTypeX.h; sourceTree = "<group>"; };
-		55224A7C1F863CD100E3068D /* AppsFlyerXAppleHelper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXAppleHelper.mm; sourceTree = "<group>"; };
-		55224A7E1F863CF500E3068D /* AppsFlyerXAppleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXAppleHelper.h; sourceTree = "<group>"; };
-		55224A7F1F89695F00E3068D /* AppsFlyerXAppleDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXAppleDelegate.h; sourceTree = "<group>"; };
-		55224A801F89697800E3068D /* AppsFlyerXAppleDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXAppleDelegate.mm; sourceTree = "<group>"; };
+		551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppsFlyerX.cpp; sourceTree = "<group>"; };
+		551900DC1F8CCFF400150B9D /* AppsFlyerX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerX.h; sourceTree = "<group>"; };
+		551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXApple.h; sourceTree = "<group>"; };
+		551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXApple.mm; sourceTree = "<group>"; };
+		551900DF1F8CCFF400150B9D /* AppsFlyerXAppleDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXAppleDelegate.h; sourceTree = "<group>"; };
+		551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXAppleDelegate.mm; sourceTree = "<group>"; };
+		551900E11F8CCFF400150B9D /* AppsFlyerXAppleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXAppleHelper.h; sourceTree = "<group>"; };
+		551900E21F8CCFF400150B9D /* AppsFlyerXAppleHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXAppleHelper.mm; sourceTree = "<group>"; };
+		551900E31F8CCFF400150B9D /* EmailCryptTypeX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailCryptTypeX.h; sourceTree = "<group>"; };
+		551900E51F8CCFF400150B9D /* AppsFlyerCrossPromotionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerCrossPromotionHelper.h; sourceTree = "<group>"; };
+		551900E61F8CCFF400150B9D /* AppsFlyerLinkGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerLinkGenerator.h; sourceTree = "<group>"; };
+		551900E71F8CCFF400150B9D /* AppsFlyerShareInviteHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerShareInviteHelper.h; sourceTree = "<group>"; };
+		551900E81F8CCFF400150B9D /* AppsFlyerTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerTracker.h; sourceTree = "<group>"; };
+		551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -210,7 +210,7 @@
 				BF1712471292920000B8313A /* libz.dylib in Frameworks */,
 				BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */,
 				D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */,
-				55224A621F8267D900E3068D /* libAppsFlyerLib.a in Frameworks */,
+				551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */,
 				D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */,
 				D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */,
 			);
@@ -299,7 +299,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				55224A5B1F8267D900E3068D /* AppsFlyerX */,
 				46880B8319C43A87006E1F66 /* Classes */,
 				46880B7519C43A67006E1F66 /* Resources */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
@@ -355,6 +354,7 @@
 		46880B8319C43A87006E1F66 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				551900DA1F8CCFF400150B9D /* AppsFlyer */,
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
 				46880B8619C43A87006E1F66 /* HelloWorldScene.cpp */,
@@ -384,32 +384,31 @@
 			name = mac;
 			sourceTree = "<group>";
 		};
-		55224A5B1F8267D900E3068D /* AppsFlyerX */ = {
+		551900DA1F8CCFF400150B9D /* AppsFlyer */ = {
 			isa = PBXGroup;
 			children = (
-				55224A5C1F8267D900E3068D /* libAppsFlyer */,
-				55224A7B1F84C08900E3068D /* EmailCryptTypeX.h */,
-				55224A631F826B8F00E3068D /* AppsFlyerX.h */,
-				55224A641F8271BE00E3068D /* AppsFlyerX.cpp */,
-				55224A681F84BC3600E3068D /* AppsFlyerXApple.h */,
-				55224A661F827C0400E3068D /* AppsFlyerXApple.mm */,
-				55224A7F1F89695F00E3068D /* AppsFlyerXAppleDelegate.h */,
-				55224A801F89697800E3068D /* AppsFlyerXAppleDelegate.mm */,
-				55224A7E1F863CF500E3068D /* AppsFlyerXAppleHelper.h */,
-				55224A7C1F863CD100E3068D /* AppsFlyerXAppleHelper.mm */,
+				551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */,
+				551900DC1F8CCFF400150B9D /* AppsFlyerX.h */,
+				551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */,
+				551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */,
+				551900DF1F8CCFF400150B9D /* AppsFlyerXAppleDelegate.h */,
+				551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */,
+				551900E11F8CCFF400150B9D /* AppsFlyerXAppleHelper.h */,
+				551900E21F8CCFF400150B9D /* AppsFlyerXAppleHelper.mm */,
+				551900E31F8CCFF400150B9D /* EmailCryptTypeX.h */,
+				551900E41F8CCFF400150B9D /* libAppsFlyer */,
 			);
-			name = AppsFlyerX;
-			path = ../AppsFlyerX;
+			path = AppsFlyer;
 			sourceTree = "<group>";
 		};
-		55224A5C1F8267D900E3068D /* libAppsFlyer */ = {
+		551900E41F8CCFF400150B9D /* libAppsFlyer */ = {
 			isa = PBXGroup;
 			children = (
-				55224A5D1F8267D900E3068D /* AppsFlyerCrossPromotionHelper.h */,
-				55224A5E1F8267D900E3068D /* AppsFlyerLinkGenerator.h */,
-				55224A5F1F8267D900E3068D /* AppsFlyerShareInviteHelper.h */,
-				55224A601F8267D900E3068D /* AppsFlyerTracker.h */,
-				55224A611F8267D900E3068D /* libAppsFlyerLib.a */,
+				551900E51F8CCFF400150B9D /* AppsFlyerCrossPromotionHelper.h */,
+				551900E61F8CCFF400150B9D /* AppsFlyerLinkGenerator.h */,
+				551900E71F8CCFF400150B9D /* AppsFlyerShareInviteHelper.h */,
+				551900E81F8CCFF400150B9D /* AppsFlyerTracker.h */,
+				551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */,
 			);
 			path = libAppsFlyer;
 			sourceTree = "<group>";
@@ -567,13 +566,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				551900EB1F8CCFF500150B9D /* AppsFlyerXApple.mm in Sources */,
 				1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */,
 				1AF87B8B1F6F782A007BE51C /* RootViewController.mm in Sources */,
-				55224A7D1F863CD100E3068D /* AppsFlyerXAppleHelper.mm in Sources */,
+				551900ED1F8CCFF500150B9D /* AppsFlyerXAppleHelper.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				55224A651F8271BE00E3068D /* AppsFlyerX.cpp in Sources */,
-				55224A671F827C0400E3068D /* AppsFlyerXApple.mm in Sources */,
-				55224A811F89697800E3068D /* AppsFlyerXAppleDelegate.mm in Sources */,
+				551900EA1F8CCFF500150B9D /* AppsFlyerX.cpp in Sources */,
+				551900EC1F8CCFF500150B9D /* AppsFlyerXAppleDelegate.mm in Sources */,
 				1AF87B8A1F6F7822007BE51C /* main.m in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
 			);
@@ -629,7 +628,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					../AppsFlyerX/libAppsFlyer/,
+					../Classes/AppsFlyer/libAppsFlyer/,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -667,7 +666,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					../AppsFlyerX/libAppsFlyer/,
+					../Classes/AppsFlyer/libAppsFlyer/,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
