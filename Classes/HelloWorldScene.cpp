@@ -8,6 +8,7 @@ USING_NS_CC;
 #include "ui/CocosGUI.h"
 #include "AppsFlyer/AppsFlyerX.h"
 #include "../cocos2d/cocos/ui/UIWidget.h"
+#include "../cocos2d/cocos/base/CCValue.h"
 
 using namespace ui;
 
@@ -55,6 +56,8 @@ bool HelloWorld::init()
                 map["key1"] = "value1";
                 map["key2"] = 1;
                 map["key3"] = true;
+                map["key4"] = 2L;
+                map["key5"] = 3.0;
                 AppsFlyerX::trackEvent("test_event", map);
                 break;
             }

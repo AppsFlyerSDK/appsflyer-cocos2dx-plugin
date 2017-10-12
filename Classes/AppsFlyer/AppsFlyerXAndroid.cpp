@@ -201,11 +201,12 @@ void AppsFlyerXAndroid::trackEvent(const std::string& eventName, cocos2d::ValueM
         jmethodID hashMapId = jniGetInstance.env->GetMethodID(hashMapClass, "put",
                                                 "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
+        //jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,jniGetInstance.env->NewStringUTF("xxx"),jniGetInstance.env->NewStringUTF("ssss"));
 
         for (auto it : values) {   //https://github.com/cocos2d/cocos2d-x/blob/v3/cocos/base/CCValue.h
             switch (it.second.getType()) {
                 case cocos2d::Value::Type::STRING:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
                                                          jniGetInstance.env->NewStringUTF(
                                                                  it.first.c_str()),
                                                          jniGetInstance.env->NewStringUTF(
@@ -213,19 +214,19 @@ void AppsFlyerXAndroid::trackEvent(const std::string& eventName, cocos2d::ValueM
                     break;
 
                 case cocos2d::Value::Type::BOOLEAN:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
                                                          jniGetInstance.env->NewStringUTF(
                                                                  it.first.c_str()),
                                                          it.second.asBool());
                     break;
                 case cocos2d::Value::Type::INTEGER:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
                                                          jniGetInstance.env->NewStringUTF(
                                                                  it.first.c_str()),
                                                          it.second.asInt());
                     break;
                 case cocos2d::Value::Type::DOUBLE:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId, "put",
+                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
                                                          jniGetInstance.env->NewStringUTF(
                                                                  it.first.c_str()),
                                                          it.second.asDouble());
@@ -237,7 +238,7 @@ void AppsFlyerXAndroid::trackEvent(const std::string& eventName, cocos2d::ValueM
             }
         }
 
-        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "trackEvent","(Landroid/content/Context;Ljava/lang/String;Ljava/util/HashMap;)V");
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "trackEvent","(Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
 
         jstring jEventName = jniGetInstance.env->NewStringUTF(eventName.c_str());
 

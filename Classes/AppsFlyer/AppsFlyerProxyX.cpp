@@ -14,11 +14,11 @@ void setAttributionCallbackMethod(void (*callbackMethod)(cocos2d::ValueMap insta
     }
 }
 
-
+/**
+ * TODO: handle other types of data
+ * */
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *env, jobject obj, jobject attributionObject) {
-
-    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative is called");
 
     if (NULL == attributionCallbackMethod) {
         return;
@@ -48,8 +48,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
 
     cocos2d::ValueMap map;
 
-    for (int i=0; i < arraySize; ++i)
-    {
+    for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
         jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
