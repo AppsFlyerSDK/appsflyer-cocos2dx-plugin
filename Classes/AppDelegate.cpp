@@ -61,7 +61,25 @@ static int register_all_packages()
 static void onConversionDataReceived(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
 
-    for (auto t : installData){
+    for (auto &t : installData){
+        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+    }
+}
+
+static void onConversionDataRequestFailure(cocos2d::ValueMap map) {
+    for (auto &t : map){
+        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+    }
+}
+
+static void onAppOpenAttribution(cocos2d::ValueMap map) {
+    for (auto &t : map){
+        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+    }
+}
+
+static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
+    for (auto &t : map){
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
     }
 }
@@ -76,6 +94,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     AppsFlyerX::setOnConversionDataReceived(onConversionDataReceived);
+    AppsFlyerX::setOnConversionDataRequestFailure(onConversionDataRequestFailure);
+    AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
+    AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerX::trackAppLaunch();
