@@ -214,22 +214,40 @@ void AppsFlyerXAndroid::trackEvent(const std::string& eventName, cocos2d::ValueM
                     break;
 
                 case cocos2d::Value::Type::BOOLEAN:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
-                                                         jniGetInstance.env->NewStringUTF(
-                                                                 it.first.c_str()),
-                                                         it.second.asBool());
+                    {
+                        jclass jBooleanClass = jniGetInstance.env->FindClass("java/lang/Boolean");
+                        jmethodID jValueOfId = jniGetInstance.env->GetStaticMethodID(jBooleanClass, "valueOf", "(Z)Ljava/lang/Boolean;");
+                        jobject jBoolValue = (jobject)jniGetInstance.env->CallStaticObjectMethod(jBooleanClass, jValueOfId, it.second.asBool());
+
+                        jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
+                                                             jniGetInstance.env->NewStringUTF(it.first.c_str()),jBoolValue);
+
+                        jniGetInstance.env->DeleteLocalRef(jBoolValue);
+                    }
                     break;
                 case cocos2d::Value::Type::INTEGER:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
-                                                         jniGetInstance.env->NewStringUTF(
-                                                                 it.first.c_str()),
-                                                         it.second.asInt());
+                    {
+                        jclass jIntegerClass = jniGetInstance.env->FindClass("java/lang/Integer");
+                        jmethodID jValueOfId = jniGetInstance.env->GetStaticMethodID(jIntegerClass, "valueOf", "(I)Ljava/lang/Integer;");
+                        jobject jIntegerValue = (jobject)jniGetInstance.env->CallStaticObjectMethod(jIntegerClass, jValueOfId, it.second.asInt());
+
+                        jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
+                                                             jniGetInstance.env->NewStringUTF(it.first.c_str()),jIntegerValue);
+
+                        jniGetInstance.env->DeleteLocalRef(jIntegerValue);
+                    }
                     break;
                 case cocos2d::Value::Type::DOUBLE:
-                    jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
-                                                         jniGetInstance.env->NewStringUTF(
-                                                                 it.first.c_str()),
-                                                         it.second.asDouble());
+                    {
+                        jclass jDoubleClass = jniGetInstance.env->FindClass("java/lang/Double");
+                        jmethodID jValueOfId = jniGetInstance.env->GetStaticMethodID(jDoubleClass, "valueOf", "(D)Ljava/lang/Double;");
+                        jobject jDoubleValue = (jobject)jniGetInstance.env->CallStaticObjectMethod(jDoubleClass, jValueOfId, it.second.asDouble());
+
+                        jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
+                                                             jniGetInstance.env->NewStringUTF(it.first.c_str()),jDoubleValue);
+
+                        jniGetInstance.env->DeleteLocalRef(jDoubleValue);
+                    }
                     break;
 
 

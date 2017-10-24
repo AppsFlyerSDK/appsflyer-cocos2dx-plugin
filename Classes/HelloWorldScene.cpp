@@ -56,8 +56,7 @@ bool HelloWorld::init()
                 map["key1"] = "value1";
                 map["key2"] = 1;
                 map["key3"] = true;
-                map["key4"] = 2;
-                map["key5"] = 3.0;
+                map["key4"] = 3.0;
                 AppsFlyerX::trackEvent("test_event", map);
                 break;
             }
