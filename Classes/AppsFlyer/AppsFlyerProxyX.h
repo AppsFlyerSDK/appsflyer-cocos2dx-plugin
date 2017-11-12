@@ -12,7 +12,8 @@
 
 extern "C" {
 
-static void (*attributionCallbackMethod)(cocos2d::ValueMap installData);
+static void (*attributionCallbackOnConversionDataReceived)(cocos2d::ValueMap installData);
+static void (*attributionCallbackOnAppOpenAttribution)(cocos2d::ValueMap installData);
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *, jobject, jobject);
@@ -23,8 +24,12 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOp
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttributionFailureNative
         (JNIEnv *, jobject, jobject);
 
- void setAttributionCallbackMethod(void (*callbackMethod)(cocos2d::ValueMap installData));
+ void setAttributionCallbackOnConversionDataReceived(
+         void (*callbackMethod)(cocos2d::ValueMap installData));
 }
+
+void setAttributionCallbackOnAppOpenAttribution(
+        void (*callbackMethod)(cocos2d::ValueMap installData));
 
 #endif
 

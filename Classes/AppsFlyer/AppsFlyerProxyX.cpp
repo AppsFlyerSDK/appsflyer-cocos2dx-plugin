@@ -8,11 +8,20 @@
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
-void setAttributionCallbackMethod(void (*callbackMethod)(cocos2d::ValueMap installData)) {
-    if (NULL == attributionCallbackMethod) {
-        attributionCallbackMethod = callbackMethod;
+void setAttributionCallbackOnConversionDataReceived(
+        void (*callbackMethod)(cocos2d::ValueMap installData)) {
+    if (NULL == attributionCallbackOnConversionDataReceived) {
+        attributionCallbackOnConversionDataReceived = callbackMethod;
     }
 }
+
+void setAttributionCallbackOnAppOpenAttribution(
+        void (*callbackMethod)(cocos2d::ValueMap attributionData)) {
+    if (NULL == attributionCallbackOnConversionDataReceived) {
+        attributionCallbackOnAppOpenAttribution = callbackMethod;
+    }
+}
+
 
 /**
  * TODO: handle other types of data
@@ -20,7 +29,7 @@ void setAttributionCallbackMethod(void (*callbackMethod)(cocos2d::ValueMap insta
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *env, jobject obj, jobject attributionObject) {
 
-    if (NULL == attributionCallbackMethod) {
+    if (NULL == attributionCallbackOnConversionDataReceived) {
         return;
     }
 
@@ -58,15 +67,19 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
         map[std::string(c_string_key)] = c_string_value;
     }
 
-    attributionCallbackMethod(map);
+    attributionCallbackOnConversionDataReceived(map);
 }
+
+
+JNIEXPORT void JNICALL
+
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
         (JNIEnv *env, jobject obj, jstring stringError) {
 
     CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative is called");
 
-    if (NULL == attributionCallbackMethod) {
+    if (NULL == attributionCallbackOnConversionDataReceived) {
         return;
     }
 }

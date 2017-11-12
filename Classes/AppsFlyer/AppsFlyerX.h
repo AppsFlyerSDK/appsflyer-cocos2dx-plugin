@@ -16,7 +16,7 @@
 
 class AppsFlyerX {
 public:
-    
+
     static void setCustomerUserID(const std::string& customerUserID);
     static std::string customerUserID();
     
@@ -25,7 +25,7 @@ public:
     
     static void setAppsFlyerDevKey(const std::string& appsFlyerDevKey);
     static std::string appsFlyerDevKey();
-    
+
     static void setAppleAppID(const std::string& appleAppID);
     static std::string appleAppID();
     
