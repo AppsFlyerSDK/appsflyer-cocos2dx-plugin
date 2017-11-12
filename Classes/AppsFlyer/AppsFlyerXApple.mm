@@ -84,11 +84,11 @@ std::string AppsFlyerXApple::currencyCode() {
 }
 
 void AppsFlyerXApple::disableAppleAdSupportTracking(bool isDisableAppleAdSupportTracking) {
-    [[AppsFlyerTracker sharedTracker] setDisableIAdTracking:isDisableAppleAdSupportTracking];
+    [[AppsFlyerTracker sharedTracker] setDisableAppleAdSupportTracking:isDisableAppleAdSupportTracking];
 }
 
 bool AppsFlyerXApple::isDisableAppleAdSupportTracking() {
-    return [[AppsFlyerTracker sharedTracker] disableIAdTracking];
+    return [[AppsFlyerTracker sharedTracker] disableAppleAdSupportTracking];
 }
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
@@ -142,7 +142,7 @@ bool AppsFlyerXApple::isUseReceiptValidationSandbox() {
 }
 
 void AppsFlyerXApple::setUseUninstallSandbox(bool setUseUninstallSandbox) {
-    [[AppsFlyerTracker sharedTracker] setUseReceiptValidationSandbox:setUseUninstallSandbox];
+    [[AppsFlyerTracker sharedTracker] setUseUninstallSandbox:setUseUninstallSandbox];
 }
 
 bool AppsFlyerXApple::isUseUninstallSandbox() {
