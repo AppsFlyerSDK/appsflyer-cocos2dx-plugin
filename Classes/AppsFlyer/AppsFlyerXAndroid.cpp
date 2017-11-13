@@ -188,6 +188,32 @@ void AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMa
 
 }
 
+void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)){
+    if (afDevKey.empty()) {
+        CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
+        return;
+    }
+
+    setAttributionCallbackOnConversionDataRequestFailure(callback);
+
+    if (!isConveriosnListenerInitialized){
+        initConvertionCallback();
+    }
+}
+
+void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)){
+    if (afDevKey.empty()) {
+        CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
+        return;
+    }
+
+    setAttributionCallbackOnAppOpenAttributionFailure(callback);
+
+    if (!isConveriosnListenerInitialized){
+        initConvertionCallback();
+    }
+}
+
 void AppsFlyerXAndroid::startTracking() {
 
     if (afDevKey.empty()) {

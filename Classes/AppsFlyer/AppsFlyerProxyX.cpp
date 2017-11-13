@@ -17,11 +17,24 @@ void setAttributionCallbackOnConversionDataReceived(
 
 void setAttributionCallbackOnAppOpenAttribution(
         void (*callbackMethod)(cocos2d::ValueMap attributionData)) {
-    if (NULL == attributionCallbackOnConversionDataReceived) {
+    if (NULL == attributionCallbackOnAppOpenAttribution) {
         attributionCallbackOnAppOpenAttribution = callbackMethod;
     }
 }
 
+void setAttributionCallbackOnConversionDataRequestFailure(
+        void (*callbackMethod)(cocos2d::ValueMap error)) {
+    if (NULL == attributionCallbackOnConversionDataRequestFailure) {
+        attributionCallbackOnConversionDataRequestFailure = callbackMethod;
+    }
+}
+
+void setAttributionCallbackOnAppOpenAttributionFailure(
+        void (*callbackMethod)(cocos2d::ValueMap error)) {
+    if (NULL == attributionCallbackOnAppOpenAttributionFailure) {
+        attributionCallbackOnAppOpenAttributionFailure = callbackMethod;
+    }
+}
 
 /**
  * TODO: handle other types of data
