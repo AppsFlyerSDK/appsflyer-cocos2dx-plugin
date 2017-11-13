@@ -188,7 +188,7 @@ void AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMa
 
 }
 
-void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)){
+void AppsFlyerXAndroid::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)){
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;
@@ -201,7 +201,7 @@ void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error))
     }
 }
 
-void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)){
+void AppsFlyerXAndroid::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)){
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;
@@ -398,6 +398,44 @@ std::string AppsFlyerXAndroid::getSDKVersion(){
 
 std::string AppsFlyerXAndroid::getHost(){
     return callStringMethod("getHost", "()Ljava/lang/String;");
+}
+
+std::string AppsFlyerXAndroid::getAppsFlyerUID(){
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    std::string appsFlyerUid;
+
+    cocos2d::JniMethodInfo miGetContext;
+
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+        return appsFlyerUid;
+    }
+    jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+    if (NULL != afInstance) {
+        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "getAppsFlyerUID", "(Landroid/content/Context;)Ljava/lang/String;");
+        // Get customer ID as a jstinrg
+        jstring userId = (jstring) jniGetInstance.env->CallObjectMethod(afInstance, methodId, jContext);
+
+        // Convert jstring tio string
+        const char *name_char = jniGetInstance.env->GetStringUTFChars(userId, NULL);
+        appsFlyerUid = std::string(name_char);
+
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+
+        return appsFlyerUid;
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+        return NULL;
+    }
 }
 
 //================== Utils ==================//

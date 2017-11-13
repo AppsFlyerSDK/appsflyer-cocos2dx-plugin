@@ -6,6 +6,9 @@
 #include "AppsFlyerProxyX.h"
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
 
+cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
+
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 void setAttributionCallbackOnConversionDataReceived(
@@ -45,30 +48,59 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
     if (NULL == attributionCallbackOnConversionDataReceived) {
         return;
     }
+    attributionCallbackOnConversionDataReceived(getMapForCallback(env, attributionObject));
+}
 
+
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
+        (JNIEnv *env, jobject obj, jobject attributionObject){
+    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative is called");
+
+    if (NULL == attributionCallbackOnAppOpenAttribution) {
+        return;
+    }
+    attributionCallbackOnAppOpenAttribution(getMapForCallback(env, attributionObject));
+
+}
+
+
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
+        (JNIEnv *env, jobject obj, jobject stringError) {
+
+    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative is called");
+
+    if (NULL == attributionCallbackOnConversionDataRequestFailure) {
+        return;
+    }
+
+    setAttributionCallbackOnConversionDataRequestFailure(
+            (void (*)(cocos2d::ValueMap)) (stringError));
+}
+
+
+cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     jclass clsHashMap = env->GetObjectClass(attributionObject);
-
+    cocos2d::ValueMap map;
     jmethodID midKeySet = env->GetMethodID(clsHashMap, "keySet", "()Ljava/util/Set;");
 
     if (midKeySet == NULL) {
-        return; /* method not found */
+        return map; /* method not found */
     }
 
     jobject objKeySet = env->CallObjectMethod(attributionObject, midKeySet);
 
-     //javap -s -p java.util.Set | grep -A 1 toArray
+    //javap -s -p java.util.Set | grep -A 1 toArray
     jclass clsSet = env->GetObjectClass(objKeySet);
 
     jmethodID midToArray = env->GetMethodID(clsSet, "toArray", "()[Ljava/lang/Object;");
 
     if (midToArray == NULL) {
-        return; /* method not found */
+        return map; /* method not found */
     }
 
     jobjectArray arrayOfKeys = (jobjectArray) env->CallObjectMethod(objKeySet, midToArray);
     int arraySize = env->GetArrayLength(arrayOfKeys);
 
-    cocos2d::ValueMap map;
 
     for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
@@ -79,23 +111,8 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
 
         map[std::string(c_string_key)] = c_string_value;
     }
-
-    attributionCallbackOnConversionDataReceived(map);
 }
 
-
-JNIEXPORT void JNICALL
-
-
-JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
-        (JNIEnv *env, jobject obj, jstring stringError) {
-
-    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative is called");
-
-    if (NULL == attributionCallbackOnConversionDataReceived) {
-        return;
-    }
-}
 
 #endif
 

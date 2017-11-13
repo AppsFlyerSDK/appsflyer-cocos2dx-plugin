@@ -5,15 +5,11 @@
 //  Created by Andrey Gagan
 //  Copyright © 2017 AppsFlyer. All rights reserved.
 //
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 #include "AppsFlyerX.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-#include <jni.h>
-#include <AppsFlyer/libAppsFlyer/AppsFlyerTracker.h>
-#include "platform/android/jni/JniHelper.h"
-#include "AppsFlyerProxyX.h"
-#include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
+
 #include "AppsFlyerXAndroid.h"
 
 #define COCOS2D_DEBUG 1
@@ -160,7 +156,7 @@ void AppsFlyerX::setAppInviteOneLink(std::string& appInviteOneLinkID) {
 
 std::string AppsFlyerX::appInviteOneLinkID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::appInviteOneLinkID();
+    // TODO: Throw not supported
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::appInviteOneLinkID();
 #endif
@@ -176,7 +172,7 @@ void AppsFlyerX::deviceTrackingDisabled(bool deviceTrackingDisabled) {
 
 bool AppsFlyerX::isDeviceTrackingDisabled() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::isDeviceTrackingDisabled();
+    // TODO: Throw not supported
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::isDeviceTrackingDisabled();
 #endif
@@ -248,7 +244,7 @@ std::string AppsFlyerX::advertiserId() {
 
 void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
+    // TODO: Throw not supported
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerXApple::setUserEmails(userEmails, type);
 #endif
@@ -297,17 +293,9 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentif
 #endif
 }
 
-//void AppsFlyerX::trackLocation(double longitude, double latitude) {
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//
-//#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//    AppsFlyerXApple::trackLocation(longitude, latitude);
-//#endif
-}
-
 std::string AppsFlyerX::getAppsFlyerUID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // FIXME: Check how can we get an access to context
+   return AppsFlyerXAndroid::getAppsFlyerUID();
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::getAppsFlyerUID();
 #endif
@@ -398,6 +386,7 @@ void AppsFlyerX::setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions)
     AppsFlyerXApple::setMinTimeBetweenSessions(minTimeBetweenSessions);
 #endif
 }
+
 unsigned long AppsFlyerX::getMinTimeBetweenSessions() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // FIXME: Android is not support this API
@@ -417,7 +406,7 @@ void AppsFlyerX::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap i
 }
 void AppsFlyerX::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-
+    AppsFlyerXAndroid::setOnConversionDataRequestFailure(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnConversionDataRequestFailure(callback);
 #endif
@@ -431,7 +420,7 @@ void AppsFlyerX::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attri
 }
 void AppsFlyerX::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
+    AppsFlyerXAndroid::setOnAppOpenAttributionFailure(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnAppOpenAttributionFailure(callback);
 #endif

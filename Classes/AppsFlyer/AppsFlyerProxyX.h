@@ -18,12 +18,13 @@ static void (*attributionCallbackOnConversionDataRequestFailure)(cocos2d::ValueM
 
 static void (*attributionCallbackOnAppOpenAttribution)(cocos2d::ValueMap attributionData);
 
-static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap attributionData);
+static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap error);
+
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
-        (JNIEnv *, jobject, jstring);
+        (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttributionFailureNative

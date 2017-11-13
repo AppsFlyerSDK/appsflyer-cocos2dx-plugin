@@ -65,7 +65,7 @@ bool HelloWorld::init()
                 test_map["key1"] = "value1";
                 test_map["key2"] = 1;
                 test_map["key3"] = true;
-                AppsFlyerX::setAdditionalData(test_map);
+                AppsFlyerX::getAppsFlyerUID();
                 break;
             }
             default:
