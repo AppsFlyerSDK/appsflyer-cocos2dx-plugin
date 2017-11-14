@@ -74,6 +74,12 @@ public:
 
     static std::string getAppsFlyerUID();
 
+    static void validateAndTrackInAppPurchase(const std::string& publicKey,
+                                                          const std::string& signature,
+                                                          const std::string& purchaseData,
+                                                          const std::string& price,
+                                                          const std::string& currency,
+                                                          cocos2d::ValueMap additionalParameters);
 
     // - (void) loadConversionDataWithDelegate:(id<AppsFlyerTrackerDelegate>) delegate __attribute__((deprecated));
 
@@ -84,7 +90,7 @@ public:
 
     static void handlePushNotification(cocos2d::ValueMap pushPayload);
 
-    static void registerUninstall(void* deviceToken, unsigned long length);
+    static void registerUninstall(const std::string& token);
 
     static std::string getSDKVersion();
 

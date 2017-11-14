@@ -74,7 +74,14 @@ public:
                                               cocos2d::ValueMap params,
                                               std::function<void(cocos2d::ValueMap)> successBlock,
                                               std::function<void(cocos2d::ValueMap)> failureBlock);
-    
+
+    static void validateAndTrackInAppPurchase(const std::string& publicKey,
+                                                     const std::string& signature,
+                                                     const std::string& purchaseData,
+                                                     const std::string& price,
+                                                     const std::string& currency,
+                                                     cocos2d::ValueMap additionalParameters);
+
     static void trackLocation(double longitude, double latitude);
     
     static std::string getAppsFlyerUID();
@@ -95,24 +102,26 @@ public:
     static void handlePushNotification(cocos2d::ValueMap pushPayload);
     
     static void registerUninstall(void* deviceToken, unsigned long length);
-    
+
+    static void registerUninstall(const std::string& token);
+
     static std::string getSDKVersion();
-    
+
     static void remoteDebuggingCallWithData(const std::string& data);
-    
+
     static void setHost(const std::string& host);
     static std::string getHost();
-    
+
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
-    
+
+
     // Delegates methods proxy
     
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
-    
 };
 
 #endif /* AppsFlyerX_h */

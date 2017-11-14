@@ -63,9 +63,9 @@ bool HelloWorld::init()
 
                 ValueMap test_map;
                 test_map["key1"] = "value1";
-                test_map["key2"] = 1;
-                test_map["key3"] = true;
-                AppsFlyerX::getAppsFlyerUID();
+                test_map["key2"] = "eee";
+                test_map["key3"] = "sssss";
+                AppsFlyerX::validateAndTrackInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
                 break;
             }
             default:
