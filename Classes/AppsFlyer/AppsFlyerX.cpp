@@ -282,7 +282,7 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentif
                                                std::function<void(cocos2d::ValueMap)> successBlock,
                                                std::function<void(cocos2d::ValueMap)> failureBlock) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-
+    // TODO: Throw not supported
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 
     AppsFlyerXApple::validateAndTrackInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
@@ -425,8 +425,3 @@ void AppsFlyerX::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMa
     return AppsFlyerXApple::setOnAppOpenAttributionFailure(callback);
 #endif
 }
-
-
-
-
-

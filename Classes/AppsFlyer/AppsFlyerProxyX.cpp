@@ -63,6 +63,16 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOp
 
 }
 
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttributionFailureNative
+        (JNIEnv *env, jobject obj, jobject stringError){
+
+    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative is called");
+
+    if (NULL == attributionCallbackOnAppOpenAttributionFailure) {
+        return;
+    }
+    attributionCallbackOnAppOpenAttributionFailure(getMapForCallback(env,stringError));
+}
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
         (JNIEnv *env, jobject obj, jobject stringError) {
@@ -73,8 +83,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
         return;
     }
 
-    setAttributionCallbackOnConversionDataRequestFailure(
-            (void (*)(cocos2d::ValueMap)) (stringError));
+    attributionCallbackOnConversionDataRequestFailure(getMapForCallback(env,stringError));
 }
 
 
