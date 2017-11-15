@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "32313476750",
+    "firebase_url": "https://cocos-9cfb2.firebaseio.com",
+    "project_id": "cocos-9cfb2",
+    "storage_bucket": "cocos-9cfb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32313476750:android:80ce9078cb02c119",
+        "android_client_info": {
+          "package_name": "com.appsflyer.cocos2dX"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "32313476750-fcde0cpneds88ct10uk5p97dtiduj6jq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6o5Xw4B9MITL5ApDCwrIngAq70wU1POE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
