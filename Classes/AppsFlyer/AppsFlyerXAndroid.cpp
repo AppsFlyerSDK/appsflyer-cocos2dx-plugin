@@ -16,7 +16,7 @@ std::string callStringMethod(const char *method_name, const char *descriptor);
 void callVoidMethodWithStringParam(const std::string &param, const char *method_name, const char *descriptor);
 void callVoidMethodWithBoolParam(bool param, const char *method_name, const char *descriptor);
 void callVoidMethodWithLongParam(unsigned long param, const char *method_name, const char *descriptor);
-jobject valueMapToHashSet(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values);
+jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values);
 
 
 
@@ -72,7 +72,7 @@ void AppsFlyerXAndroid::setAdditionalData(cocos2d::ValueMap customData) {
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        jobject hashMapObj = valueMapToHashSet(jniGetInstance, customData);
+        jobject hashMapObj = valueMapToHashMap(jniGetInstance, customData);
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setAdditionalData",
                                                              "(Ljava/util/HashMap;)V");
@@ -258,7 +258,7 @@ void AppsFlyerXAndroid::trackEvent(const std::string &eventName, cocos2d::ValueM
         jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
                 jniGetContext.classID, jniGetContext.methodID);
 
-        jobject hashMapObj = valueMapToHashSet(jniGetInstance, values);
+        jobject hashMapObj = valueMapToHashMap(jniGetInstance, values);
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "trackEvent",
                                                              "(Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
@@ -368,7 +368,7 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string& publicK
 
     // Convert ValueMap to HashSet
 
-    jobject hashMapObj = valueMapToHashSet(jniGetInstance, additionalParameters);
+    jobject hashMapObj = valueMapToHashMap(jniGetInstance, additionalParameters);
 
     if (NULL != afInstance) {
         CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
@@ -489,7 +489,7 @@ std::string callStringMethod(const char *method_name, const char *descriptor) {
     }
 }
 
-jobject valueMapToHashSet(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values){
+jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values){
     jclass hashMapClass = jniGetInstance.env->FindClass("java/util/HashMap");
 
     jmethodID hashMapInit = jniGetInstance.env->GetMethodID(hashMapClass, "<init>", "(I)V");
