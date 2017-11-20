@@ -5,15 +5,12 @@
 //  Created by Andrey Gagan
 //  Copyright © 2017 AppsFlyer. All rights reserved.
 //
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 #include "AppsFlyerX.h"
-
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "AppsFlyerXAndroid.h"
 
 #define COCOS2D_DEBUG 1
-
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 #include "AppsFlyerXApple.h"
@@ -324,12 +321,7 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& publicKey,
     AppsFlyerXAndroid::validateAndTrackInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // Not supported for Android
-    CCLOGWARN("%s", "validateAndTrackInAppPurchase(const std::string& publicKey,
-                                               const std::string& signature,
-                                               const std::string& purchaseData,
-                                               const std::string& price,
-                                               const std::string& currency,
-                                               cocos2d::ValueMap additionalParameters) is not supported for Android.");
+    CCLOGWARN("%s", "validateAndTrackInAppPurchase(const std::string& publicKey, const std::string& signature, const std::string& purchaseData, const std::string& price, const std::string& currency, cocos2d::ValueMap additionalParameters) is not supported for Android.");
 #endif
 }
 
