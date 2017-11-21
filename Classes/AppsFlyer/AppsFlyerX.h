@@ -13,6 +13,7 @@
 #include <iostream>
 
 #include "EmailCryptTypeX.h"
+#include "AppsFlyerXMacro.h"
 
 class AppsFlyerX {
 public:
