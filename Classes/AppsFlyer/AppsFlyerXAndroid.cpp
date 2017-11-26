@@ -268,7 +268,7 @@ void AppsFlyerXAndroid::trackEvent(const std::string &eventName, cocos2d::ValueM
         //public void trackEvent(Context context, String eventName, Map<String,Object> eventValues)
         jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jEventName, hashMapObj);
 
-        jniGetInstance.env->DeleteGlobalRef(hashMapObj);
+        jniGetInstance.env->DeleteLocalRef(hashMapObj);
         jniGetInstance.env->DeleteLocalRef(afInstance);
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
     } else {
