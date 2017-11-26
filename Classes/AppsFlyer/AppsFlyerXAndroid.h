@@ -32,7 +32,6 @@ public:
     static void setAppsFlyerDevKey(const std::string& appsFlyerDevKey);
     static std::string appsFlyerDevKey();
 
-
     static void setCurrencyCode(const std::string& currencyCode);
     static std::string currencyCode();
 
@@ -75,11 +74,14 @@ public:
 
     static std::string getAppsFlyerUID();
 
-    static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
+    static void validateAndTrackInAppPurchase(const std::string& publicKey,
+                                                          const std::string& signature,
+                                                          const std::string& purchaseData,
+                                                          const std::string& price,
+                                                          const std::string& currency,
+                                                          cocos2d::ValueMap additionalParameters);
 
     // - (void) loadConversionDataWithDelegate:(id<AppsFlyerTrackerDelegate>) delegate __attribute__((deprecated));
-
-
 
     /*
      - (BOOL) continueUserActivity:(NSUserActivity *) userActivity restorationHandler:(void (^)(NSArray *))restorationHandler NS_AVAILABLE_IOS(9_0);
@@ -88,7 +90,7 @@ public:
 
     static void handlePushNotification(cocos2d::ValueMap pushPayload);
 
-    static void registerUninstall(void* deviceToken, unsigned long length);
+    static void registerUninstall(const std::string& token);
 
     static std::string getSDKVersion();
 
@@ -103,6 +105,7 @@ public:
     // Delegates methods proxy
 
 
+    static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));

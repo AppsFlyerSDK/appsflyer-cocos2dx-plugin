@@ -184,6 +184,7 @@
 		551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
 		559592F81F9628B500EFD43C /* AppsFlyerX+AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppsFlyerX+AppController.h"; sourceTree = "<group>"; };
 		559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppsFlyerX+AppController.m"; sourceTree = "<group>"; };
+		55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXMacro.h; sourceTree = "<group>"; };
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -403,6 +404,7 @@
 				551900E31F8CCFF400150B9D /* EmailCryptTypeX.h */,
 				559592F81F9628B500EFD43C /* AppsFlyerX+AppController.h */,
 				559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */,
+				55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */,
 				551900E41F8CCFF400150B9D /* libAppsFlyer */,
 			);
 			path = AppsFlyer;

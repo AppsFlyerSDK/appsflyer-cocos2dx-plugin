@@ -12,20 +12,37 @@
 
 extern "C" {
 
-static void (*attributionCallbackMethod)(cocos2d::ValueMap installData);
+static void (*attributionCallbackOnConversionDataReceived)(cocos2d::ValueMap installData);
+
+static void (*attributionCallbackOnConversionDataRequestFailure)(cocos2d::ValueMap error);
+
+static void (*attributionCallbackOnAppOpenAttribution)(cocos2d::ValueMap attributionData);
+
+static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap error);
+
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
-        (JNIEnv *, jobject, jstring);
+        (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttributionFailureNative
         (JNIEnv *, jobject, jobject);
 
- void setAttributionCallbackMethod(void (*callbackMethod)(cocos2d::ValueMap installData));
-}
+ void setAttributionCallbackOnConversionDataReceived(
+         void (*callbackMethod)(cocos2d::ValueMap installData));
 
+void setAttributionCallbackOnAppOpenAttribution(
+        void (*callbackMethod)(cocos2d::ValueMap attributionData));
+
+void setAttributionCallbackOnConversionDataRequestFailure(
+        void (*callbackMethod)(cocos2d::ValueMap error));
+
+void setAttributionCallbackOnAppOpenAttributionFailure(
+        void (*callbackMethod)(cocos2d::ValueMap error));
+
+}
 #endif
 
 

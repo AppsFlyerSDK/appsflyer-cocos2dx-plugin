@@ -58,6 +58,14 @@ bool HelloWorld::init()
                 map["key3"] = true;
                 map["key4"] = 3.0;
                 AppsFlyerX::trackEvent("test_event", map);
+
+                AppsFlyerX::setCustomerUserID("CustomId");
+
+                ValueMap test_map;
+                test_map["key1"] = "value1";
+                test_map["key2"] = "eee";
+                test_map["key3"] = "sssss";
+                AppsFlyerX::validateAndTrackInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
                 break;
             }
             default:
