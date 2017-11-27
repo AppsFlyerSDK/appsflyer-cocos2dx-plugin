@@ -70,7 +70,7 @@ How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.
 Throughout this guide, we assume that you are using `Android Studio` for development.
 
 Take the files from the `AppsFlyer` folder and add them to your Android project.
-![add-android-files](https://drive.google.com/a/appsflyer.com/file/d/1jv7dPxQOcFzApQ5gGW68fMQZ8H5Bpg3G/view?usp=sharing)
+![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png)
 
 ### <a id="sdk-cpp-files">Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file.
@@ -80,7 +80,7 @@ Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in you
 ../../../Classes/AppsFlyer/AppsFlyerX.cpp
 ```
 
-![add-to-android-mk](https://drive.google.com/a/appsflyer.com/file/d/1GEwp9zIAlprOaKO4WOp6_z5r8WM1CHVi/view?usp=sharing)
+![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png)
 
 ### <a id="sdk-library">Add the AppsFlyer library to your project
 
@@ -485,5 +485,3 @@ npm run setup_a
 
 
 ![demo printscreen](examples/demo_example.png?raw=true)
-![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png)
-![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png)
