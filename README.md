@@ -485,3 +485,5 @@ npm run setup_a
 
 
 ![demo printscreen](examples/demo_example.png?raw=true)
+![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png?raw=true)
+![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png?raw=true)
