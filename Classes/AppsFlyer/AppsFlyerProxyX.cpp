@@ -6,10 +6,12 @@
 #include "AppsFlyerProxyX.h"
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
 
-cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
+
 
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+
+cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
 
 void setAttributionCallbackOnConversionDataReceived(
         void (*callbackMethod)(cocos2d::ValueMap installData)) {

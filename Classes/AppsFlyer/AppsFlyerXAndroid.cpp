@@ -1,8 +1,10 @@
 //
 // Created by Maxim Shoustin on 10/9/17.
 //
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <jni.h>
+#endif
+
 #include "AppsFlyerXAndroid.h"
 #include "AppsFlyerProxyX.h"
 #include "../../cocos2d/external/flatbuffers/reflection_generated.h"
