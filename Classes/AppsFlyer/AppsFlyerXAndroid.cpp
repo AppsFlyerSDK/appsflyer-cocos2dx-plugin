@@ -7,7 +7,6 @@
 
 #include "AppsFlyerXAndroid.h"
 #include "AppsFlyerProxyX.h"
-#include "../../cocos2d/external/flatbuffers/reflection_generated.h"
 
 std::string afDevKey;
 bool isConveriosnListenerInitialized = false;
