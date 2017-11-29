@@ -1,22 +1,11 @@
 <img src="https://www.appsflyer.com/wp-content/uploads/2016/11/logo-1.svg"  width="200">
 
-# Cordova AppsFlyer plugin for Android and iOS.
+# Cocos2dX Android Integration Guide
 
-[![npm version](https://badge.fury.io/js/cordova-plugin-appsflyer-sdk.svg)](https://badge.fury.io/js/cordova-plugin-appsflyer-sdk) [![Build Status](https://travis-ci.org/AppsFlyerSDK/cordova-plugin-appsflyer-sdk.svg?branch=master)](https://travis-ci.org/AppsFlyerSDK/cordova-plugin-appsflyer-sdk)
-
-----------
-In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
-
-*When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , production steps, logs, code snippets and any additional relevant information.*
-
-----------
 
 ## Table of content
 
-- [Supported Platforms](#supported-platforms)
-- [SDK versions](#plugin-build-for)
-- [Installation using CLI](#installation-using-cli)
-- [Basic integration](#basic-integration)
+- [integration](#integration)
 - [Usage](#usage)
 - [for pure Cordova](#usage-pure)
 - [For Ionic](#usage-ionic1)
@@ -40,37 +29,18 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [iOS Universal Links](#dl-ul)
 - [Sample App](#sample-app)
 
-## <a id="supported-platforms"> Supported Platforms
-
-- Android
-- iOS 8+
 
 
 
-### <a id="plugin-build-for"> This plugin is built for
-
-- iOS AppsFlyerSDK **v4.8.1**
-- Android AppsFlyerSDK **v4.8.3**
-
-
-## <a id="installation-using-cli"> Installation using CLI:
-
-```
-$ cordova plugin add cordova-plugin-appsflyer-sdk
-```
-or directly from git:
-
-```
-$ cordova plugin add https://github.com/AppsFlyerSDK/cordova-plugin-appsflyer-sdk.git
-```
-## <a id="basic-integration"> Basic integration:
+## <a id="integration"> Integration:
 How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.
 
-### <a id="sdk-add">Add the SDK to your project
+#### <a id="sdk-add">Add the SDK to your project
 Throughout this guide, we assume that you are using `Android Studio` for development.
 
-Take the files from the `AppsFlyer` folder and add them to your Android project.
-![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png)
+Take the files from the `AppsFlyer` [folder](/Classes/AppsFlyer) and add them to your Android project under `Classes` folder.
+
+![add-to-android-mk](Resources/add-android-files.png)
 
 ### <a id="sdk-cpp-files">Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file.
