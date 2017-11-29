@@ -13,4 +13,4 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 ### Integration
 
  - [Android integration Documents](docs/Android_README.md)
- - [iOS integration Documents](docs/iOS_README.md)
+ - [iOS integration Documents](docs/ios.md)
