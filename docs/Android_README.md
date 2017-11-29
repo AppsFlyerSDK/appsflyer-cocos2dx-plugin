@@ -40,7 +40,7 @@ Throughout this guide, we assume that you are using `Android Studio` for develop
 
 Take the files from the `AppsFlyer` [folder](/Classes/AppsFlyer) and add them to your Android project under `Classes` folder.
 
-![add-to-android-mk](Resources/add-android-files.png)
+![add-to-android-mk](Resources/add-android-files.png?raw=true)
 
 ### <a id="sdk-cpp-files">Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file.
