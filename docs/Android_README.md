@@ -6,28 +6,11 @@
 ## Table of content
 
 - [integration](#integration)
+
 - [Usage](#usage)
-- [for pure Cordova](#usage-pure)
-- [For Ionic](#usage-ionic1)
-- [API Methods](#api-methods)
-- [initSdk](#initSdk)
-- [trackEvent](#trackEvent)
-- [deviceTrackingDisabled](#deviceTrackingDisabled)
-- [setCurrencyCode](#setCurrencyCode)
-- [setAppUserId](#setAppUserId)
-- [enableUninstallTracking](#enableUninstallTracking)
-- [setGCMProjectID](#setGCMProjectID)
-- [updateServerUninstallToken](#updateServerUninstallToken)
-- [getAppsFlyerUID](#getAppsFlyerUID)
-- [setAppInviteOneLinkID](#setAppInviteOneLinkID)
-- [generateInviteLink](#generateInviteLink)
-- [trackCrossPromotionImpression](#trackCrossPromotionImpression)
-- [trackAndOpenStore](#trackAndOpenStore)
-- [Deep linking Tracking](#deep-linking-tracking)
-- [Android](#dl-android)
-- [iOS URL Types](#dl-ios)
-- [iOS Universal Links](#dl-ul)
-- [Sample App](#sample-app)
+- [API methods](#api-methods)
+ - [setIsDebug](#setIsDebug)
+ - [trackEvent](#trackEvent)
 
 
 
@@ -35,14 +18,14 @@
 ## <a id="integration"> Integration:
 How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.
 
-#### <a id="sdk-add">Add the SDK to your project
+###1.  Add the SDK to your project
 Throughout this guide, we assume that you are using `Android Studio` for development.
 
 Take the files from the `AppsFlyer` [folder](/Classes/AppsFlyer) and add them to your Android project under `Classes` folder.
 
-![add-to-android-mk](Resources/add-android-files.png?raw=true)
+![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png?raw=true)
 
-### <a id="sdk-cpp-files">Add the C++ source file definitions
+###2.  Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file.
 ```mk
 ../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
@@ -50,13 +33,13 @@ Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in you
 ../../../Classes/AppsFlyer/AppsFlyerX.cpp
 ```
 
-![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png)
+![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png?raw=true)
 
-### <a id="sdk-library">Add the AppsFlyer library to your project
+###3. Add the AppsFlyer library to your project
 
-Take the `appsflyer-SDK.jar` library and copy it to your project's `libs` folder.
+Take the latest `appsflyer-SDK.jar` library and copy it to your project's `libs` folder.
 
-### <a id="sdk-permissions">Add permissions
+###4. Add permissions
 
 In the Package Explorer, open the `AndroidManifest.xml` file of your Android project. Add the `uses-permission` tag for `INTERNET` if it's not already present.
 
@@ -67,94 +50,54 @@ In the Package Explorer, open the `AndroidManifest.xml` file of your Android pro
 
 ## <a id="usage"> Usage:
 
-#### 1\. Set your App_ID (iOS only), Dev_Key and enable AppsFlyer to detect installations, sessions (app opens) and updates.
+#### 1\. Set your  Dev_Key and enable AppsFlyer to detect installations, sessions (app opens) and updates.
 > This is the minimum requirement to start tracking your app installs and is already implemented in this plugin. You **MUST** modify this call and provide:
 **-devKey** - Your application devKey provided by AppsFlyer.
-**-appId**  - ***For iOS only.*** Your iTunes Application ID.
 
 
 
-Add the following lines to your code to be able to initialize tracking with your own AppsFlyer dev key:
 
-##### <a id="usage-pure"> **for pure Cordova:**
-```javascript
-document.addEventListener("deviceready", function(){
+Add the following lines into `applicationDidFinishLaunching` and to `applicationWillEnterForeground` method to be able to initialize tracking with your own AppsFlyer dev key:
 
-var options = {
-devKey:  'xxXXXXXxXxXXXXxXXxxxx8'// your AppsFlyer devKey
-};
 
-var userAgent = window.navigator.userAgent.toLowerCase();
+```cpp
+#include "AppsFlyer/AppsFlyerX.h"
 
-if (/iphone|ipad|ipod/.test( userAgent )) {
-options.appId = "123456789";            // your ios app id in app store
-}
-window.plugins.appsFlyer.initSdk(options);
-}, false);
-```
-
-##### <a id="usage-ionic1"> **For Ionic 1**
-
-```javascript
-$ionicPlatform.ready(function() {
-
-var options = {
-devKey:  'xxXXXXXxXxXXXXxXXxxxx8'// your AppsFlyer devKey
-};
-
-if (ionic.Platform.isIOS()) {
-options.appId = "123456789";            // your ios app id in app store
+bool AppDelegate::applicationDidFinishLaunching() {
+  AppsFlyerX::setAppsFlyerDevKey("YOUR_DEV_KEY");
+  
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::trackAppLaunch();
+#endif
 }
 
-window.plugins.appsFlyer.initSdk(options);
-});
-```
+void AppDelegate::applicationWillEnterForeground() {
+   //..
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::trackAppLaunch();
+#endif
+}
 
+```
 
 ##<a id="api-methods"> API Methods
 
 ---
 
-##### <a id="initSdk"> **`initSdk(options, onSuccess, onError): void`**
+##### <a id="setIsDebug"> **`setIsDebug(boolean);`**
 
-initialize the SDK.
+ if `true` AppsFlyer SDK will run in debug mode
 
-| parameter   | type                        | description  |
-| ----------- |-----------------------------|--------------|
-| `options`   | `Object`                    |   SDK configuration           |
-| `onSuccess` | `(message: string)=>void` | Success callback - called after successfull SDK initialization. (optional)|
-| `onError`   | `(message: string)=>void` | Error callback - called when error occurs during initialization. (optional)|
-
-**`options`**
-
-| name       | type    | default | description            |
-| -----------|---------|---------|------------------------|
-| `devKey`   |`string` |         |   [Appsflyer Dev key](https://support.appsflyer.com/hc/en-us/articles/207032126-AppsFlyer-SDK-Integration-Android)    |
-| `appId`    |`string` |        | [Apple Application ID](https://support.appsflyer.com/hc/en-us/articles/207032066-AppsFlyer-SDK-Integration-iOS) (for iOS only) |
-| `isDebug`  |`boolean`| `false` | debug mode (optional)|
-| `onInstallConversionDataListener`  |`boolean`| `false` | Accessing AppsFlyer Attribution / Conversion Data from the SDK (Deferred Deeplinking). Read more: [Android](http://support.appsflyer.com/entries/69796693-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deep-linking-), [iOS](http://support.appsflyer.com/entries/22904293-Testing-AppsFlyer-iOS-SDK-Integration-Before-Submitting-to-the-App-Store-). AppsFlyer plugin will return attribution data in `onSuccess` callback.
 
 *Example:*
 
-```javascript
-var onSuccess = function(result) {
-//handle result
-};
-
-function onError(err) {
-// handle error
-}
-var options = {
-devKey:  'd3Ac9qPardVYZxfWmCspwL',
-appId: '123456789',
-isDebug: false,
-onInstallConversionDataListener: true
-};
-window.plugins.appsFlyer.initSdk(options, onSuccess, onError);
+```cpp
+AppsFlyerX::setIsDebug(true);
 ```
 
 ---
-
+#####  **`trackEvent(eventName, eventValue): void`** (optional)
+and
 ##### <a id="trackEvent"> **`trackEvent(eventName, eventValues): void`** (optional)
 
 
@@ -166,30 +109,49 @@ to track ROI (Return on Investment) and LTV (Lifetime Value).
 
 | parameter   | type                        | description |
 | ----------- |-----------------------------|--------------|
-| `eventName` | `String`                    | custom event name, is presented in your dashboard.  See the Event list [HERE](https://github.com/AppsFlyerSDK/cordova-plugin-appsflyer-sdk/blob/master/src/ios/AppsFlyerTracker.h)  |
-| `eventValue` | `Object`                    | event details |
+| `eventName` | `string`                    | custom event name, is presented in your dashboard.  See the Event list [HERE](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/dev/RD-8680/Android-docs/Classes/AppsFlyer/AppsFlyerXMacro.h)  |
+| `eventValues` | `cocos2d::ValueMap`                    | event details |
 
 *Example:*
 
-```javascript
-var eventName = "af_add_to_cart";
-var eventValues = {
-"af_content_id": "id123",
-"af_currency":"USD",
-"af_revenue": "2"
-};
-window.plugins.appsFlyer.trackEvent(eventName, eventValues);
+```cpp
+AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
+                                         { "key2", cocos2d::Value("value2")}});
 ```
 ---
 
-##### <a id="deviceTrackingDisabled"> **`deviceTrackingDisabled(bool): void`**
-**End User Opt-Out (Optional)**
-AppsFlyer provides you a method to opt‐out specific users from AppsFlyer analytics. This method complies with the latest privacy requirements and complies with Facebook data and privacy policies. Default is FALSE, meaning tracking is enabled by default.
+##### <a id="getConversionListener"> **`Attribution Data callback`**
+
+AppsFlyer allows you to access the user attribution data in real-time directly at SDK level. It enables you to customize the landing page a user sees on the very first app open after a fresh app install.
+
+To access AppsFlyer's conversion data from the Android SDK implement the ConversionDataListener callback:
 
 *Examples:*
 
-```javascript
-window.plugins.appsFlyer.setDeviceTrackingDisabled(true);
+```cpp
+
+static void onConversionDataReceived(cocos2d::ValueMap installData) {}
+
+static void onConversionDataRequestFailure(cocos2d::ValueMap map) {
+/*has signature {
+                 {"status": "failure"},
+                 {"data", "errorMessage"}
+                 }*/
+}
+
+static void onAppOpenAttribution(cocos2d::ValueMap map) {}
+
+static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
+/*has signature {
+                 {"status": "failure"},
+                 {"data", "errorMessage"}
+                 }*/
+}
+
+AppsFlyerX::setOnConversionDataReceived(onConversionDataReceived);
+AppsFlyerX::setOnConversionDataRequestFailure(onConversionDataRequestFailure);
+AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
+AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
 ```
 ---
 
@@ -412,46 +374,3 @@ var handleOpenURL = function(url) {
 window.plugins.appsFlyer.handleOpenUrl(url);
 }
 ```
-#### <a id='dl-ul'>Universal Links in iOS
-To enable Universal Links in iOS please follow the guide <a href="https://support.appsflyer.com/hc/en-us/articles/207032266-Setting-Deeplinking-on-iOS9-using-iOS-Universal-Links">here</a>.
-
-##### **Note**: Our plugin utilizes the
-
-` - (BOOL)application:(UIApplication *)application
-continueUserActivity:(NSUserActivity *)userActivity
-restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler; `
-
-##### method for Universal Links support.
-
-##### ***If additional instances of the method exist in your code - merge all calls into one***
-
-##### (Available on cordova-plugin-appsflyer-sdk 4.2.24 and higher )
-
----
-
-## Demo
-
-This plugin has a `examples` folder with `demoA` (Angular 1)  and `demoC` (Cordova) projects bundled with it. To give it a try , clone this repo and from root a.e. `cordova-plugin-appsflyer-sdk` execute the following:
-
-For Cordova:
-```sh
-npm run setup_c
-```
--  `npm run demo_c.ra` - runs Android
--  `npm run demo_c.ba` - builds Android
--  `npm run demo_c.ri` - runs iOS
--  `npm run demo_c.bi` - builds iOS
-
-
-For Angular:
-```sh
-npm run setup_a
-```
--  `npm run demo_a.ra` - runs Android
--  `npm run demo_a.ba` - builds Android
--  `npm run demo_a.ri` - runs iOS
--  `npm run demo_a.bi` - builds iOS
-
-
-
-![demo printscreen](examples/demo_example.png?raw=true)
