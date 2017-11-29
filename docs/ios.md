@@ -40,7 +40,7 @@ to `Classes/AppsFlyer`
 
 2\. It looks like in the image below.
 
-![add-iOS-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-iOS-mk.png)
+![add-iOS-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-iOS-mk.png) <!-- .element height="50%" width="50%" -->
 
 3\. Add the following lines to your code to be able to initialize tracking:
 
