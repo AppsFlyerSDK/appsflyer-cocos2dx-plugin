@@ -97,7 +97,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     AppsFlyerX::setOnConversionDataRequestFailure(onConversionDataRequestFailure);
     AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
     AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-    AppsFlyerX::setUserEmails({"kinzer.appsf@gmail.com"}, XEmailCryptTypeSHA256);
+
     AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

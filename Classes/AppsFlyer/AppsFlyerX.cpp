@@ -84,7 +84,7 @@ std::string AppsFlyerX::appleAppID() {
 
 void AppsFlyerX::setCurrencyCode(const std::string& currencyCode) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setCustomerUserID(currencyCode);
+    AppsFlyerXAndroid::setCurrencyCode(currencyCode);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setCurrencyCode(currencyCode);
 #endif
@@ -403,14 +403,6 @@ std::string AppsFlyerX::getSDKVersion() {
 #endif
 }
 
-// TODO: Remove it
-void AppsFlyerX::remoteDebuggingCallWithData(const std::string& data) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // FIXME: Android is not support this API
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::remoteDebuggingCallWithData(data);
-#endif
-}
 
 void AppsFlyerX::setHost(const std::string& host) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
