@@ -2,7 +2,7 @@
 //  AppsFlyerTracker.h
 //  AppsFlyerLib
 //
-//  AppsFlyer iOS SDK 4.8.0 (597)
+//  AppsFlyer iOS SDK 9.9.607 (607)
 //  Copyright (c) 2013 AppsFlyer Ltd. All rights reserved.
 //
 
@@ -150,13 +150,7 @@ typedef enum  {
 @end
 
 @interface AppsFlyerTracker : NSObject {
-
-    BOOL _isDebug;
     BOOL permitAggregateiAdData;
-    BOOL _useReceiptValidationSandbox;
-    BOOL _useUninstallSandbox;
-    EmailCryptType emailCryptType;
-    NSArray *userEmails;
 }
 
 +(AppsFlyerTracker*) sharedTracker;
@@ -179,10 +173,6 @@ typedef enum  {
  * The currency code is a 3 letter code according to ISO standards. Example: "USD"
  */
 @property (nonatomic, strong) NSString *currencyCode;
-
-
-/* AppsFlyer's SDK send the data to AppsFlyer's servers over HTTPS. You can set the isHTTPS property to NO in order to use regular HTTP. */
-//@property BOOL isHTTPS;
 
 /* 
  * AppsFLyer SDK collect Apple's advertisingIdentifier if the AdSupport framework included in the SDK.
@@ -324,11 +314,6 @@ typedef enum  {
 
 
 - (void) remoteDebuggingCallWithData:(NSString *) data;
-
-//- (void) crossPromotionViewed:(NSString*) appID campaign:(NSString*) campaign;
-//- (void) openAppStoreForAppID:(NSString*) appID campaign:(NSString*)
-//campaign paramters:(NSDictionary*) parameters
-//               viewController: (UIViewController*) viewController;
 
 /*!
  *  @brief This property accepts a string value representing the host name for all enpoints.
