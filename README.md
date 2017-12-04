@@ -26,37 +26,24 @@ In order for us to provide optimal support, we would kindly ask you to submit an
  - [setAppInviteOneLink](#setAppInviteOneLink)
  - [deviceTrackingDisabled opt-out](#deviceTrackingDisabled)
  - [disableIAdTracking](#disableIAdTracking)*(ios only)*
-
-
-
-setUseReceiptValidationSandbox ios only
-
-setUseUninstallSandbox ios only
-
-setAdvertiserId (ios only)
-
-validateAndTrackInAppPurchase
-
-getAppsFlyerUID
-
-handleOpenURL (ios only)
-handleOpenURL
-handleOpenURL
-
-handlePushNotification ios only
-
-registerUninstall
-registerUninstall
-
-getSDKVersion
-
-setHost
-
-setMinTimeBetweenSessions
-
-setAppInviteOneLink
-
-appInviteOneLinkID
+ - [setUseReceiptValidationSandbox](#setUseReceiptValidationSandbox) *(ios olny)*
+ - [setUseUninstallSandbox](#setUseUninstallSandbox) *(ios only)*
+ - validateAndTrackInAppPurchase
+    - [Android](#validateAndTrackInAppPurchase-a)
+    - [iOS](#validateAndTrackInAppPurchase-i)
+  - [getAppsFlyerUID](#getAppsFlyerUID)
+  - [handleOpenURL Deep-linking](#getAppsFlyerUID) *(ios only)*
+  - Uninstall
+    - [Android](#)
+    - [iOS](#registerUninstall) 
+  - [getSDKVersion](#getSDKVersion)
+  - [setHost](#setHost)
+  - [setMinTimeBetweenSessions](#setMinTimeBetweenSessions)
+  - [deep linking Tracking](#deep-linking-tracking)
+  - generateInviteLink - TBD
+  - trackCrossPromotionImpression - TBD
+  - trackAndOpenStore - TBD
+    
 
 
 ### <a id="integration"> Integration:
@@ -261,52 +248,251 @@ AppsFlyerX::setShouldCollectDeviceName(true);
 
 ---
 
-
-setAppInviteOneLink 
-
-opt opt deviceTrackingDisabled
-
-disableIAdTracking ios only
-
-setUseReceiptValidationSandbox ios only
-
-setUseUninstallSandbox ios only
-
-setAdvertiserId (ios only)
-
-validateAndTrackInAppPurchase
-
-getAppsFlyerUID
-
-handleOpenURL (ios only)
-handleOpenURL
-handleOpenURL
-
-handlePushNotification ios only
-
-registerUninstall
-registerUninstall
-
-getSDKVersion
-
-setHost
-
-setMinTimeBetweenSessions
-
-setAppInviteOneLink
-
-appInviteOneLinkID
+##### <a id="setAppInviteOneLink"> **`setAppInviteOneLink(string): void`** 
 
 
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `appInviteOneLinkID`| `std::string&`              |       | Before calling startTracking in your app, set the OneLink which is invoked according to the OneLink ID. See additional info [HERE](https://support.appsflyer.com/hc/en-us/articles/115004480866-User-Invite-Tracking)|
 
- 
+*Examples:*
+
+```cpp
+AppsFlyerX::setAppInviteOneLink("8eOw");
+```
+
+---
+
+##### <a id="deviceTrackingDisabled"> **`deviceTrackingDisabled(bool): void`**  
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `flag`| `bool`              |   `false`     | AppsFlyer provides you a method to opt-out specific users from AppsFlyer analytics. This method complies with the latest privacy requirements and complies with Facebook data and privacy policies. Default is false, meaning tracking is enabled by default. **Warning** Opting out users SEVERELY hurts your attribution information. Use this option ONLY on regions which legally bind you from collecting your users' information.|
+
+*Examples:*
+
+```cpp
+AppsFlyerX::deviceTrackingDisabled(true);
+```
+
+---
+
+##### <a id="disableIAdTracking"> **`disableIAdTracking(bool): void`** *(ios only)*
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `flag`| `bool`              |   `false`     | enables/disables iAD tracking|
+
+*Examples:*
+
+```cpp
+AppsFlyerX::disableIAdTracking(true);
+```
+
+---
+
+
+
+##### <a id="setUseReceiptValidationSandbox"> **`setUseReceiptValidationSandbox(bool): void`** *(ios only)*
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `flag`| `bool`              |   `false`     | enables Receipt Validation Sandbox|
+
+*Examples:*
+
+```cpp
+AppsFlyerX::setUseReceiptValidationSandbox(true);
+```
+
+---
+
+##### <a id="setUseUninstallSandbox"> **`setUseUninstallSandbox(bool): void`** *(ios only)*
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `flag`| `bool`              |   `false`     | enables Uninstall Sandbox mode|
+
+*Examples:*
+
+```cpp
+AppsFlyerX::setUseUninstallSandbox(true);
+```
+
+---
+
+##### <a id="validateAndTrackInAppPurchase"> **`validateAndTrackInAppPurchase`**
+
+##### <a id="validateAndTrackInAppPurchase-a)"> **Android**
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `publicKey`| `const std::string&`              |        |  |
+| `signature`| `const std::string&`              |        |  |
+| `purchaseData`| `const std::string&`              |       |  |
+| `price`| `const std::string&`              |        |  |
+| `currency`| `const std::string&`              |        |  |
+| `additionalParameters`| `cocos2d::ValueMap`              |      |  |
+
+*Examples:*
+
+```cpp
+ValueMap test_map;
+test_map["key1"] = "value1";
+std::string base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3dkBTr2pD2YSqSK2ewlEWwH9Llu0iA4PkwgVOyNRxOsHfrOlqi0Cm51qdNS0aqh/SMZkuQTAroqH3pAr9gVFOiejKRw+ymTaL5wB9+5n1mAbdeO2tv2FDsbawDvp7u6fIBejYt7Dtmih+kcu707fEO58HZWqgzx9qSHmrkMZr6yvHCtAhdBLwSBBjyhPHy7RAwKA+PE+HYVV2UNb5urqIZ9eI1dAv3RHX/xxHVHRJcjnTyMAqBmfFM+o31tp8/1CxGIazVN8HpVk8Qi2uqSS5HdKUu6VnIK8VuAHQbXQn4bG6GXx5Tp0SX1fKrejo7hupNUCgOlqsYHFYxsRkEOi0QIDAQAB";
+std::string signature = "OaIdwQOcmrJrMKUx+URVy1I6aeKYiYzflkk1zIKVSs+dDv691neCbR+jlDDzVi3jfSkfirxQISxo7Pe1uzoYbpq9wBk/pMgVjjSbpvCojhA4d/Mwsf4mtAH2LJcVNjhMQdSWvGJlzva3OSt+KQ+9/pRJ15aYT2gFn3SpGSPxNxJmHPIOlM1Lr74MejVu9rnbcSjCB/oI0W4O58p9UWSt5MgmlpqlrK5YqTi1a1VnttY9r1IXFeltwZvmPbcWcYwRHFvemwYGX86huSOFBOYRfaYo9f+DinpoUoXKQEo0JrvKD2/dzFkbUTto1d2OPo1ddaYllgsb2UEV5wwFZFnemg==";
+std::string purchaseData = "{\"orderId\":\"\",\"packageName\":\"com.appsflyer.testapp\",\"productId\":\"consumable\",\"purchaseTime\":1497531638107,\"purchaseState\":0,\"developerPayload\":\"2497525891514-5765886608164763986\",\"purchaseToken\":\"pfkalmpnnimamdllmincaida.AO-J1OymunlPCkDQZTf8bPcesoB0n1_ND3WFynoU91-v_R1Px46m3Q-DdRKNlxMVsP2pCTKpo1et1w1IpNVXQ8-zNpRo6a2nXP7a5fQWiDv2asL1dwJPCV8NghDHbstO084IlKo6xcgy\"}";
+    
+AppsFlyerX::validateAndTrackInAppPurchase(base64EncodedPublicKey, 
+                                          signature, 
+                        "3.00",
+                      "ILS",
+                      test_map);
+```
+
+---
+
+
+##### <a id="validateAndTrackInAppPurchase-i)"> **iOS**
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `productIdentifier`| `const std::string&`              |        |  |
+| `price`| `const std::string&`              |        |  |
+| `currency`| `const std::string&`              |       |  |
+| `tranactionId`| `const std::string&`              |        |  |
+| `params`| `cocos2d::ValueMap`              |        |  |
+| `successBlock`| `std::function<void(cocos2d::ValueMap)>`              |      |  |
+| `failureBlock`| `std::function<void(cocos2d::ValueMap)>`              |      |  |
+
+*Examples:*
+
+```cpp
+ValueMap test_map;
+test_map["key1"] = "value1";
+std::string productIdentifier = "com.mycomp.inapppurchase.cons";
+std::string tr_id = "1000000256672208";
+  
+AppsFlyerX::validateAndTrackInAppPurchase(productIdentifier, 
+                                          "1.99",
+                                          "USD",
+                                          tr_id
+                      test_map, 
+                      successBlock,
+                      failureBlock);
+```
+
+---
+
+##### <a id="getAppsFlyerUID"> **`getAppsFlyerUID(): string`**
+
+
+*Examples:*
+
+```cpp 
+std::string appsflyerId = AppsFlyerX::getAppsFlyerUID();
+```
+
+---
+
+##### <a id="handleOpenURL"> **`Deep-linking handleOpenURL(): void`** *(ios only)*
+
+- `void AppsFlyerX::handleOpenURL(const std::string& url, const std::string& sourceApplication)`
+- `void AppsFlyerX::handleOpenURL(std::string url, std::string sourceApplication, void* annotation)`
+- `void AppsFlyerX::handleOpenURL(std::string url, cocos2d::ValueMap options)`
+
+*Examples:*
+
+```cpp 
+TBD
+```
+
+---
+
+##### <a id="registerUninstall"> **`registerUninstall(NSData): void`** *(ios only)*
+
+For more Info see the [DOCs](https://support.appsflyer.com/hc/en-us/articles/208004986-Android-Uninstall-Tracking)
 
 
 
 
 
+##### <a id="registerUninstall"> **`registerUninstall(NSData): void`** *(ios only)*
+
+Open your Xcode project and locate the file `AppController.mm` under the iOS folder inside your project. Add the following code snippet under `didFinishLaunchingWithOptions` :
+
+```cpp 
+#import "AppsFlyerTracker.h"
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//...
+UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                    UIUserNotificationTypeBadge |
+                                                    UIUserNotificationTypeSound);
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                             categories:nil];
+    [application registerUserNotificationSettings:settings];
+    [application registerForRemoteNotifications];
+//..
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
+    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+}
+```
+and method implementation:
+
+```cpp 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
+    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+}
+```
+
+---
+
+##### <a id="getSDKVersion"> **`getSDKVersion(): string`**
 
 
+*Examples:*
+
+```cpp 
+std::string sdkVersion = AppsFlyerX::getSDKVersion();
+```
+
+---
+
+##### <a id="setHost"> **`setHost(host): void`** 
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `host`| `std::string&`              |       | host name that should override `appsflyer.com`|
+*Examples:*
+
+```cpp
+AppsFlyerX::setHost("mynewhost.com");
+```
+
+---
+
+##### <a id="setMinTimeBetweenSessions"> **`setMinTimeBetweenSessions(long): void`** 
+
+
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `minTimeBetweenSessions`| `unsigned long`              |       | host name that should override `appsflyer.com`|
+*Examples:*
+
+```cpp
+AppsFlyerX::setMinTimeBetweenSessions(9);
+```
+
+---
 
 
 
@@ -324,18 +510,6 @@ Enables app uninstall tracking.
 
 ---
 
-##### <a id="setGCMProjectID"> **`setGCMProjectID(GCMProjectNumber): void`** *Deprecated*
-
-AppsFlyer requires a Google Project Number to enable uninstall tracking.
-<a href="https://support.appsflyer.com/hc/en-us/articles/208004986-Android-Uninstall-Tracking">More Information</a>
-
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `GCMProjectNumber`   | `String`           | GCM ProjectNumber |
-
-
----
 
 ##### <a id="updateServerUninstallToken"> **`updateServerUninstallToken("token"): void`**
 
@@ -350,144 +524,18 @@ Can be used for Uninstall Tracking.
 
 ---
 
-##### <a id="getAppsFlyerUID"> **`getAppsFlyerUID(successCB): void`**  (Advanced)
-
-Get AppsFlyer’s proprietary Device ID. The AppsFlyer Device ID is the main ID used by AppsFlyer in Reports and APIs.
-
-```javascript
-function getUserIdCallbackFn(id){/* ... */}
-window.plugins.appsFlyer.getAppsFlyerUID(getUserIdCallbackFn);
-```
-*Example:*
-
-```javascript
-var getUserIdCallbackFn = function(id) {
-alert('received id is: ' + id);
-}
-window.plugins.appsFlyer.getAppsFlyerUID(getUserIdCallbackFn);
-```
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `getUserIdCallbackFn` | `() => void`                | Success callback |
 
 
----
-
-##### <a id="setAppInviteOneLinkID"> **`setAppInviteOneLinkID(OneLinkID): void`**  (User Invite / Cross Promotion)
-
-Set AppsFlyer’s OneLink ID. Setting a valid OneLink ID will result in shortened User Invite links, when one is generated. The OneLink ID can be obtained on the AppsFlyer Dashboard.
-
-*Example:*
-```javascript
-window.plugins.appsFlyer.setAppInviteOneLinkID("Ab1C");
-```
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `OneLinkID` | `String`                    | OneLink ID |
 
 
----
-
-##### <a id="generateInviteLink"> **`generateInviteLink(options, onSuccess, onError): void`**  (User Invite)
-
-Allowing your existing users to invite their friends and contacts as new users to your app can be a key growth factor for your app. AppsFlyer allows you to track and attribute new installs originating from user invites within your app.
-
-*Example:*
-```javascript
-var inviteOptions {
-channel: "gmail",
-campaign: "myCampaign",
-customerID: "1234",
-
-userParams {
-myParam : "newUser",
-anotherParam : "fromWeb",
-amount : 1
-}
-};
-
-var onInviteLinkSuccess = function(link) {
-console.log(link); // Handle Generated Link Here
-}
-
-function onInviteLinkError(err) {
-console.log(err);
-}
-
-window.plugins.appsFlyer.generateInviteLink(inviteOptions, onInviteLinkSuccess, onInviteLinkError);
-```
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `inviteOptions` | `Object`                    |Parameters for Invite link  |
-| `onInviteLinkSuccess` | `() => void`                | Success callback (generated link) |
-| `onInviteLinkError` | `() => void`                | Error callback |
-
-A complete list of supported parameters is available <a href="https://support.appsflyer.com/hc/en-us/articles/115004480866-User-Invite-Tracking">here</a>.
-Custom parameters can be passed using a `userParams{}` nested object, as in the example above.
-
----
-
-##### <a id="trackCrossPromotionImpression"> **`trackCrossPromotionImpression("appID", "campaign"): void`**  (Cross Promotion)
-
-Use this call to track an impression use the following API call. Make sure to use the promoted App ID as it appears within the AppsFlyer dashboard.
-
-*Example:*
-```javascript
-window.plugins.appsFlyer.trackCrossPromotionImpression("com.myandroid.app", "myCampaign");
-```
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `appID` | `String`                    | Promoted Application ID |
-| `campaign` | `String`                    | Promoted Campaign |
-
-For more details about Cross-Promotion tracking please see <a href="https://support.appsflyer.com/hc/en-us/articles/115004481946-Cross-Promotion-Tracking">here</a>.
-
----
-
-##### <a id="trackAndOpenStore"> **`trackAndOpenStore("appID","campaign", options): void`**  (Cross Promotion)
-
-Use this call to track the click and launch the app store's app page (via Browser)
-
-*Example:*
-```javascript
-var crossPromOptions {
-customerID: "1234",
-myCustomParameter: "newUser"
-};
-
-window.plugins.appsFlyer.trackAndOpenStore("com.myandroid.app", "myCampaign", crossPromOptions);
-```
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `appID` | `String`                    | Promoted Application ID |
-| `campaign` | `String`                    | Promoted Campaign |
-| `options` | `Object`                    | Additional Parameters to track |
-
-For more details about Cross-Promotion tracking please see <a href="https://support.appsflyer.com/hc/en-us/articles/115004481946-Cross-Promotion-Tracking">here</a>.
-
----
 
 ### <a id="deep-linking-tracking"> Deep linking Tracking
 
 #### <a id="dl-android"> Android
 In ver. >4.2.5 deeplinking metadata (scheme/host) is sent automatically
+TBD
 
 #### <a id="dl-ios"> iOS URL Types
-Add the following lines to your code to be able to track deeplinks with AppsFlyer attribution data:
+TBD
 
-for pure Cordova - add a function 'handleOpenUrl' to your root, and call our SDK as shown:
-```javascript
-window.plugins.appsFlyer.handleOpenUrl(url);
-```
-It appears as follows:
 
-```javascript
-var handleOpenURL = function(url) {
-window.plugins.appsFlyer.handleOpenUrl(url);
-}
-```

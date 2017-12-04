@@ -320,7 +320,7 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& publicKey,
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::validateAndTrackInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    // Not supported for Android
+    // Not supported for iOS
     CCLOGWARN("%s", "validateAndTrackInAppPurchase(const std::string& publicKey, const std::string& signature, const std::string& purchaseData, const std::string& price, const std::string& currency, cocos2d::ValueMap additionalParameters) is not supported for Android.");
 #endif
 }

@@ -42,6 +42,18 @@ static AppDelegate s_sharedApplication;
     
     cocos2d::Application *app = cocos2d::Application::getInstance();
     
+    // The userNotificationTypes below is just an example and may be changed depending on the app
+    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                    UIUserNotificationTypeBadge |
+                                                    UIUserNotificationTypeSound);
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                             categories:nil];
+    [application registerUserNotificationSettings:settings];
+    [application registerForRemoteNotifications];
+    
+    // if you do not use push notificaiton in your app, uncomment the following line
+    //application.applicationIconBadgeNumber = 0;
+    
     // Initialize the GLView attributes
     app->initGLContextAttrs();
     cocos2d::GLViewImpl::convertAttrs();
@@ -134,6 +146,11 @@ static AppDelegate s_sharedApplication;
     /*
      Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded from disk) later.
      */
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
 }
 
 
