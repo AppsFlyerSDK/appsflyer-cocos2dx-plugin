@@ -600,7 +600,8 @@ jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueM
                                                                              "valueOf",
                                                                              "(D)Ljava/lang/Double;");
 
-
+                jmethodID met = jniGetInstance.env->GetMethodID(
+                        jArrayListClass, "add", "(Ljava/lang/Object;)Z");
 
                 for (int n = 0; n < vector.size(); n++) {
                     if (vector[n].getType() == cocos2d::Value::Type::INTEGER) {
@@ -611,10 +612,7 @@ jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueM
                         jobject jIntegerValue = (jobject) jniGetInstance.env->CallStaticObjectMethod(
                                 jIntegerClass, jValueOfInt, integer_value);
 
-                        // Get and call to "add" method
-                        jmethodID met = jniGetInstance.env->GetMethodID(
-                                jArrayListClass, "add", "(Ljava/lang/Object;)Z");
-
+                        // Call to "add" method
                         jniGetInstance.env->CallBooleanMethod(obj, met, jIntegerValue);
 
 
@@ -622,15 +620,18 @@ jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueM
                         // Get Double value
                         double double_value = (vector[n]).asDouble();
 
-                        // Convert int to INTEGER
+                        // Convert double to DOUBLE
                         jobject jDoubleValue = (jobject) jniGetInstance.env->CallStaticObjectMethod(
                                 jIntegerClass, jValueOfDouble, double_value);
 
-                        jmethodID met = jniGetInstance.env->GetMethodID(
-                                jArrayListClass, "add", "(Ljava/lang/Object;)Z");
 
-                        // Get and call to "add" method
+                        // Call to "add" method
                         jniGetInstance.env->CallBooleanMethod(obj, met, jDoubleValue);
+                    } else if (vector[n].getType() == cocos2d::Value::Type::STRING) {
+
+                        jobject jstr =  jniGetInstance.env->NewStringUTF(vector[n].asString().c_str());
+
+                        jniGetInstance.env->CallBooleanMethod(obj, met, jstr);
                     }
                 }
 
