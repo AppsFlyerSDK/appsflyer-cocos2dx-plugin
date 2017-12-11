@@ -134,10 +134,23 @@ to track ROI (Return on Investment) and LTV (Lifetime Value).
 *Example:*
 
 ```cpp
+//basic implementation
 AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                          { "key2", cocos2d::Value("value2")}});
+
+//rich in-app-event implementation:
+AppsFlyerX::trackEvent(AFEventPurchase, {
+                        { AFEventParamContentId, Value({Value("12344"), Value("98844"), Value("39944")})},
+                        { AFEventParamCurrency, Value({Value(20), Value(11), Value(61)})},
+                        { AFEventParamPrice, Value({Value(25), Value(50), Value(10)})},
+                        { AFEventParamContentType, Value("ELECTRONIC")},
+                        { AFEventParamCurrency, Value("USD")},
+                        {AFEventParamRevenue, cocos2d::Value("10.67")}
+                });
 ```
 ---
+
+*More info about rich in-app-events you can find* [HERE](https://support.appsflyer.com/hc/en-us/articles/115005544169#multiple-items)
 
 ##### <a id="getConversionListener"> **`Attribution Data callback`**
 
@@ -537,5 +550,3 @@ TBD
 
 #### <a id="dl-ios"> iOS URL Types
 TBD
-
-
