@@ -38,6 +38,8 @@ public:
     
     static void setIsDebug(bool isDebug);
     static bool isDebug();
+
+    static void didEnterBackground();
     
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
     static bool isShouldCollectDeviceName();
@@ -106,7 +108,7 @@ public:
 
     static void registerUninstall(const std::string& token);
 
-    static std::string getSDKVersion();
+    // static std::string getSDKVersion();
 
     static void remoteDebuggingCallWithData(const std::string& data);
 

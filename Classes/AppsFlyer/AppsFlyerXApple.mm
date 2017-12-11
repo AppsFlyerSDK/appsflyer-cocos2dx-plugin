@@ -255,9 +255,9 @@ void AppsFlyerXApple::registerUninstall(void* deviceToken, unsigned long length)
     [[AppsFlyerTracker sharedTracker] registerUninstall: [NSData dataWithBytes:deviceToken length:length]];
 }
 
-std::string AppsFlyerXApple::getSDKVersion() {
-    return [[[AppsFlyerTracker sharedTracker] getSDKVersion] UTF8String];
-}
+// std::string AppsFlyerXApple::getSDKVersion() {
+//     return [[[AppsFlyerTracker sharedTracker] getSDKVersion] UTF8String];
+// }
 
 void AppsFlyerXApple::remoteDebuggingCallWithData(const std::string& data) {
     [[AppsFlyerTracker sharedTracker] remoteDebuggingCallWithData:[NSString stringWithUTF8String:data.c_str()]];

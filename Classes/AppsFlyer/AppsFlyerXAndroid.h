@@ -23,6 +23,8 @@ public:
 
     static AppsFlyerXAndroid* getInstance();
 
+    static void didEnterBackground();
+
     static void setCustomerUserID(const std::string& customerUserID);
     static std::string customerUserID();
 
@@ -92,7 +94,7 @@ public:
 
     static void registerUninstall(const std::string& token);
 
-    static std::string getSDKVersion();
+    // static std::string getSDKVersion();
 
     static void remoteDebuggingCallWithData(const std::string& data);
 

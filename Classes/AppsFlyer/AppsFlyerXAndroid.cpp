@@ -1,10 +1,9 @@
 //
 // Created by Maxim Shoustin on 10/9/17.
 //
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <jni.h>
-#endif
-
 #include "AppsFlyerXAndroid.h"
 #include "AppsFlyerProxyX.h"
 
@@ -40,6 +39,38 @@ cocos2d::JniMethodInfo getAppsFlyerInstance() {
 
 void AppsFlyerXAndroid::setIsDebug(bool isDebug) {
     callVoidMethodWithBoolParam(isDebug, "setDebugLog", "(Z)V");
+}
+
+void AppsFlyerXAndroid::didEnterBackground(){
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+        cocos2d::JniMethodInfo miGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+            return;
+        }
+        jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "onPause", "(Landroid/content/Context;)V");
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext);
+
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
 }
 
 std::string AppsFlyerXAndroid::customerUserID() {
@@ -289,9 +320,9 @@ std::string AppsFlyerXAndroid::appsFlyerDevKey() {
     return afDevKey;
 }
 
-std::string AppsFlyerXAndroid::getSDKVersion(){
-    return callStringMethod("getSDKVersion", "()Ljava/lang/String;");
-}
+//std::string AppsFlyerXAndroid::getSDKVersion(){
+//    return callStringMethod("getSDKVersion", "()Ljava/lang/String;");
+//}
 
 std::string AppsFlyerXAndroid::getHost(){
     return callStringMethod("getHost", "()Ljava/lang/String;");
@@ -620,7 +651,7 @@ void initConvertionCallback(){
     }
 }
 
-
+#endif
 
 
 

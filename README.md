@@ -36,7 +36,6 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - Uninstall
     - [Android](#)
     - [iOS](#registerUninstall) 
-  - [getSDKVersion](#getSDKVersion)
   - [setHost](#setHost)
   - [setMinTimeBetweenSessions](#setMinTimeBetweenSessions)
   - [deep linking Tracking](#deep-linking-tracking)
@@ -84,6 +83,16 @@ void AppDelegate::applicationWillEnterForeground() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerX::trackAppLaunch();
 #endif
+}
+```
+
+Also notify AppsFlyer SDK about background event:
+
+```cpp
+void AppDelegate::applicationDidEnterBackground() {
+
+    //...
+    AppsFlyerX::didEnterBackground();
 }
 
 ```
@@ -453,16 +462,7 @@ and method implementation:
 }
 ```
 
----
 
-##### <a id="getSDKVersion"> **`getSDKVersion(): string`**
-
-
-*Examples:*
-
-```cpp 
-std::string sdkVersion = AppsFlyerX::getSDKVersion();
-```
 
 ---
 

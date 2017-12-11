@@ -117,6 +117,12 @@ bool AppsFlyerX::isDisableAppleAdSupportTracking() {
 #endif
 }
 
+ void AppsFlyerX::didEnterBackground(){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+     AppsFlyerXAndroid::didEnterBackground();
+#endif
+ }
+
 void AppsFlyerX::setIsDebug(bool isDebug) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setIsDebug(isDebug);
@@ -395,13 +401,13 @@ void AppsFlyerX::registerUninstall(const std::string& token) {
 #endif
 }
 
-std::string AppsFlyerX::getSDKVersion() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::getSDKVersion();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::getSDKVersion();
-#endif
-}
+// std::string AppsFlyerX::getSDKVersion() {
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+//     return AppsFlyerXAndroid::getSDKVersion();
+// #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//     return AppsFlyerXApple::getSDKVersion();
+// #endif
+// }
 
 
 void AppsFlyerX::setHost(const std::string& host) {

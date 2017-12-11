@@ -104,7 +104,7 @@ public:
     
     static void registerUninstall(void* deviceToken, unsigned long length);
     
-    static std::string getSDKVersion();
+    // static std::string getSDKVersion();
     
     static void remoteDebuggingCallWithData(const std::string& data);
     
