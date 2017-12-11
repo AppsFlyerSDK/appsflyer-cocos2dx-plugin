@@ -52,20 +52,30 @@ bool HelloWorld::init()
         switch (type) {
             case Widget::TouchEventType::ENDED: {
                 std::cout << "Track event raised" << std::endl;
-                ValueMap map;
-                map["key1"] = "value1";
-                map["key2"] = 1;
-                map["key3"] = true;
-                map["key4"] = 3.0;
-                AppsFlyerX::trackEvent("test_event", map);
+
+                AppsFlyerX::trackEvent(AFEventPurchase, {
+                        { AFEventParamContentId, Value({Value("12344"), Value("98844"), Value("39944")})},
+                        { AFEventParamCurrency, Value({Value(20), Value(11), Value(61)})},
+                        { AFEventParamPrice, Value({Value(25), Value(50), Value(10)})},
+                        { AFEventParamContentType, Value("ELECTRONIC")},
+                        { AFEventParamCurrency, Value("USD")},
+                        {AFEventParamRevenue, cocos2d::Value("10.67")}
+                });
+
+//                ValueMap map;
+//                map["key1"] = "value1";
+//                map["key2"] = 1;
+//                map["key3"] = true;
+//                map["key4"] = 3.0;
+//                AppsFlyerX::trackEvent("test_event", map);
 
                 AppsFlyerX::setCustomerUserID("CustomId");
 
-                ValueMap test_map;
-                test_map["key1"] = "value1";
-                test_map["key2"] = "eee";
-                test_map["key3"] = "sssss";
-                AppsFlyerX::validateAndTrackInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
+//                ValueMap test_map;
+//                test_map["key1"] = "value1";
+//                test_map["key2"] = "eee";
+//                test_map["key3"] = "sssss";
+//                AppsFlyerX::validateAndTrackInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
                 break;
             }
             default:

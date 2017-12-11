@@ -3,6 +3,7 @@
 //
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+
 #include <jni.h>
 #include "AppsFlyerXAndroid.h"
 #include "AppsFlyerProxyX.h"
@@ -12,12 +13,18 @@ bool isConveriosnListenerInitialized = false;
 
 // Headers
 void initConvertionCallback();
-std::string callStringMethod(const char *method_name, const char *descriptor);
-void callVoidMethodWithStringParam(const std::string &param, const char *method_name, const char *descriptor);
-void callVoidMethodWithBoolParam(bool param, const char *method_name, const char *descriptor);
-void callVoidMethodWithLongParam(unsigned long param, const char *method_name, const char *descriptor);
-jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values);
 
+std::string callStringMethod(const char *method_name, const char *descriptor);
+
+void callVoidMethodWithStringParam(const std::string &param, const char *method_name,
+                                   const char *descriptor);
+
+void callVoidMethodWithBoolParam(bool param, const char *method_name, const char *descriptor);
+
+void
+callVoidMethodWithLongParam(unsigned long param, const char *method_name, const char *descriptor);
+
+jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values);
 
 
 /*
@@ -123,7 +130,7 @@ void AppsFlyerXAndroid::setHost(const std::string &host) {
     callVoidMethodWithStringParam(host, "setHostName", "(Ljava/lang/String;)V");
 }
 
-void AppsFlyerXAndroid::registerUninstall(const std::string& token){
+void AppsFlyerXAndroid::registerUninstall(const std::string &token) {
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
     jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
@@ -132,16 +139,19 @@ void AppsFlyerXAndroid::registerUninstall(const std::string& token){
 
     cocos2d::JniMethodInfo miGetContext;
 
-    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity",
+                                                 "getContext", "()Landroid/content/Context;")) {
         return;
     }
-    jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+    jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
+                                                                          miGetContext.methodID);
 
     if (NULL != afInstance) {
         CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "updateServerUninstallToken", "(Landroid/content/Context;Ljava/lang/String;)V");
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "updateServerUninstallToken",
+                                                             "(Landroid/content/Context;Ljava/lang/String;)V");
 
         jstring jtoken = jniGetInstance.env->NewStringUTF(token.c_str());
 
@@ -157,7 +167,8 @@ void AppsFlyerXAndroid::registerUninstall(const std::string& token){
     }
 }
 
-void AppsFlyerXAndroid::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
+void
+AppsFlyerXAndroid::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
 
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
@@ -166,12 +177,13 @@ void AppsFlyerXAndroid::setOnConversionDataReceived(void(*callback)(cocos2d::Val
 
     setAttributionCallbackOnConversionDataReceived(callback);
 
-    if (!isConveriosnListenerInitialized){
+    if (!isConveriosnListenerInitialized) {
         initConvertionCallback();
     }
 }
 
-void AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData)){
+void
+AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData)) {
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;
@@ -179,13 +191,14 @@ void AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMa
 
     setAttributionCallbackOnAppOpenAttribution(callback);
 
-    if (!isConveriosnListenerInitialized){
+    if (!isConveriosnListenerInitialized) {
         initConvertionCallback();
     }
 
 }
 
-void AppsFlyerXAndroid::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)){
+void
+AppsFlyerXAndroid::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)) {
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;
@@ -193,12 +206,12 @@ void AppsFlyerXAndroid::setOnConversionDataRequestFailure(void(*callback)(cocos2
 
     setAttributionCallbackOnConversionDataRequestFailure(callback);
 
-    if (!isConveriosnListenerInitialized){
+    if (!isConveriosnListenerInitialized) {
         initConvertionCallback();
     }
 }
 
-void AppsFlyerXAndroid::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)){
+void AppsFlyerXAndroid::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)) {
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;
@@ -206,7 +219,7 @@ void AppsFlyerXAndroid::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::
 
     setAttributionCallbackOnAppOpenAttributionFailure(callback);
 
-    if (!isConveriosnListenerInitialized){
+    if (!isConveriosnListenerInitialized) {
         initConvertionCallback();
     }
 }
@@ -297,7 +310,6 @@ void AppsFlyerXAndroid::trackEvent(const std::string &eventName, cocos2d::ValueM
 
         jstring jEventName = jniGetInstance.env->NewStringUTF(eventName.c_str());
 
-        //public void trackEvent(Context context, String eventName, Map<String,Object> eventValues)
         jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jEventName, hashMapObj);
 
         jniGetInstance.env->DeleteLocalRef(hashMapObj);
@@ -320,19 +332,16 @@ std::string AppsFlyerXAndroid::appsFlyerDevKey() {
     return afDevKey;
 }
 
-//std::string AppsFlyerXAndroid::getSDKVersion(){
-//    return callStringMethod("getSDKVersion", "()Ljava/lang/String;");
-//}
 
-std::string AppsFlyerXAndroid::getHost(){
+std::string AppsFlyerXAndroid::getHost() {
     return callStringMethod("getHost", "()Ljava/lang/String;");
 }
 
-void AppsFlyerXAndroid::setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions){
+void AppsFlyerXAndroid::setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions) {
     callVoidMethodWithLongParam(minTimeBetweenSessions, "setMinTimeBetweenSessions", "(I)V");
 }
 
-std::string AppsFlyerXAndroid::getAppsFlyerUID(){
+std::string AppsFlyerXAndroid::getAppsFlyerUID() {
 
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
@@ -343,18 +352,22 @@ std::string AppsFlyerXAndroid::getAppsFlyerUID(){
 
     cocos2d::JniMethodInfo miGetContext;
 
-    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity",
+                                                 "getContext", "()Landroid/content/Context;")) {
         return appsFlyerUid;
     }
-    jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+    jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
+                                                                          miGetContext.methodID);
 
     if (NULL != afInstance) {
         CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "getAppsFlyerUID", "(Landroid/content/Context;)Ljava/lang/String;");
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "getAppsFlyerUID",
+                                                             "(Landroid/content/Context;)Ljava/lang/String;");
         // Get customer ID as a jstinrg
-        jstring userId = (jstring) jniGetInstance.env->CallObjectMethod(afInstance, methodId, jContext);
+        jstring userId = (jstring) jniGetInstance.env->CallObjectMethod(afInstance, methodId,
+                                                                        jContext);
 
         // Convert jstring tio string
         const char *name_char = jniGetInstance.env->GetStringUTFChars(userId, NULL);
@@ -370,12 +383,12 @@ std::string AppsFlyerXAndroid::getAppsFlyerUID(){
     }
 }
 
-void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string& publicKey,
-                                   const std::string& signature,
-                                   const std::string& purchaseData,
-                                   const std::string& price,
-                                   const std::string& currency,
-                                   cocos2d::ValueMap additionalParameters){
+void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string &publicKey,
+                                                      const std::string &signature,
+                                                      const std::string &purchaseData,
+                                                      const std::string &price,
+                                                      const std::string &currency,
+                                                      cocos2d::ValueMap additionalParameters) {
 
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
@@ -386,10 +399,12 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string& publicK
 
     cocos2d::JniMethodInfo miGetContext;
 
-    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity",
+                                                 "getContext", "()Landroid/content/Context;")) {
         return;
     }
-    jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+    jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
+                                                                          miGetContext.methodID);
 
     // Convert string params to jstring
     jstring jPublicKey = jniGetInstance.env->NewStringUTF(publicKey.c_str());
@@ -416,7 +431,8 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string& publicK
                                                                      "Ljava/lang/String;"
                                                                      "Ljava/util/HashMap;)V");
 
-        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jPublicKey, jSignature, jPurchaseData, jPrice, jCurrency, hashMapObj);
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jPublicKey, jSignature,
+                                           jPurchaseData, jPrice, jCurrency, hashMapObj);
 
         jniGetInstance.env->DeleteLocalRef(hashMapObj);
         jniGetInstance.env->DeleteLocalRef(afInstance);
@@ -472,7 +488,8 @@ void callVoidMethodWithBoolParam(bool param, const char *method_name, const char
     }
 }
 
-void callVoidMethodWithLongParam(unsigned long param, const char *method_name, const char *descriptor) {
+void
+callVoidMethodWithLongParam(unsigned long param, const char *method_name, const char *descriptor) {
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
     jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
@@ -521,7 +538,7 @@ std::string callStringMethod(const char *method_name, const char *descriptor) {
     }
 }
 
-jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values){
+jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueMap values) {
     jclass hashMapClass = jniGetInstance.env->FindClass("java/util/HashMap");
 
     jmethodID hashMapInit = jniGetInstance.env->GetMethodID(hashMapClass, "<init>", "(I)V");
@@ -590,7 +607,67 @@ jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueM
                 jniGetInstance.env->DeleteLocalRef(jDoubleValue);
             }
                 break;
+            case cocos2d::Value::Type::VECTOR: {
+                jclass jArrayListClass = jniGetInstance.env->FindClass("java/util/ArrayList");
 
+                jobject obj = jniGetInstance.env->NewObject(jArrayListClass,
+                                                            jniGetInstance.env->GetMethodID(
+                                                                    jArrayListClass, "<init>",
+                                                                    "()V"));
+
+                cocos2d::ValueVector &vector = it.second.asValueVector();
+
+                jclass jIntegerClass = jniGetInstance.env->FindClass("java/lang/Integer");
+                jmethodID jValueOfInt = jniGetInstance.env->GetStaticMethodID(jIntegerClass,
+                                                                             "valueOf",
+                                                                             "(I)Ljava/lang/Integer;");
+
+                jclass jDoubleClass = jniGetInstance.env->FindClass("java/lang/Double");
+                jmethodID jValueOfDouble = jniGetInstance.env->GetStaticMethodID(jDoubleClass,
+                                                                             "valueOf",
+                                                                             "(D)Ljava/lang/Double;");
+
+                jmethodID met = jniGetInstance.env->GetMethodID(
+                        jArrayListClass, "add", "(Ljava/lang/Object;)Z");
+
+                for (int n = 0; n < vector.size(); n++) {
+                    if (vector[n].getType() == cocos2d::Value::Type::INTEGER) {
+                        // Get Integer value
+                        int integer_value = (vector[n]).asInt();
+
+                        // Convert int to INTEGER
+                        jobject jIntegerValue = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                                jIntegerClass, jValueOfInt, integer_value);
+
+                        // Call to "add" method
+                        jniGetInstance.env->CallBooleanMethod(obj, met, jIntegerValue);
+
+
+                    } else if (vector[n].getType() == cocos2d::Value::Type::DOUBLE) {
+                        // Get Double value
+                        double double_value = (vector[n]).asDouble();
+
+                        // Convert double to DOUBLE
+                        jobject jDoubleValue = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                                jIntegerClass, jValueOfDouble, double_value);
+
+
+                        // Call to "add" method
+                        jniGetInstance.env->CallBooleanMethod(obj, met, jDoubleValue);
+                    } else if (vector[n].getType() == cocos2d::Value::Type::STRING) {
+
+                        jobject jstr =  jniGetInstance.env->NewStringUTF(vector[n].asString().c_str());
+
+                        jniGetInstance.env->CallBooleanMethod(obj, met, jstr);
+                    }
+                }
+
+                jniGetInstance.env->CallObjectMethod(hashMapObj, hashMapId,
+                                                     jniGetInstance.env->NewStringUTF(
+                                                             it.first.c_str()), obj);
+                jniGetInstance.env->DeleteLocalRef(obj);
+            }
+                break;
             default:
                 break;
         }
@@ -600,7 +677,7 @@ jobject valueMapToHashMap(cocos2d::JniMethodInfo jniGetInstance, cocos2d::ValueM
 }
 
 // Initialize AppsFlyerLib with conversion Callback
-void initConvertionCallback(){
+void initConvertionCallback() {
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
     //AppsFlyerLib afLib instance
