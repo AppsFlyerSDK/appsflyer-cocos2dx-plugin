@@ -306,7 +306,7 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentif
     AppsFlyerXApple::validateAndTrackInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
         successBlock(result);
     }, [&] (cocos2d::ValueMap error) {
-        successBlock(error);
+        failureBlock(error);
     });
 #endif
 }

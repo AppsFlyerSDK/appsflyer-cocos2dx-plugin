@@ -101,6 +101,26 @@ bool HelloWorld::init()
                 std::cout << "Track event raised" << std::endl;
                 
                 ValueMap params;
+                
+                Director::getInstance()
+                    ->getEventDispatcher()
+                    ->dispatchCustomEvent("CallValidateAndTrackEvent");
+                
+
+                
+                
+                /*
+                auto disp = getEventDispatcher();
+                // add observer
+                auto listener = disp->addCustomEventListener("ProductInfoCallback", [this](EventCustom* event) {
+                    std::cout << event << std::endl;
+                });
+                
+                disp->dispatchCustomEvent("ProductInfoCallback", nullptr);
+                cocos2d::NotificationCenter::getInstance()->postNotification("CallValidateAndTrackEvent", this);
+                cocos2d::__NotificationCenter::getInstance()->postNotification("CallValidateAndTrackEvent");
+                disp->dispatchCustomEvent("CallValidateAndTrackEvent", nullptr);
+                
                 AppsFlyerX::validateAndTrackInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
                     for (auto& t : result)
                         std::cout << t.first << " "
@@ -110,6 +130,7 @@ bool HelloWorld::init()
                         std::cout << t.first << " "
                                   << t.second.asString() << "\n";
                 });
+                 */
                 break;
             }
             default:
@@ -119,5 +140,34 @@ bool HelloWorld::init()
     addChild(validatePurchase, 1);
     addChild(exitButton, 1);
     addChild(button, 1);
+    
+    Director::getInstance()
+        ->getEventDispatcher()
+        ->addCustomEventListener("ResultCallback", [this](EventCustom* event) {
+        
+            ValueMap* map = static_cast<ValueMap*>(event->getUserData());
+            
+            std::string price = (*map)["priceStr"].asString();
+            std::string transactionId = (*map)["transactionId"].asString();
+            std::string currency = (*map)["currency"].asString();
+            std::string productIdentifier = (*map)["productId"].asString();
+            
+            AppsFlyerX::validateAndTrackInAppPurchase(productIdentifier, price, currency, transactionId, {}, [&](cocos2d::ValueMap result) {
+                for (auto& t : result)
+                    std::cout << t.first << " "
+                              << t.second.asString() << "\n";
+            }, [&](cocos2d::ValueMap error) {
+                for (auto& t : error)
+                    std::cout << t.first << " "
+                              << t.second.asString() << "\n";
+            });
+            
+        
+    });
+    
     return true;
+}
+
+static void problemLoading(void* someRef) {
+    
 }

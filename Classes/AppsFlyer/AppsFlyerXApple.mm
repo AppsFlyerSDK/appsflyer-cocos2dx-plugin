@@ -199,7 +199,7 @@ void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productId
                                                            currency:lCurrency
                                                       transactionId:lTranactionId
                                                additionalParameters:lParams success:^(NSDictionary *response) {
-        cocos2d::ValueMap lResponce = AppsFlyerXAppleHelper::nsDictionary2ValueMap(response);
+        cocos2d::ValueMap lResponce = AppsFlyerXAppleHelper::nsDictionary2ValueMap([NSDictionary dictionaryWithDictionary:response]);
         successBlock(lResponce);
     } failure:^(NSError *error, id response) {
         NSMutableDictionary *errorDictionary = @{}.mutableCopy;
@@ -211,7 +211,10 @@ void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productId
             errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:-1];
             errorDictionary[@"errorDescription"] = response;
         }
-        failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
+        if (response && [response isKindOfClass:[NSDictionary class]]) {
+            errorDictionary = response;
+        }
+        failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap([NSDictionary dictionaryWithDictionary:errorDictionary]));
     }];
 }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InAppView" customModule="AppsFlyerCocos2dX_mobile" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="510" height="151"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ybq-40-R45">
+                    <rect key="frame" x="8" y="0.0" width="184" height="30"/>
+                    <state key="normal" title="Consumable Purchase Info"/>
+                    <connections>
+                        <action selector="onButton1Pressed:" destination="-1" eventType="touchUpInside" id="BKp-XD-Mp0"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GPw-5T-8vM">
+                    <rect key="frame" x="8" y="31" width="64" height="30"/>
+                    <state key="normal" title="Purchase"/>
+                    <connections>
+                        <action selector="onButton2Pressed:" destination="-1" eventType="touchUpInside" id="vv0-3x-eYH"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1vO-bt-ayC">
+                    <rect key="frame" x="0.0" y="63" width="510" height="2"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="XeB-T6-8xf"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sr1-JW-THI">
+                    <rect key="frame" x="8" y="67" width="186" height="30"/>
+                    <state key="normal" title="Non Consumable Purchase"/>
+                    <connections>
+                        <action selector="onButton3Pressed:" destination="-1" eventType="touchUpInside" id="3YW-mF-Gwt"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Je-WY-xBi">
+                    <rect key="frame" x="8" y="99" width="64" height="30"/>
+                    <state key="normal" title="Purchase"/>
+                    <connections>
+                        <action selector="onButton4Pressed:" destination="-1" eventType="touchUpInside" id="MXI-Ya-geY"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="1vO-bt-ayC" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2WN-ce-gKu"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1vO-bt-ayC" secondAttribute="trailing" id="4uO-Yp-dFT"/>
+                <constraint firstItem="7Je-WY-xBi" firstAttribute="top" secondItem="sr1-JW-THI" secondAttribute="bottom" constant="2" id="58n-Oy-at5"/>
+                <constraint firstItem="ybq-40-R45" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="5LJ-KP-9qv"/>
+                <constraint firstItem="GPw-5T-8vM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="BSO-yd-Gvm"/>
+                <constraint firstItem="GPw-5T-8vM" firstAttribute="top" secondItem="ybq-40-R45" secondAttribute="bottom" constant="1" id="JbT-NG-hIh"/>
+                <constraint firstItem="1vO-bt-ayC" firstAttribute="top" secondItem="GPw-5T-8vM" secondAttribute="bottom" constant="2" id="Jdi-De-Dx6"/>
+                <constraint firstItem="7Je-WY-xBi" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="dll-5c-6uJ"/>
+                <constraint firstItem="sr1-JW-THI" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="hbi-Fi-jCj"/>
+                <constraint firstItem="sr1-JW-THI" firstAttribute="top" secondItem="1vO-bt-ayC" secondAttribute="bottom" constant="2" id="rYD-PJ-7WY"/>
+                <constraint firstItem="ybq-40-R45" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="sbX-TV-FT0"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-378" y="-227.5"/>
+        </view>
+    </objects>
+</document>

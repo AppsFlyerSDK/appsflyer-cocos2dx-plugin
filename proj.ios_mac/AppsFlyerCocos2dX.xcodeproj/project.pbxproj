@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C70232BF0B365FD37071B85 /* libPods-AppsFlyerCocos2dX-desktop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6461B850FD40B029633EC657 /* libPods-AppsFlyerCocos2dX-desktop.a */; };
 		1AC6FB21180E996B004C840B /* libcocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2d Mac.a */; };
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
 		1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AF87B481F6F77D6007BE51C /* AppController.mm */; };
@@ -65,7 +66,12 @@
 		551900EC1F8CCFF500150B9D /* AppsFlyerXAppleDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */; };
 		551900ED1F8CCFF500150B9D /* AppsFlyerXAppleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E21F8CCFF400150B9D /* AppsFlyerXAppleHelper.mm */; };
 		551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */; };
+		5547A3181FDE960E00B5AC8A /* ViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5547A3161FDE960E00B5AC8A /* ViewController+Alert.swift */; };
+		556CDA7D1FD992A7004CD29B /* LoadableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556CDA7C1FD992A7004CD29B /* LoadableView.swift */; };
+		556CDA7F1FD9994E004CD29B /* InAppView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556CDA7E1FD9994E004CD29B /* InAppView.xib */; };
+		556CDA811FD99969004CD29B /* InAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556CDA801FD99969004CD29B /* InAppView.swift */; };
 		559592FA1F9628B500EFD43C /* AppsFlyerX+AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */; };
+		613CF09D99F0DAD16991685C /* Pods_AppsFlyerCocos2dX_mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7D5E30D4AC3B4EBC330320 /* Pods_AppsFlyerCocos2dX_mobile.framework */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
@@ -146,8 +152,10 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* AppsFlyerCocos2dX-mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AppsFlyerCocos2dX-mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1F4CA9954ADF206126BDF8A6 /* Pods-AppsFlyerCocos2dX-desktop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppsFlyerCocos2dX-desktop.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AppsFlyerCocos2dX-desktop/Pods-AppsFlyerCocos2dX-desktop.debug.xcconfig"; sourceTree = "<group>"; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		294D0D631D0D56D500F7F5D4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
+		2E07D973E9432FE61FD287E3 /* Pods-AppsFlyerCocos2dX-mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppsFlyerCocos2dX-mobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AppsFlyerCocos2dX-mobile/Pods-AppsFlyerCocos2dX-mobile.debug.xcconfig"; sourceTree = "<group>"; };
 		3EACC98E19EE6D4300EB3C5E /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
 		46880B7619C43A67006E1F66 /* CloseNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseNormal.png; sourceTree = "<group>"; };
 		46880B7719C43A67006E1F66 /* CloseSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSelected.png; sourceTree = "<group>"; };
@@ -156,6 +164,7 @@
 		46880B8519C43A87006E1F66 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		46880B8619C43A87006E1F66 /* HelloWorldScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelloWorldScene.cpp; sourceTree = "<group>"; };
 		46880B8719C43A87006E1F66 /* HelloWorldScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloWorldScene.h; sourceTree = "<group>"; };
+		4BC9C16DD30D2DF35DFE9F8F /* Pods-AppsFlyerCocos2dX-desktop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppsFlyerCocos2dX-desktop.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppsFlyerCocos2dX-desktop/Pods-AppsFlyerCocos2dX-desktop.release.xcconfig"; sourceTree = "<group>"; };
 		503AE0F617EB97AB00D1A890 /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		503AE0F717EB97AB00D1A890 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		503AE10317EB98FF00D1A890 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = mac/main.cpp; sourceTree = "<group>"; };
@@ -182,11 +191,19 @@
 		551900E71F8CCFF400150B9D /* AppsFlyerShareInviteHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerShareInviteHelper.h; sourceTree = "<group>"; };
 		551900E81F8CCFF400150B9D /* AppsFlyerTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerTracker.h; sourceTree = "<group>"; };
 		551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
+		5547A3161FDE960E00B5AC8A /* ViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Alert.swift"; sourceTree = "<group>"; };
+		556CDA7B1FD992A7004CD29B /* AppsFlyerCocos2dX-mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppsFlyerCocos2dX-mobile-Bridging-Header.h"; sourceTree = "<group>"; };
+		556CDA7C1FD992A7004CD29B /* LoadableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableView.swift; sourceTree = "<group>"; };
+		556CDA7E1FD9994E004CD29B /* InAppView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InAppView.xib; sourceTree = "<group>"; };
+		556CDA801FD99969004CD29B /* InAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppView.swift; sourceTree = "<group>"; };
 		559592F81F9628B500EFD43C /* AppsFlyerX+AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppsFlyerX+AppController.h"; sourceTree = "<group>"; };
 		559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppsFlyerX+AppController.m"; sourceTree = "<group>"; };
 		55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXMacro.h; sourceTree = "<group>"; };
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
+		5D6FB323ED3C8AC5BE7C2346 /* Pods-AppsFlyerCocos2dX-mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppsFlyerCocos2dX-mobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppsFlyerCocos2dX-mobile/Pods-AppsFlyerCocos2dX-mobile.release.xcconfig"; sourceTree = "<group>"; };
+		6461B850FD40B029633EC657 /* libPods-AppsFlyerCocos2dX-desktop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppsFlyerCocos2dX-desktop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		AC7D5E30D4AC3B4EBC330320 /* Pods_AppsFlyerCocos2dX_mobile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppsFlyerCocos2dX_mobile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -218,6 +235,7 @@
 				551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */,
 				D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */,
 				D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */,
+				613CF09D99F0DAD16991685C /* Pods_AppsFlyerCocos2dX_mobile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +255,7 @@
 				5087E76917EB910900C73F5D /* OpenAL.framework in Frameworks */,
 				5087E76A17EB910900C73F5D /* AVFoundation.framework in Frameworks */,
 				5087E76B17EB910900C73F5D /* AudioToolbox.framework in Frameworks */,
+				0C70232BF0B365FD37071B85 /* libPods-AppsFlyerCocos2dX-desktop.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +284,7 @@
 		1AF87B461F6F77D6007BE51C /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				5547A3161FDE960E00B5AC8A /* ViewController+Alert.swift */,
 				1AF87BC81F6F9481007BE51C /* Icons */,
 				1AF87B471F6F77D6007BE51C /* AppController.h */,
 				1AF87B481F6F77D6007BE51C /* AppController.mm */,
@@ -275,6 +295,10 @@
 				1AF87B5C1F6F77D6007BE51C /* Prefix.pch */,
 				1AF87B5D1F6F77D6007BE51C /* RootViewController.h */,
 				1AF87B5E1F6F77D6007BE51C /* RootViewController.mm */,
+				556CDA7C1FD992A7004CD29B /* LoadableView.swift */,
+				556CDA7B1FD992A7004CD29B /* AppsFlyerCocos2dX-mobile-Bridging-Header.h */,
+				556CDA7E1FD9994E004CD29B /* InAppView.xib */,
+				556CDA801FD99969004CD29B /* InAppView.swift */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -312,6 +336,7 @@
 				1AF87B461F6F77D6007BE51C /* ios */,
 				503AE10617EB990700D1A890 /* mac */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				F3219093B9B86E451DC99D0B /* Pods */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -339,6 +364,8 @@
 				BF170DB012928DE900B8313A /* OpenGLES.framework */,
 				BF1C47EA1293683800B63C5D /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				6461B850FD40B029633EC657 /* libPods-AppsFlyerCocos2dX-desktop.a */,
+				AC7D5E30D4AC3B4EBC330320 /* Pods_AppsFlyerCocos2dX_mobile.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -422,6 +449,17 @@
 			path = libAppsFlyer;
 			sourceTree = "<group>";
 		};
+		F3219093B9B86E451DC99D0B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1F4CA9954ADF206126BDF8A6 /* Pods-AppsFlyerCocos2dX-desktop.debug.xcconfig */,
+				4BC9C16DD30D2DF35DFE9F8F /* Pods-AppsFlyerCocos2dX-desktop.release.xcconfig */,
+				2E07D973E9432FE61FD287E3 /* Pods-AppsFlyerCocos2dX-mobile.debug.xcconfig */,
+				5D6FB323ED3C8AC5BE7C2346 /* Pods-AppsFlyerCocos2dX-mobile.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -429,9 +467,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "AppsFlyerCocos2dX-mobile" */;
 			buildPhases = (
+				6BC388FB1FC85177B884C88F /* [CP] Check Pods Manifest.lock */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				19B12460650DBD8659E273CF /* [CP] Embed Pods Frameworks */,
+				E2A37B12CCC831641E62E549 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -447,9 +488,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5087E76C17EB910900C73F5D /* Build configuration list for PBXNativeTarget "AppsFlyerCocos2dX-desktop" */;
 			buildPhases = (
+				AAD768767F3ED1BFA4B14F03 /* [CP] Check Pods Manifest.lock */,
 				5087E74817EB910900C73F5D /* Resources */,
 				5087E75617EB910900C73F5D /* Sources */,
 				5087E75C17EB910900C73F5D /* Frameworks */,
+				9583FB97B1830E39DBA427C0 /* [CP] Embed Pods Frameworks */,
+				EB7CA9CC8CB84B458D8C23D0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -471,6 +515,7 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 6UQAD4B3U2;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -494,6 +539,7 @@
 				German,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 				{
@@ -555,6 +601,7 @@
 				1AF87B881F6F781D007BE51C /* LaunchScreen.storyboard in Resources */,
 				1AF87BDA1F6F94A4007BE51C /* Icon-50.png in Resources */,
 				1AF87BDD1F6F94A4007BE51C /* Icon-72.png in Resources */,
+				556CDA7F1FD9994E004CD29B /* InAppView.xib in Resources */,
 				1AF87BDF1F6F94A4007BE51C /* Icon-80.png in Resources */,
 				1AF87BE51F6F94A4007BE51C /* Icon-152.png in Resources */,
 				1AF87BD81F6F94A4007BE51C /* Icon-29.png in Resources */,
@@ -579,16 +626,121 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		19B12460650DBD8659E273CF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AppsFlyerCocos2dX-mobile/Pods-AppsFlyerCocos2dX-mobile-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftyStoreKit/SwiftyStoreKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyStoreKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppsFlyerCocos2dX-mobile/Pods-AppsFlyerCocos2dX-mobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6BC388FB1FC85177B884C88F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AppsFlyerCocos2dX-mobile-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9583FB97B1830E39DBA427C0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppsFlyerCocos2dX-desktop/Pods-AppsFlyerCocos2dX-desktop-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AAD768767F3ED1BFA4B14F03 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AppsFlyerCocos2dX-desktop-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E2A37B12CCC831641E62E549 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppsFlyerCocos2dX-mobile/Pods-AppsFlyerCocos2dX-mobile-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB7CA9CC8CB84B458D8C23D0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppsFlyerCocos2dX-desktop/Pods-AppsFlyerCocos2dX-desktop-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1D60588E0D05DD3D006BFB54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5547A3181FDE960E00B5AC8A /* ViewController+Alert.swift in Sources */,
 				551900EB1F8CCFF500150B9D /* AppsFlyerXApple.mm in Sources */,
+				556CDA811FD99969004CD29B /* InAppView.swift in Sources */,
 				1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */,
 				1AF87B8B1F6F782A007BE51C /* RootViewController.mm in Sources */,
 				551900ED1F8CCFF500150B9D /* AppsFlyerXAppleHelper.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
+				556CDA7D1FD992A7004CD29B /* LoadableView.swift in Sources */,
 				559592FA1F9628B500EFD43C /* AppsFlyerX+AppController.m in Sources */,
 				551900EA1F8CCFF500150B9D /* AppsFlyerX.cpp in Sources */,
 				551900EC1F8CCFF500150B9D /* AppsFlyerXAppleDelegate.mm in Sources */,
@@ -625,8 +777,10 @@
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E07D973E9432FE61FD287E3 /* Pods-AppsFlyerCocos2dX-mobile.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "AppsFlyerCocos2dX-mobile.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -634,7 +788,7 @@
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 6UQAD4B3U2;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "\"$PODS_CONFIGURATION_BUILD_DIR/SwiftyStoreKit\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -648,6 +802,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Classes/AppsFlyer/libAppsFlyer/,
@@ -657,10 +812,13 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.shareinvite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.inapppurchase;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "ios/AppsFlyerCocos2dX-mobile-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
 				VALID_ARCHS = "arm64 armv7";
@@ -669,8 +827,10 @@
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D6FB323ED3C8AC5BE7C2346 /* Pods-AppsFlyerCocos2dX-mobile.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "AppsFlyerCocos2dX-mobile.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -678,7 +838,7 @@
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 6UQAD4B3U2;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "\"$PODS_CONFIGURATION_BUILD_DIR/SwiftyStoreKit\"";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
@@ -691,6 +851,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Classes/AppsFlyer/libAppsFlyer/,
@@ -700,10 +861,12 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.shareinvite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.inapppurchase;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "ios/AppsFlyerCocos2dX-mobile-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
 				VALID_ARCHS = "arm64 armv7";
@@ -712,6 +875,7 @@
 		};
 		5087E76D17EB910900C73F5D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F4CA9954ADF206126BDF8A6 /* Pods-AppsFlyerCocos2dX-desktop.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
@@ -743,6 +907,7 @@
 		};
 		5087E76E17EB910900C73F5D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4BC9C16DD30D2DF35DFE9F8F /* Pods-AppsFlyerCocos2dX-desktop.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";

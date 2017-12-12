@@ -26,7 +26,8 @@
 #import "RootViewController.h"
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
-
+#import "AppsFlyerCocos2dX_mobile-Swift.h"
+#import "AppsFlyerXAppleHelper.h"
 
 @implementation RootViewController
 
@@ -63,8 +64,44 @@
     [super viewDidLoad];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    
+    InAppView *inAppView = [[InAppView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    
+    [inAppView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    [self.view addSubview:inAppView];
+    
+    NSLayoutConstraint *left = [NSLayoutConstraint constraintWithItem:inAppView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:8];
+    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:inAppView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:8];
+    
+    NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:inAppView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:130];
+    NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:inAppView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:320];
+    
+    [self.view addConstraints:@[left, top]];
+    [inAppView addConstraints:@[height, width]];
+    
+    [inAppView setValue:self forKey:@"viewController"];
+    
+    auto callBack = [inAppView](cocos2d::EventCustom* event) {
+        [inAppView verifyPurchaseWithCallback:^(NSDictionary *dictionary) {
+            cocos2d::ValueMap map = AppsFlyerXAppleHelper::nsDictionary2ValueMap(dictionary);
+            cocos2d::EventCustom event("ResultCallback");
+                                 event.setUserData(&map);
+        
+            
+            cocos2d::Director::getInstance()
+                ->getEventDispatcher()
+                ->dispatchEvent(&event);
+        }];
+    };
+    
+    cocos2d::Director::getInstance()
+        ->getEventDispatcher()
+        ->addCustomEventListener("CallValidateAndTrackEvent", callBack);
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
