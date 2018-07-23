@@ -429,7 +429,7 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string &publicK
                                                                      "Ljava/lang/String;"
                                                                      "Ljava/lang/String;"
                                                                      "Ljava/lang/String;"
-                                                                     "Ljava/util/HashMap;)V");
+                                                                     "Ljava/util/Map;)V");
 
         jniGetInstance.env->CallVoidMethod(afInstance, methodId, jContext, jPublicKey, jSignature,
                                            jPurchaseData, jPrice, jCurrency, hashMapObj);
