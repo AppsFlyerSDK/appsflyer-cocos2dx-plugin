@@ -122,6 +122,8 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
 
         map[std::string(c_string_key)] = c_string_value;
     }
+
+    return map;
 }
 
 
