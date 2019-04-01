@@ -255,13 +255,23 @@ void AppsFlyerXAndroid::startTracking() {
         jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
                 jniGetContext.classID, jniGetContext.methodID);
 
+        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
+
+        // call Init if no GCD regestered
+        if (!isConveriosnListenerInitialized) {
+            jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
+                                                                 "init",
+                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;)Lcom/appsflyer/AppsFlyerLib;");
+
+            // This is what we actually do: afLib.init(appsFlyerDevKey, null)
+            jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, jAppsFlyerDevKey, NULL);
+        }
+
         //public void trackAppLaunch(Context ctx, String devKey)
         jmethodID startTrackingMethodId = jniGetInstance.env->GetMethodID(cls,
                                                                           "trackAppLaunch",
                                                                           "(Landroid/content/Context;Ljava/lang/String;)V");
-
-        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
-
+        
         // This is what we actually do: afLib.startTracking((Application) context.getApplicationContext())
         jniGetInstance.env->CallVoidMethod(afInstance, startTrackingMethodId, jContext,
                                            jAppsFlyerDevKey);
