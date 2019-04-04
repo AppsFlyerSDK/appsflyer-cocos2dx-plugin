@@ -6,14 +6,15 @@
 ##  Integration:
 How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.
 
-###1.  Add the SDK to your project
+### 1. Add the SDK to your project
+
 Throughout this guide, we assume that you are using `Android Studio` for development.
 
 Take the files from the `AppsFlyer` [folder](/Classes/AppsFlyer) and add them to your Android project under `Classes` folder.
 
 ![add-to-android-mk](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-android-files.png?raw=true)
 
-###2.  Add the C++ source file definitions
+### 2.  Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file if you use `PROP_BUILD_TYPE=ndk-build`
 ```mk
 ../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
@@ -49,7 +50,7 @@ list(APPEND GAME_HEADER
 
 
 
-###3. Add the AppsFlyer library to your project
+### 3. Add the AppsFlyer library to your project
 We prefer to use `gradle` - as the easiest way to stay up to date. Please add the following lines to your gradle app dependencies:
 
 ```
@@ -66,7 +67,7 @@ implementation 'com.android.support:appcompat-v7:28.0.0'
 
 As alternative way, take the latest `appsflyer-SDK.jar` library and copy it to your project's `libs` folder.
 
-###4. Add permissions
+### 4. Add permissions
 
 In the Package Explorer, open the `AndroidManifest.xml` file of your Android project. Add the `uses-permission` tag for `INTERNET` if it's not already present.
 
