@@ -45,7 +45,7 @@ list(APPEND GAME_HEADER
      )
 ```
 
-![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-cmake?raw=true)
+![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-cmake.png?raw=true)
 
 
 
