@@ -56,7 +56,7 @@ void AppsFlyerXAndroid::didEnterBackground(){
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -107,7 +107,7 @@ void AppsFlyerXAndroid::setAdditionalData(cocos2d::ValueMap customData) {
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -147,7 +147,7 @@ void AppsFlyerXAndroid::registerUninstall(const std::string &token) {
                                                                           miGetContext.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "updateServerUninstallToken",
@@ -238,7 +238,7 @@ void AppsFlyerXAndroid::startTracking() {
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -251,17 +251,27 @@ void AppsFlyerXAndroid::startTracking() {
             return;
         }
 
-
         jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
                 jniGetContext.classID, jniGetContext.methodID);
+
+
+        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
+
+        // call Init if no GCD registered
+        if (!isConveriosnListenerInitialized) {
+            jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
+                                                                 "init",
+                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;Landroid/content/Context;)Lcom/appsflyer/AppsFlyerLib;");
+
+            // This is what we actually do: afLib.init(appsFlyerDevKey, null)
+            jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, jAppsFlyerDevKey, NULL, jContext);
+        }
 
         //public void trackAppLaunch(Context ctx, String devKey)
         jmethodID startTrackingMethodId = jniGetInstance.env->GetMethodID(cls,
                                                                           "trackAppLaunch",
                                                                           "(Landroid/content/Context;Ljava/lang/String;)V");
-
-        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
-
+        
         // This is what we actually do: afLib.startTracking((Application) context.getApplicationContext())
         jniGetInstance.env->CallVoidMethod(afInstance, startTrackingMethodId, jContext,
                                            jAppsFlyerDevKey);
@@ -285,7 +295,7 @@ void AppsFlyerXAndroid::trackEvent(const std::string &eventName, cocos2d::ValueM
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -360,7 +370,7 @@ std::string AppsFlyerXAndroid::getAppsFlyerUID() {
                                                                           miGetContext.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "getAppsFlyerUID",
@@ -418,7 +428,7 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string &publicK
     jobject hashMapObj = valueMapToHashMap(jniGetInstance, additionalParameters);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+       // CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -452,7 +462,7 @@ void callVoidMethodWithStringParam(const std::string &param, const char *method_
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -474,7 +484,7 @@ void callVoidMethodWithBoolParam(bool param, const char *method_name, const char
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -496,7 +506,7 @@ callVoidMethodWithLongParam(unsigned long param, const char *method_name, const 
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
@@ -517,7 +527,7 @@ std::string callStringMethod(const char *method_name, const char *descriptor) {
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, method_name, descriptor);
@@ -696,6 +706,20 @@ void initConvertionCallback() {
             return;
         }
 
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+
+        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                jniGetContext.classID, jniGetContext.methodID);
+
+
+
         jclass clsAppsFlyer2dXConversionCallback = jniInit.env->FindClass(
                 "com/appsflyer/AppsFlyer2dXConversionCallback");
 
@@ -708,16 +732,18 @@ void initConvertionCallback() {
 
         jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
                                                                  "init",
-                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;)Lcom/appsflyer/AppsFlyerLib;");
+                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;Landroid/content/Context;)Lcom/appsflyer/AppsFlyerLib;");
 
         jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
 
-        // This is what we actually do: afLib.init(appsFlyerDevKey, conversionDataListener)
-        jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, jAppsFlyerDevKey,
-                                             jCallbackProxy);
-
         // Conversion Callback is initialized
         isConveriosnListenerInitialized = true;
+
+        // This is what we actually do: afLib.init(appsFlyerDevKey, conversionDataListener, context)
+        jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, 
+                                            jAppsFlyerDevKey, jCallbackProxy, jContext);
+
+
 
 
         jniInit.env->DeleteLocalRef(jCallbackProxy);
@@ -729,15 +755,3 @@ void initConvertionCallback() {
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
