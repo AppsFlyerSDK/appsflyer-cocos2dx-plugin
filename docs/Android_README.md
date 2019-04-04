@@ -50,8 +50,21 @@ list(APPEND GAME_HEADER
 
 
 ###3. Add the AppsFlyer library to your project
+We prefer to use `gradle` - as the easiest way to stay up to date. Please add the following lines to your gradle app dependencies:
 
-Take the latest `appsflyer-SDK.jar` library and copy it to your project's `libs` folder.
+```
+implementation 'com.appsflyer:af-android-sdk:4.9.0@aar'
+```
+
+For Google Install Referrer, please, add also:
+
+```
+implementation 'com.android.installreferrer:installreferrer:1.0'
+implementation 'com.android.support:appcompat-v7:28.0.0'
+``` 
+
+
+As alternative way, take the latest `appsflyer-SDK.jar` library and copy it to your project's `libs` folder.
 
 ###4. Add permissions
 
