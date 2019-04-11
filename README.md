@@ -34,8 +34,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - [getAppsFlyerUID](#getAppsFlyerUID)
   - [handleOpenURL Deep-linking](#getAppsFlyerUID) *(ios only)*
   - Uninstall
-    - [Android](#)
-    - [iOS](#registerUninstall) 
+    - [Android](#registerUninstallAndroid)
+    - [iOS](#registerUninstallIOS) 
   - [setHost](#setHost)
   - [setMinTimeBetweenSessions](#setMinTimeBetweenSessions)
   - [deep linking Tracking](#deep-linking-tracking)
@@ -436,7 +436,13 @@ TBD
 
 ---
 
-##### <a id="registerUninstall"> **`registerUninstall(NSData): void`** *(ios only)*
+##### <a id="registerUninstallAndroid"> **`registerUninstall(const std::string& token): void`** *(Android only)*
+
+*Examples:*
+
+```cpp
+AppsFlyerX::registerUninstall("<TOKEN>");
+```
 
 For more Info see the [DOCs](https://support.appsflyer.com/hc/en-us/articles/208004986-Android-Uninstall-Tracking)
 
@@ -444,8 +450,13 @@ For more Info see the [DOCs](https://support.appsflyer.com/hc/en-us/articles/208
 
 
 
-##### <a id="registerUninstall"> **`registerUninstall(NSData): void`** *(ios only)*
+##### <a id="registerUninstallIOS"> **`registerUninstall(void* deviceToken, unsigned long length): void`** *(ios only)*
 
+You can use the `registerUninstall(void* deviceToken, unsigned long length)` API.
+
+ *or*
+ 
+ As alternative way use directly native API:
 Open your Xcode project and locate the file `AppController.mm` under the iOS folder inside your project. Add the following code snippet under `didFinishLaunchingWithOptions` :
 
 ```cpp 
