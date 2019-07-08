@@ -64,9 +64,10 @@
 		551900EB1F8CCFF500150B9D /* AppsFlyerXApple.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */; };
 		551900EC1F8CCFF500150B9D /* AppsFlyerXAppleDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */; };
 		551900ED1F8CCFF500150B9D /* AppsFlyerXAppleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E21F8CCFF400150B9D /* AppsFlyerXAppleHelper.mm */; };
-		551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */; };
 		559592FA1F9628B500EFD43C /* AppsFlyerX+AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
+		94953C7D22D37C130096F048 /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */; };
+		94953C7F22D38A590096F048 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94953C7E22D38A580096F048 /* CFNetwork.framework */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -187,6 +188,7 @@
 		55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXMacro.h; sourceTree = "<group>"; };
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		94953C7E22D38A580096F048 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -203,6 +205,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94953C7F22D38A590096F048 /* CFNetwork.framework in Frameworks */,
+				94953C7D22D37C130096F048 /* libAppsFlyerLib.a in Frameworks */,
 				294D0D641D0D56D500F7F5D4 /* CoreText.framework in Frameworks */,
 				ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */,
 				52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */,
@@ -215,7 +219,6 @@
 				BF1712471292920000B8313A /* libz.dylib in Frameworks */,
 				BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */,
 				D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */,
-				551900EE1F8CCFF500150B9D /* libAppsFlyerLib.a in Frameworks */,
 				D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */,
 				D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */,
 			);
@@ -319,6 +322,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94953C7E22D38A580096F048 /* CFNetwork.framework */,
 				294D0D631D0D56D500F7F5D4 /* CoreText.framework */,
 				ED545A7D1B68A1FA00C3958E /* libiconv.dylib */,
 				ED545A7B1B68A1F400C3958E /* libiconv.dylib */,
