@@ -44,6 +44,39 @@ cocos2d::JniMethodInfo getAppsFlyerInstance() {
     return jniGetInstance;
 }
 
+
+void AppsFlyerXAndroid::stopTracking(bool stopTracking) {
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "stopTracking", "(ZLandroid/content/Context;)V");
+
+        cocos2d::JniMethodInfo miGetContext;
+        if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+            return;
+        }
+        jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, stopTracking, jContext);
+
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+
+}
+
+
 void AppsFlyerXAndroid::setIsDebug(bool isDebug) {
     callVoidMethodWithBoolParam(isDebug, "setDebugLog", "(Z)V");
 }
@@ -484,7 +517,7 @@ void callVoidMethodWithBoolParam(bool param, const char *method_name, const char
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 

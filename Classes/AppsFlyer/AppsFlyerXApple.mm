@@ -297,4 +297,7 @@ void AppsFlyerXApple::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::Va
     static_cast<AppsFlyerXAppleDelegate *>(AppsFlyerXApple::getInstance()->delegate).onAppOpenAttributionFailureCallback = callback;
 }
 
+void AppsFlyerXApple::stopTracking(bool stopTracking) {
+    [[AppsFlyerTracker sharedTracker] setIsStopTracking:stopTracking];
+}
 

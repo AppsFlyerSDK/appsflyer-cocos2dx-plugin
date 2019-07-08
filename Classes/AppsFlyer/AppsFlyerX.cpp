@@ -474,3 +474,12 @@ void AppsFlyerX::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMa
     return AppsFlyerXApple::setOnAppOpenAttributionFailure(callback);
 #endif
 }
+
+
+void AppsFlyerX::stopTracking(bool stopTracking) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::stopTracking(stopTracking);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::stopTracking(stopTracking);
+#endif
+}

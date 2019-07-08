@@ -38,13 +38,14 @@ public:
     static std::string currencyCode();
 
     static void disableAppleAdSupportTracking(bool isDisableAppleAdSupportTracking);
-    static bool isDisableAppleAdSupportTracking();
+    //static bool isDisableAppleAdSupportTracking();
 
     static void setIsDebug(bool isDebug);
-    static bool isDebug();
+    //never used
+    //static bool isDebug();
 
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
-    static bool isShouldCollectDeviceName();
+    //static bool isShouldCollectDeviceName();
 
     static void setAppInviteOneLink(std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
@@ -56,7 +57,8 @@ public:
     static bool isDisableIAdTracking();
 
     static void setUseReceiptValidationSandbox(bool useReceiptValidationSandbox);
-    static bool isUseReceiptValidationSandbox();
+    //never used
+    //static bool isUseReceiptValidationSandbox();
 
 
     static void setAdvertiserId(const std::string& advertiserId);
@@ -104,9 +106,11 @@ public:
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
 
+
+    static void stopTracking(bool stopTracking);
+
+
     // Delegates methods proxy
-
-
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));

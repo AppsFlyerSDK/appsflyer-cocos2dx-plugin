@@ -5,7 +5,7 @@
 //  Created by AndreyG-AF on 10/7/17.
 //
 
-#import <AppsFlyerTracker.h>
+#import "AppsFlyerTracker.h"
 
 @interface AppsFlyerXAppleDelegate: NSObject<AppsFlyerTrackerDelegate>
 
