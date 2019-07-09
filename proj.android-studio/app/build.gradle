@@ -127,7 +127,7 @@ android.applicationVariants.all { variant ->
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libcocos2dx')
-
+    implementation 'com.appsflyer:af-android-sdk:4.10.1@aar'
     implementation 'com.google.firebase:firebase-messaging:10.0.1'
 }
 
