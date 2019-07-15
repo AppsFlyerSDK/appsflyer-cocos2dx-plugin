@@ -113,9 +113,11 @@ public:
     
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
+
+    static void stopTracking(bool stopTracking);
     
-    // Delegates methods proxy
     
+    // Delegates methods proxy    
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
