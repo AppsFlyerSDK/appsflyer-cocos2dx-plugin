@@ -52,7 +52,7 @@ public:
     
     static void disableIAdTracking(bool disableIAdTracking);
     static bool isDisableIAdTracking();
-    
+
     static void setUseReceiptValidationSandbox(bool useReceiptValidationSandbox);
     static bool isUseReceiptValidationSandbox();
     
@@ -118,9 +118,10 @@ public:
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
 
-
-    // Delegates methods proxy
+    static void stopTracking(bool stopTracking);
     
+    
+    // Delegates methods proxy
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));

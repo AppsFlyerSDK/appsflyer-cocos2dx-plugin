@@ -86,6 +86,8 @@ static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
 
 bool AppDelegate::applicationDidFinishLaunching() {
 
+    AppsFlyerX::stopTracking(false);
+
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
     AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
