@@ -16,6 +16,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [Usage](#usage)
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
+ - [stopTracking](#stopTracking) 
  - [trackEvent](#trackEvent)
  - [getConversion Listener](#getConversionListener)
  - [setUserEmails](#setUserEmails)
@@ -112,6 +113,19 @@ void AppDelegate::applicationDidEnterBackground() {
 
 ```cpp
 AppsFlyerX::setIsDebug(true);
+```
+
+---
+
+##### <a id="stopTracking"> **`stopTracking(boolean);`**
+
+ if `true` AppsFlyer SDK will enter to pending mode, no activity
+Be sure to set `stopTracking(false)` to release the SDK from stop tracking
+
+*Example:*
+
+```cpp
+AppsFlyerX::stopTracking(false); // or false
 ```
 
 ---
