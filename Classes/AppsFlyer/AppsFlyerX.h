@@ -122,8 +122,8 @@ public:
     
     
     // Delegates methods proxy
-    static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
-    static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
+    static void setOnConversionDataSuccess(void(*callback)(cocos2d::ValueMap installData));
+    static void setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
 };

@@ -443,17 +443,17 @@ unsigned long AppsFlyerX::getMinTimeBetweenSessions() {
 }
 
 // Delegates methods proxy
-void AppsFlyerX::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
+void AppsFlyerX::setOnConversionDataSuccess(void(*callback)(cocos2d::ValueMap installData)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataReceived(callback);
+    AppsFlyerXAndroid::setonConversionDataSuccess(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnConversionDataReceived(callback);
 #endif
 }
 
-void AppsFlyerX::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)) {
+void AppsFlyerX::setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataRequestFailure(callback);
+    AppsFlyerXAndroid::setonConversionDataFail(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnConversionDataRequestFailure(callback);
 #endif
