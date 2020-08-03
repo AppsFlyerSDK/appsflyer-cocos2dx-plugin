@@ -301,3 +301,14 @@ void AppsFlyerXApple::stopTracking(bool stopTracking) {
     [[AppsFlyerTracker sharedTracker] setIsStopTracking:stopTracking];
 }
 
+void AppsFlyerXApple::sharingFilter(std::vector<std::string> partners){
+    NSMutableArray *filteredPartners = [NSMutableArray new];
+    for (auto partner : partners) {
+        [filteredPartners addObject:[NSString stringWithUTF8String:partner.c_str()]];
+     [[AppsFlyerTracker sharedTracker] setSharingFilter:filteredPartners];
+    }   
+}
+
+void AppsFlyerXApple::sharingFilterForAllPartners() {
+    [[AppsFlyerTracker sharedTracker] setSharingFilterForAllPartners];
+}

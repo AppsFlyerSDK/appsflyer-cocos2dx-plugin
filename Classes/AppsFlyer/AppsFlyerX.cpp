@@ -483,3 +483,19 @@ void AppsFlyerX::stopTracking(bool stopTracking) {
     return AppsFlyerXApple::stopTracking(stopTracking);
 #endif
 }
+
+void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    #todo
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        return AppsFlyerXApple::sharingFilter(partners);
+    #endif
+}
+
+void AppsFlyerX::sharingFilterForAllPartners(){
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    #todo
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        return AppsFlyerXApple::sharingFilterForAllPartners();
+    #endif
+}

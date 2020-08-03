@@ -126,6 +126,10 @@ public:
     static void setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
+
+    //Sharing Data filter
+    static void sharingFilter(std::vector<std::string> partners);
+    static void sharingFilterForAllPartners();
 };
 
 #endif /* AppsFlyerX_h */
