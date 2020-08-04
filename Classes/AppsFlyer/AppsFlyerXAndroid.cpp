@@ -201,7 +201,7 @@ void AppsFlyerXAndroid::registerUninstall(const std::string &token) {
 }
 
 void
-AppsFlyerXAndroid::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
+AppsFlyerXAndroid::setOnConversionDataSuccess(void(*callback)(cocos2d::ValueMap installData)) {
 
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
@@ -231,7 +231,7 @@ AppsFlyerXAndroid::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap att
 }
 
 void
-AppsFlyerXAndroid::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)) {
+AppsFlyerXAndroid::setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error)) {
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
         return;

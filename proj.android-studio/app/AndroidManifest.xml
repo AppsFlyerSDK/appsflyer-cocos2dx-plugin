@@ -16,10 +16,10 @@
 
 
         <service
-            android:name="com.appsflyer.FirebaseInstanceIdListener">
+            android:name="com.appsflyer.FirebaseMessagingServiceListener">
             <intent-filter>
                 <action
-                    android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                    android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
