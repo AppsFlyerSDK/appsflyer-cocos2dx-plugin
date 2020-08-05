@@ -508,9 +508,6 @@ void AppsFlyerXAndroid::sharingFilter(std::vector<std::string> partners){
         }
 
 
-        int partSize = partners.size();
-
-
         jobjectArray result;
         result = (jobjectArray)jniGetInstance.env->NewObjectArray(3,jniGetInstance.env->FindClass("java/lang/String"),jniGetInstance.env->NewStringUTF(""));
         for(int i=0; i<partners.size(); i++) {
@@ -519,8 +516,8 @@ void AppsFlyerXAndroid::sharingFilter(std::vector<std::string> partners){
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilter",
                                                              "([Ljava/lang/String;)V");
-        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
-                jniGetContext.classID, jniGetContext.methodID);
+//        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+//                jniGetContext.classID, jniGetContext.methodID);
 
 
 
@@ -559,8 +556,8 @@ void AppsFlyerXAndroid::sharingFilterForAllPartners(){
 
         jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilterForAllPartners",
                                                              "()V");
-        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
-                jniGetContext.classID, jniGetContext.methodID);
+//        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+//                jniGetContext.classID, jniGetContext.methodID);
 
 
 

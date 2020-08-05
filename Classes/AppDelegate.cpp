@@ -95,11 +95,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("942960987");
 #endif
-
-    AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
-    AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
-    AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
-    AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
+//        std::vector<std::string> partners;
+//         partners.push_back("facebook_int");
+//         partners.push_back("googleadwords_int");
+//         AppsFlyerX::sharingFilter(partners);
+        AppsFlyerX::sharingFilterForAllPartners();
+        AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
+        AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
+        AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
+        AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
 
     AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});

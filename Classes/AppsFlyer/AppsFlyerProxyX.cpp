@@ -120,7 +120,7 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
         jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
         jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
-        if (objValue == NULL){
+        if   (objValue == NULL) {
             map[std::string(c_string_key)] = NULL;
         }
         else if (env->IsInstanceOf(objValue, jBooleanClass)){
@@ -130,9 +130,10 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
         } else if (env->IsInstanceOf(objValue, jStringClass)){
             jstring objString = (jstring)objValue;
             const char *c_string_value = env->GetStringUTFChars(objString, 0);
-            jobjectRefType typeObj = env->GetObjectRefType(objValue);
             map[std::string(c_string_key)] = c_string_value;
         }
+
+        env->DeleteLocalRef(objValue);
     }
 
     return map;
