@@ -17,6 +17,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
  - [stopTracking](#stopTracking) 
+ - [sharingFilter](#sharingFilter)
+ - [sharingFilterForAllPartners](#sharingFilterForAllPartners)
  - [trackEvent](#trackEvent)
  - [getConversion Listener](#getConversionListener)
  - [setUserEmails](#setUserEmails)
@@ -126,6 +128,34 @@ Be sure to set `stopTracking(false)` to release the SDK from stop tracking
 
 ```cpp
 AppsFlyerX::stopTracking(false); // or false
+```
+---
+##### <a id="sharingFilter"> **`sharingFilter(partners);`**
+ Use to prevent sharing data with some (one or more) networks/integrated partners.
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `eventName` | `std::vector<std::string>`  | list of partners
+
+
+*Example:*
+
+```cpp
+  std::vector<std::string> partners;
+  partners.push_back("facebook_int");
+  partners.push_back("googleadwords_int");
+  AppsFlyerX::sharingFilter(partners);
+```
+---
+
+##### <a id="sharingFilterForAllPartners"> **`sharingFilterForAllPartners();`**
+
+Use to prevent sharing data with all networks/integrated partners.
+
+*Example:*
+
+```cpp
+AppsFlyerX::sharingFilterForAllPartners();
 ```
 
 ---
