@@ -1,5 +1,20 @@
 # Versions
 
+## 5.4.1
+
+Release date: Aug 5, 2020
+Release type: Major / **Minor** / Hotfix
+
+Android SDK is updated to v5.4.1
+iOS SDK is updated to v5.4.1
+
+ **Technical Story**
+
+Cocos2dx >> Support for "sharingFilter"
+Cocos2dx >> Support for "sharingFilterForAllPartners"
+
+----------
+
 ## 1.1.0
 
 Release date: Jul 15, 2019
