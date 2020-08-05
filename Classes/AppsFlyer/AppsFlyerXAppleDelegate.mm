@@ -10,13 +10,13 @@
 
 @implementation AppsFlyerXAppleDelegate
 
-- (void)onConversionDataReceived:(NSDictionary*)installData {
+- (void)onConversionDataSuccess:(NSDictionary*)installData {
     if (_onConversionDataReceivedCallback) {
         _onConversionDataReceivedCallback(AppsFlyerXAppleHelper::nsDictionary2ValueMap(installData));
     }
 }
 
-- (void)onConversionDataRequestFailure:(NSError *)error {
+- (void)onConversionDataFail:(NSError *)error {
     if (_onConversionDataRequestFailureCallback) {
         NSDictionary * errorDictionary = @{@"errorCode":[NSNumber numberWithInteger:error.code],
                                            @"errorDescription":error.localizedDescription};

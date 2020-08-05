@@ -9,6 +9,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <jni.h>
 #include "cocos2d.h"
+#include <typeinfo>
 
 extern "C" {
 

@@ -4,6 +4,7 @@
 
 #include <string>
 #include "AppsFlyerProxyX.h"
+#include <typeinfo>
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 
@@ -111,16 +112,28 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
 
     jobjectArray arrayOfKeys = (jobjectArray) env->CallObjectMethod(objKeySet, midToArray);
     int arraySize = env->GetArrayLength(arrayOfKeys);
-
+    jclass jBooleanClass = env->FindClass("java/lang/Boolean");
+    jclass jStringClass = env->FindClass("java/lang/String");
 
     for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
         jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
-        jstring objValue = (jstring)env->CallObjectMethod(attributionObject, midGet, objKey);
-        const char* c_string_value = env->GetStringUTFChars(objValue, 0);
+        jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
+        if   (objValue == NULL) {
+            map[std::string(c_string_key)] = NULL;
+        }
+        else if (env->IsInstanceOf(objValue, jBooleanClass)){
+            jmethodID booleanValueMID   = env->GetMethodID(jBooleanClass, "booleanValue", "()Z");
+            bool booleanValue           = (bool) env->CallBooleanMethod(objValue, booleanValueMID);
+            map[std::string(c_string_key)] = booleanValue;
+        } else if (env->IsInstanceOf(objValue, jStringClass)){
+            jstring objString = (jstring)objValue;
+            const char *c_string_value = env->GetStringUTFChars(objString, 0);
+            map[std::string(c_string_key)] = c_string_value;
+        }
 
-        map[std::string(c_string_key)] = c_string_value;
+        env->DeleteLocalRef(objValue);
     }
 
     return map;

@@ -443,17 +443,17 @@ unsigned long AppsFlyerX::getMinTimeBetweenSessions() {
 }
 
 // Delegates methods proxy
-void AppsFlyerX::setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData)) {
+void AppsFlyerX::setOnConversionDataSuccess(void(*callback)(cocos2d::ValueMap installData)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataReceived(callback);
+    AppsFlyerXAndroid::setOnConversionDataSuccess(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnConversionDataReceived(callback);
 #endif
 }
 
-void AppsFlyerX::setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error)) {
+void AppsFlyerX::setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataRequestFailure(callback);
+    AppsFlyerXAndroid::setOnConversionDataFail(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOnConversionDataRequestFailure(callback);
 #endif
@@ -482,4 +482,20 @@ void AppsFlyerX::stopTracking(bool stopTracking) {
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::stopTracking(stopTracking);
 #endif
+}
+
+void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::sharingFilter(partners);
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        return AppsFlyerXApple::sharingFilter(partners);
+    #endif
+}
+
+void AppsFlyerX::sharingFilterForAllPartners(){
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::sharingFilterForAllPartners();
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        return AppsFlyerXApple::sharingFilterForAllPartners();
+    #endif
 }
