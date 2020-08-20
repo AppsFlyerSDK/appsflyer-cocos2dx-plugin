@@ -121,7 +121,7 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
         jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
         jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
         if   (objValue == NULL) {
-            map[std::string(c_string_key)] = NULL;
+            map[std::string(c_string_key)] = cocos2d::Value::Null;
         }
         else if (env->IsInstanceOf(objValue, jBooleanClass)){
             jmethodID booleanValueMID   = env->GetMethodID(jBooleanClass, "booleanValue", "()Z");
