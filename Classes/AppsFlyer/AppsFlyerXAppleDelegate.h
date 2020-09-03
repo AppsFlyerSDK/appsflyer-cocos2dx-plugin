@@ -5,9 +5,9 @@
 //  Created by AndreyG-AF on 10/7/17.
 //
 
-#import "AppsFlyerTracker.h"
+#import "AppsFlyerLib.h"
 
-@interface AppsFlyerXAppleDelegate: NSObject<AppsFlyerTrackerDelegate>
+@interface AppsFlyerXAppleDelegate: NSObject<AppsFlyerLibDelegate>
 
 @property (nonatomic) void (* onConversionDataReceivedCallback)(cocos2d::ValueMap installData);
 @property (nonatomic) void (* onConversionDataRequestFailureCallback)(cocos2d::ValueMap error);

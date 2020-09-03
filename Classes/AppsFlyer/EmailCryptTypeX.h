@@ -9,7 +9,7 @@
 #define EmailCryptTypeX_h
 
 /*!
- *  Copied enum of EmailCryptType defined in AppsFlyerTracker.h
+ *  Copied enum of EmailCryptType defined in AppsFlyerLib.h
  */
 typedef enum  {
     XEmailCryptTypeNone = 0,

@@ -167,13 +167,13 @@
 		551900E51F8CCFF400150B9D /* AppsFlyerCrossPromotionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerCrossPromotionHelper.h; sourceTree = "<group>"; };
 		551900E61F8CCFF400150B9D /* AppsFlyerLinkGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerLinkGenerator.h; sourceTree = "<group>"; };
 		551900E71F8CCFF400150B9D /* AppsFlyerShareInviteHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerShareInviteHelper.h; sourceTree = "<group>"; };
-		551900E81F8CCFF400150B9D /* AppsFlyerTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerTracker.h; sourceTree = "<group>"; };
 		551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
 		559592F81F9628B500EFD43C /* AppsFlyerX+AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppsFlyerX+AppController.h"; sourceTree = "<group>"; };
 		559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppsFlyerX+AppController.m"; sourceTree = "<group>"; };
 		55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXMacro.h; sourceTree = "<group>"; };
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		868EF8B525012A8B0033C526 /* AppsFlyerLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerLib.h; sourceTree = "<group>"; };
 		94953C7E22D38A580096F048 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -406,7 +406,7 @@
 				551900E51F8CCFF400150B9D /* AppsFlyerCrossPromotionHelper.h */,
 				551900E61F8CCFF400150B9D /* AppsFlyerLinkGenerator.h */,
 				551900E71F8CCFF400150B9D /* AppsFlyerShareInviteHelper.h */,
-				551900E81F8CCFF400150B9D /* AppsFlyerTracker.h */,
+				868EF8B525012A8B0033C526 /* AppsFlyerLib.h */,
 				551900E91F8CCFF400150B9D /* libAppsFlyerLib.a */,
 			);
 			path = libAppsFlyer;

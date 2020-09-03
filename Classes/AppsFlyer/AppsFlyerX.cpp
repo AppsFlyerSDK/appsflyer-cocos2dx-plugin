@@ -99,21 +99,21 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
-void AppsFlyerX::disableAppleAdSupportTracking(bool isDisableAppleAdSupportTracking) {
+void AppsFlyerX::disableAdvertiserIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "disableAppleAdSupportTracking is not supported for Android.");
+    CCLOGWARN("%s", "disableAdvertiserIdentifier is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::disableAppleAdSupportTracking(isDisableAppleAdSupportTracking);
+    return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
 #endif
 }
 
-bool AppsFlyerX::isDisableAppleAdSupportTracking() {
+bool AppsFlyerX::isDisabledAdvertiserIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "isDisableAppleAdSupportTracking is not supported for Android.");
+    CCLOGWARN("%s", "isDisabledAdvertiserIdentifier is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDisableAppleAdSupportTracking();
+    return AppsFlyerXApple::isDisabledAdvertisingIdentifier();
 #endif
 }
 
@@ -175,38 +175,38 @@ std::string AppsFlyerX::appInviteOneLinkID() {
 #endif
 }
 
-void AppsFlyerX::deviceTrackingDisabled(bool deviceTrackingDisabled) {
+void AppsFlyerX::anonymizeUser(bool shouldAnonymize) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::deviceTrackingDisabled(deviceTrackingDisabled);
+    AppsFlyerXAndroid::anonymizeUser(shouldAnonymize);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::deviceTrackingDisabled(deviceTrackingDisabled);
+    return AppsFlyerXApple::anonymizeUser(shouldAnonymize);
 #endif
 }
 
-bool AppsFlyerX::isDeviceTrackingDisabled() {
+bool AppsFlyerX::isAnonymizedUser() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "isDeviceTrackingDisabled is not supported for Android.");
+    CCLOGWARN("%s", "isAnonymizedUser is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDeviceTrackingDisabled();
+    return AppsFlyerXApple::isAnonymizedUser();
 #endif
 }
 
-void AppsFlyerX::disableIAdTracking(bool disableIAdTracking) {
+void AppsFlyerX::disableCollectASA(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "disableIAdTracking is not supported for Android.");
+    CCLOGWARN("%s", "disableCollectASA is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::disableIAdTracking(disableIAdTracking);
+    return AppsFlyerXApple::setDisableCollectASA(shouldDisable);
 #endif
 }
 
-bool AppsFlyerX::isDisableIAdTracking() {
+bool AppsFlyerX::isDisabledCollectASA() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "isDisableIAdTracking is not supported for Android.");
+    CCLOGWARN("%s", "isDisabledCollectASA is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDisableIAdTracking();
+    return AppsFlyerXApple::isDisabledCollectASA();
 #endif
 }
 
@@ -273,31 +273,23 @@ void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTy
 #endif
 }
 
-void AppsFlyerX::trackAppLaunch() {
+void AppsFlyerX::start() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::startTracking();
+    AppsFlyerXAndroid::start();
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::trackAppLaunch();
+    AppsFlyerXApple::start();
 #endif
 }
 
-void AppsFlyerX::trackEvent(const std::string& eventName, const std::string& value) {
+void AppsFlyerX::logEvent(const std::string& eventName, cocos2d::ValueMap values) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::trackEvent(eventName, value);
+    AppsFlyerXAndroid::logEvent(eventName, values);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::trackEvent(eventName, value);
+    AppsFlyerXApple::logEvent(eventName, values);
 #endif
 }
 
-void AppsFlyerX::trackEvent(const std::string& eventName, cocos2d::ValueMap values) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::trackEvent(eventName, values);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::trackEvent(eventName, values);
-#endif
-}
-
-void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentifier,
+void AppsFlyerX::validateAndLogInAppPurchase(const std::string& productIdentifier,
                                                const std::string& price,
                                                const std::string& currency,
                                                const std::string& tranactionId,
@@ -306,10 +298,10 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentif
                                                std::function<void(cocos2d::ValueMap)> failureBlock) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
-    CCLOGWARN("%s", "validateAndTrackInAppPurchase is not supported for Android.");
+    CCLOGWARN("%s", "validateAndLogInAppPurchase is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 
-    AppsFlyerXApple::validateAndTrackInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
+    AppsFlyerXApple::validateAndLogInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
         successBlock(result);
     }, [&] (cocos2d::ValueMap error) {
         successBlock(error);
@@ -317,17 +309,17 @@ void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& productIdentif
 #endif
 }
 
-void AppsFlyerX::validateAndTrackInAppPurchase(const std::string& publicKey,
+void AppsFlyerX::validateAndLogInAppPurchase(const std::string& publicKey,
                                                const std::string& signature,
                                                const std::string& purchaseData,
                                                const std::string& price,
                                                const std::string& currency,
                                                cocos2d::ValueMap additionalParameters){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::validateAndTrackInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters);
+    AppsFlyerXAndroid::validateAndLogInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // Not supported for iOS
-    CCLOGWARN("%s", "validateAndTrackInAppPurchase(const std::string& publicKey, const std::string& signature, const std::string& purchaseData, const std::string& price, const std::string& currency, cocos2d::ValueMap additionalParameters) is not supported for Android.");
+    CCLOGWARN("%s", "validateAndLogInAppPurchase(const std::string& publicKey, const std::string& signature, const std::string& purchaseData, const std::string& price, const std::string& currency, cocos2d::ValueMap additionalParameters) is not supported for Android.");
 #endif
 }
 
@@ -340,7 +332,6 @@ std::string AppsFlyerX::getAppsFlyerUID() {
 #endif
 }
 
-// - (void) loadConversionDataWithDelegate:(id<AppsFlyerTrackerDelegate>) delegate __attribute__((deprecated));
 
 void AppsFlyerX::handleOpenURL(const std::string& url, const std::string& sourceApplication) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -476,11 +467,11 @@ void AppsFlyerX::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMa
 }
 
 
-void AppsFlyerX::stopTracking(bool stopTracking) {
+void AppsFlyerX::stop(bool shouldStop) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::stopTracking(stopTracking);
+    AppsFlyerXAndroid::stop(shouldStop);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::stopTracking(stopTracking);
+    return AppsFlyerXApple::stop(shouldStop);
 #endif
 }
 
@@ -497,5 +488,13 @@ void AppsFlyerX::sharingFilterForAllPartners(){
     AppsFlyerXAndroid::sharingFilterForAllPartners();
     #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         return AppsFlyerXApple::sharingFilterForAllPartners();
+    #endif
+}
+
+void logLocation(double longitude, double latitude){
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::logLocation(longitude, latitude);
     #endif
 }

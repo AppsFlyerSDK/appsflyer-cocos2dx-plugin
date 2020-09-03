@@ -148,9 +148,9 @@ static AppDelegate s_sharedApplication;
      */
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void)application:(UIApplication *)application didRegisterForRemoteNotifiokcationsWithDeviceToken:(NSData *)deviceToken {
     
-    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+    [[AppsFlyerLib shared] registerUninstall:deviceToken];
 }
 
 
