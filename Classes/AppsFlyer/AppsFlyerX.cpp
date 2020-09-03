@@ -99,7 +99,7 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
-void AppsFlyerX::disableAdvertiserIdentifier(bool shouldDisable) {
+void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
     CCLOGWARN("%s", "disableAdvertiserIdentifier is not supported for Android.");
@@ -108,7 +108,7 @@ void AppsFlyerX::disableAdvertiserIdentifier(bool shouldDisable) {
 #endif
 }
 
-bool AppsFlyerX::isDisabledAdvertiserIdentifier() {
+bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
     CCLOGWARN("%s", "isDisabledAdvertiserIdentifier is not supported for Android.");
@@ -476,25 +476,62 @@ void AppsFlyerX::stop(bool shouldStop) {
 }
 
 void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilter(partners);
-    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        return AppsFlyerXApple::sharingFilter(partners);
-    #endif
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::sharingFilter(partners);
+#endif
 }
 
 void AppsFlyerX::sharingFilterForAllPartners(){
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilterForAllPartners();
-    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        return AppsFlyerXApple::sharingFilterForAllPartners();
-    #endif
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::sharingFilterForAllPartners();
+#endif
 }
 
 void logLocation(double longitude, double latitude){
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     
-    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::logLocation(longitude, latitude);
-    #endif
+#endif
+}
+
+void disableSKAdNetwork(bool shouldDisable){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "disableSKAdNetwork is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::disableSKAdNetwork(shouldDisable);
+#endif
+}
+
+bool isDisabledSKAdNetwork(){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "isDisabledSKAdNetwork is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::isDisabledSKAdNetwork();
+#endif
+}
+
+void waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "waitForAdvertisingIdentifierWithTimeoutInterval is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::waitForAdvertisingIdentifierWithTimeoutInterval(timeoutInterval);
+#endif
+}
+
+
+void setPhoneNumber(const std::string& phoneNumber){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setPhoneNumber(phoneNumber);
+#endif
 }

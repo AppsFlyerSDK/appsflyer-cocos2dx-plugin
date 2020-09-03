@@ -295,3 +295,20 @@ void AppsFlyerXApple::sharingFilter(std::vector<std::string> partners){
 void AppsFlyerXApple::sharingFilterForAllPartners() {
     [[AppsFlyerLib shared] setSharingFilterForAllPartners];
 }
+
+void disableSKAdNetwork(bool shouldDisable){
+    [[AppsFlyerLib shared] setDisableSKAdNetwork:shouldDisable];
+}
+
+bool isDisabledSKAdNetwork(){
+     return [[AppsFlyerLib shared] disableSKAdNetwork];
+}
+
+void  waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval){
+    [[AppsFlyerLib shared] waitForAdvertisingIdentifierWithTimeoutInterval:timeoutInterval];
+}
+
+void setPhoneNumber(const std::string& phoneNumber){
+    NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];
+     [[AppsFlyerLib shared] setPhoneNumber:phone];
+}

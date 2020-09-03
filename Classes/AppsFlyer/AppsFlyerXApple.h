@@ -123,6 +123,13 @@ public:
     //Sharing data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
+    
+    static void disableSKAdNetwork(bool shouldDisable);
+    static bool isDisabledSKAdNetwork();
+    
+    static void  waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval);
+    
+    static void setPhoneNumber(const std::string& phoneNumber);
 };
 
 #endif /* AppsFlyerXApple_h */

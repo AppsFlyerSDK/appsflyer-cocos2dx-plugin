@@ -33,8 +33,8 @@ public:
     static void setCurrencyCode(const std::string& currencyCode);
     static std::string currencyCode();
     
-    static void disableAdvertiserIdentifier(bool shouldDisable);
-    static bool isDisabledAdvertiserIdentifier();
+    static void disableAdvertisingIdentifier(bool shouldDisable);
+    static bool isDisabledAdvertisingIdentifier();
     
     static void setIsDebug(bool isDebug);
     static bool isDebug();
@@ -128,6 +128,14 @@ public:
     //Sharing Data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
+    
+    static void waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval);
+    
+    static void disableSKAdNetwork(bool shouldDisable);
+    static bool isDisabledSKAdNetwork();
+    
+    static void setPhoneNumber(const std::string& phoneNumber);
+    
 };
 
 #endif /* AppsFlyerX_h */
