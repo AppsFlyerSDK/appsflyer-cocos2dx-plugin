@@ -45,7 +45,7 @@ cocos2d::JniMethodInfo getAppsFlyerInstance() {
 }
 
 
-void AppsFlyerXAndroid::stopTracking(bool stopTracking) {
+void AppsFlyerXAndroid::stop(bool shouldStop) {
 
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
@@ -66,7 +66,7 @@ void AppsFlyerXAndroid::stopTracking(bool stopTracking) {
         jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
 
 
-        jniGetInstance.env->CallVoidMethod(afInstance, methodId, stopTracking, jContext);
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, shouldStop, jContext);
 
         jniGetInstance.env->DeleteLocalRef(afInstance);
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
@@ -130,8 +130,8 @@ void AppsFlyerXAndroid::setAppInviteOneLink(std::string &appInviteOneLinkID) {
                                   "(Ljava/lang/String;)V");
 }
 
-void AppsFlyerXAndroid::deviceTrackingDisabled(bool deviceTrackingDisabled) {
-    callVoidMethodWithBoolParam(deviceTrackingDisabled, "setDeviceTrackingDisabled", "(Z)V");
+void AppsFlyerXAndroid::anonymizeUser(bool shouldAnonymize) {
+    callVoidMethodWithBoolParam(shouldAnonymize, "setDeviceTrackingDisabled", "(Z)V");
 }
 
 void AppsFlyerXAndroid::setAdditionalData(cocos2d::ValueMap customData) {
@@ -257,7 +257,7 @@ void AppsFlyerXAndroid::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::
     }
 }
 
-void AppsFlyerXAndroid::startTracking() {
+void AppsFlyerXAndroid::start() {
 
     if (afDevKey.empty()) {
         CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
@@ -316,11 +316,11 @@ void AppsFlyerXAndroid::startTracking() {
     }
 }
 
-void AppsFlyerXAndroid::trackEvent(const std::string &eventName, const std::string &value) {
+void AppsFlyerXAndroid::logEvent(const std::string &eventName, const std::string &value) {
 
 }
 
-void AppsFlyerXAndroid::trackEvent(const std::string &eventName, cocos2d::ValueMap values) {
+void AppsFlyerXAndroid::logEvent(const std::string &eventName, cocos2d::ValueMap values) {
 
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
 
@@ -426,7 +426,7 @@ std::string AppsFlyerXAndroid::getAppsFlyerUID() {
     }
 }
 
-void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string &publicKey,
+void AppsFlyerXAndroid::validateAndLogInAppPurchase(const std::string &publicKey,
                                                       const std::string &signature,
                                                       const std::string &purchaseData,
                                                       const std::string &price,
@@ -465,7 +465,7 @@ void AppsFlyerXAndroid::validateAndTrackInAppPurchase(const std::string &publicK
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "validateAndTrackInAppPurchase",
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "validateAndLogInAppPurchase",
                                                              "(Landroid/content/Context;"
                                                                      "Ljava/lang/String;"
                                                                      "Ljava/lang/String;"

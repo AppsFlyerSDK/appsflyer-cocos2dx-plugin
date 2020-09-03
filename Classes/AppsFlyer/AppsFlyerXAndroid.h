@@ -50,8 +50,8 @@ public:
     static void setAppInviteOneLink(std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
 
-    static void deviceTrackingDisabled(bool deviceTrackingDisabled);
-    static bool isDeviceTrackingDisabled();
+    static void anonymizeUser(bool shouldAnonymize);
+    static bool isAnonymizedUser();
 
     static void disableIAdTracking(bool disableIAdTracking);
     static bool isDisableIAdTracking();
@@ -66,19 +66,19 @@ public:
 
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
 
-    static void startTracking();
+    static void start();
 
-    static void trackEvent(const std::string& eventName, const std::string& value);
+    static void logEvent(const std::string& eventName, const std::string& value);
 
-    static void trackEvent(const std::string& eventName, cocos2d::ValueMap values);
+    static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
 
-    static void validateAndTrackInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
+    static void validateAndLogInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
 
     static void trackLocation(double longitude, double latitude);
 
     static std::string getAppsFlyerUID();
 
-    static void validateAndTrackInAppPurchase(const std::string& publicKey,
+    static void validateAndLogInAppPurchase(const std::string& publicKey,
                                                           const std::string& signature,
                                                           const std::string& purchaseData,
                                                           const std::string& price,
@@ -107,7 +107,7 @@ public:
     static unsigned long getMinTimeBetweenSessions();
 
 
-    static void stopTracking(bool stopTracking);
+    static void stop(bool shouldStop);
 
 
     // Delegates methods proxy
