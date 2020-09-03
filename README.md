@@ -57,13 +57,13 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 ## <a id="usage"> Usage:
 
 #### 1\. Set your  Dev_Key and enable AppsFlyer to detect installations, sessions (app opens) and updates.
-> This is the minimum requirement to start tracking your app installs and is already implemented in this plugin. You **MUST** modify this call and provide:
+> This is the minimum requirement to start measuring your app installs and is already implemented in this plugin. You **MUST** modify this call and provide:
 **-devKey** - Your application devKey provided by AppsFlyer.
 **-appId**  - (*For iOS only*) Your iTunes Application ID.
 
 
 
-Add the following lines into `applicationDidFinishLaunching` and to `applicationWillEnterForeground` method to be able to initialize tracking with your own AppsFlyer dev key:
+Add the following lines into `applicationDidFinishLaunching` and to `applicationWillEnterForeground` method to be able to initialize measuring with your own AppsFlyer dev key:
 
 
 ```cpp
@@ -77,14 +77,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
   
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::trackAppLaunch();
+    AppsFlyerX::start();
 #endif
 }
 
 void AppDelegate::applicationWillEnterForeground() {
    //..
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::trackAppLaunch();
+    AppsFlyerX::start();
 #endif
 }
 ```
@@ -122,12 +122,12 @@ AppsFlyerX::setIsDebug(true);
 ##### <a id="stopTracking"> **`stopTracking(boolean);`**
 
  if `true` AppsFlyer SDK will enter to pending mode, no activity
-Be sure to set `stopTracking(false)` to release the SDK from stop tracking
+Be sure to set `stop(false)` to release the SDK from stop measuring events
 
 *Example:*
 
 ```cpp
-AppsFlyerX::stopTracking(false); // or false
+AppsFlyerX::stop(false); // or false
 ```
 ---
 ##### <a id="sharingFilter"> **`sharingFilter(partners);`**
@@ -159,15 +159,14 @@ AppsFlyerX::sharingFilterForAllPartners();
 ```
 
 ---
-#####  **`trackEvent(eventName, eventValue): void`** (optional)
-and
-##### <a id="trackEvent"> **`trackEvent(eventName, eventValues): void`** (optional)
+
+##### <a id="logEvent"> **`trackEvent(eventName, eventValues): void`** (optional)
 
 
 - These in-app events help you track how loyal users discover your app, and attribute them to specific
 campaigns/media-sources. Please take the time define the event/s you want to measure to allow you
 to track ROI (Return on Investment) and LTV (Lifetime Value).
-- The `trackEvent` method allows you to send in-app events to AppsFlyer analytics. This method allows you to add events dynamically by adding them directly to the application code.
+- The `logEvent` method allows you to send in-app events to AppsFlyer analytics. This method allows you to add events dynamically by adding them directly to the application code.
 
 
 | parameter   | type                        | description |
@@ -179,11 +178,11 @@ to track ROI (Return on Investment) and LTV (Lifetime Value).
 
 ```cpp
 //basic implementation
-AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
+AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                          { "key2", cocos2d::Value("value2")}});
 
 //rich in-app-event implementation:
-AppsFlyerX::trackEvent(AFEventPurchase, {
+AppsFlyerX::logEvent(AFEventPurchase, {
                         { AFEventParamContentId, Value({Value("12344"), Value("98844"), Value("39944")})},
                         { AFEventParamCurrency, Value({Value(20), Value(11), Value(61)})},
                         { AFEventParamPrice, Value({Value(25), Value(50), Value(10)})},
@@ -284,17 +283,17 @@ AppsFlyerX::setCurrencyCode("<CURRENCY_ID>");
 
 ---
 
-##### <a id="disableAppleAdSupportTracking"> **`disableAppleAdSupportTracking(bool): void`** *(ios only)*
+##### <a id="disableAdvertiserIdentifier"> **`disableAppleAdSupportTracking(bool): void`** *(ios only)*
 
 
 | parameter   | type                  | Default     | description |
 | ----------- |-----------------------|-------------|-------------|
-| `flag`| `bool`              |   `false`     | disables Apple iAd Support Tracking|
+| `flag`| `bool`              |   `false`     | disables AdvertiserIdentifier|
 
 *Examples:*
 
 ```cpp
-AppsFlyerX::disableAppleAdSupportTracking(true);
+AppsFlyerX::disableAdvertiserIdentifier(true);
 ```
 
 ---
@@ -319,7 +318,7 @@ AppsFlyerX::setShouldCollectDeviceName(true);
 
 | parameter   | type                  | Default     | description |
 | ----------- |-----------------------|-------------|-------------|
-| `appInviteOneLinkID`| `std::string&`              |       | Before calling startTracking in your app, set the OneLink which is invoked according to the OneLink ID. See additional info [HERE](https://support.appsflyer.com/hc/en-us/articles/115004480866-User-Invite-Tracking)|
+| `appInviteOneLinkID`| `std::string&`              |       | Before calling start in your app, set the OneLink which is invoked according to the OneLink ID. See additional info [HERE](https://support.appsflyer.com/hc/en-us/articles/115004480866-User-Invite-Tracking)|
 
 *Examples:*
 
@@ -329,32 +328,32 @@ AppsFlyerX::setAppInviteOneLink("8eOw");
 
 ---
 
-##### <a id="deviceTrackingDisabled"> **`deviceTrackingDisabled(bool): void`**  
+##### <a id="anonymizeUser"> **`deviceTrackingDisabled(bool): void`**  
 
 
 | parameter   | type                  | Default     | description |
 | ----------- |-----------------------|-------------|-------------|
-| `flag`| `bool`              |   `false`     | AppsFlyer provides you a method to opt-out specific users from AppsFlyer analytics. This method complies with the latest privacy requirements and complies with Facebook data and privacy policies. Default is false, meaning tracking is enabled by default. **Warning** Opting out users SEVERELY hurts your attribution information. Use this option ONLY on regions which legally bind you from collecting your users' information.|
+| `flag`| `bool`              |   `false`     | AppsFlyer provides you a method to opt-out specific users from AppsFlyer analytics. This method complies with the latest privacy requirements and complies with Facebook data and privacy policies. Default is false. **Warning** Opting out users SEVERELY hurts your attribution information. Use this option ONLY on regions which legally bind you from collecting your users' information.|
 
 *Examples:*
 
 ```cpp
-AppsFlyerX::deviceTrackingDisabled(true);
+AppsFlyerX::anonymizeUser(true);
 ```
 
 ---
 
-##### <a id="disableIAdTracking"> **`disableIAdTracking(bool): void`** *(ios only)*
+##### <a id="disableCollectASA"> **`disableIAdTracking(bool): void`** *(ios only)*
 
 
 | parameter   | type                  | Default     | description |
 | ----------- |-----------------------|-------------|-------------|
-| `flag`| `bool`              |   `false`     | enables/disables iAD tracking|
+| `flag`| `bool`              |   `false`     | enables/disables collect ASA|
 
 *Examples:*
 
 ```cpp
-AppsFlyerX::disableIAdTracking(true);
+AppsFlyerX::disableCollectASA(true);
 ```
 
 ---
@@ -391,9 +390,9 @@ AppsFlyerX::setUseUninstallSandbox(true);
 
 ---
 
-##### <a id="validateAndTrackInAppPurchase"> **`validateAndTrackInAppPurchase`**
+##### <a id="validateAndLogInAppPurchase"> **`validateAndTrackInAppPurchase`**
 
-##### <a id="validateAndTrackInAppPurchase-a)"> **Android**
+##### <a id="validateAndLogInAppPurchase-a)"> **Android**
 
 
 | parameter   | type                  | Default     | description |
@@ -414,7 +413,7 @@ std::string base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ
 std::string signature = "OaIdwQOcmrJrMKUx+URVy1I6aeKYiYzflkk1zIKVSs+dDv691neCbR+jlDDzVi3jfSkfirxQISxo7Pe1uzoYbpq9wBk/pMgVjjSbpvCojhA4d/Mwsf4mtAH2LJcVNjhMQdSWvGJlzva3OSt+KQ+9/pRJ15aYT2gFn3SpGSPxNxJmHPIOlM1Lr74MejVu9rnbcSjCB/oI0W4O58p9UWSt5MgmlpqlrK5YqTi1a1VnttY9r1IXFeltwZvmPbcWcYwRHFvemwYGX86huSOFBOYRfaYo9f+DinpoUoXKQEo0JrvKD2/dzFkbUTto1d2OPo1ddaYllgsb2UEV5wwFZFnemg==";
 std::string purchaseData = "{\"orderId\":\"\",\"packageName\":\"com.appsflyer.testapp\",\"productId\":\"consumable\",\"purchaseTime\":1497531638107,\"purchaseState\":0,\"developerPayload\":\"2497525891514-5765886608164763986\",\"purchaseToken\":\"pfkalmpnnimamdllmincaida.AO-J1OymunlPCkDQZTf8bPcesoB0n1_ND3WFynoU91-v_R1Px46m3Q-DdRKNlxMVsP2pCTKpo1et1w1IpNVXQ8-zNpRo6a2nXP7a5fQWiDv2asL1dwJPCV8NghDHbstO084IlKo6xcgy\"}";
     
-AppsFlyerX::validateAndTrackInAppPurchase(base64EncodedPublicKey, 
+AppsFlyerX::validateAndLogInAppPurchase(base64EncodedPublicKey, 
                                           signature, 
                         "3.00",
                       "ILS",
@@ -424,7 +423,7 @@ AppsFlyerX::validateAndTrackInAppPurchase(base64EncodedPublicKey,
 ---
 
 
-##### <a id="validateAndTrackInAppPurchase-i)"> **iOS**
+##### <a id="validateAndLogInAppPurchase-i)"> **iOS**
 
 | parameter   | type                  | Default     | description |
 | ----------- |-----------------------|-------------|-------------|
@@ -444,7 +443,7 @@ test_map["key1"] = "value1";
 std::string productIdentifier = "com.mycomp.inapppurchase.cons";
 std::string tr_id = "1000000256672208";
   
-AppsFlyerX::validateAndTrackInAppPurchase(productIdentifier, 
+AppsFlyerX::validateAndLogInAppPurchase(productIdentifier, 
                                           "1.99",
                                           "USD",
                                           tr_id
@@ -504,7 +503,7 @@ You can use the `registerUninstall(void* deviceToken, unsigned long length)` API
 Open your Xcode project and locate the file `AppController.mm` under the iOS folder inside your project. Add the following code snippet under `didFinishLaunchingWithOptions` :
 
 ```cpp 
-#import "AppsFlyerTracker.h"
+#import "AppsFlyerLib.h"
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //...
@@ -519,14 +518,14 @@ UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
-    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+    [[AppsFlyerLib shared] registerUninstall:deviceToken];
 }
 ```
 and method implementation:
 
 ```cpp 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
-    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+    [[AppsFlyerLib shared] registerUninstall:deviceToken];
 }
 ```
 
@@ -564,25 +563,10 @@ AppsFlyerX::setMinTimeBetweenSessions(9);
 
 
 
-##### <a id="enableUninstallTracking"> **`enableUninstallTracking(token, onSuccess, onError): void`**
-
-Enables app uninstall tracking.
-<a href="https://support.appsflyer.com/hc/en-us/articles/211211963-iOS-Uninstall-Tracking">More Information</a>
-
-| parameter   | type                        | description |
-| ----------- |-----------------------------|--------------|
-| `FCM/GCM ProjectNumber`   | `String`    | GCM/FCM ProjectNumber |
-| `onSuccess` | `(message: string)=>void` | Success callback - called after successfull register uninstall. (optional)|
-| `onError`   | `(message: string)=>void` | Error callback - called when error occurs during register uninstall. (optional)|
-
-
----
-
-
 ##### <a id="updateServerUninstallToken"> **`updateServerUninstallToken("token"): void`**
 
 Allows to pass GCM/FCM Tokens that where collected by third party plugins to the AppsFlyer server.
-Can be used for Uninstall Tracking.
+Can be used for Uninstall measuring.
 
 
 | parameter   | type                        | description |
