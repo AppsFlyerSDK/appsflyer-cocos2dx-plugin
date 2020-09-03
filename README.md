@@ -16,22 +16,22 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [Usage](#usage)
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
- - [stopTracking](#stopTracking) 
+ - [stop](#stopTracking) 
  - [sharingFilter](#sharingFilter)
  - [sharingFilterForAllPartners](#sharingFilterForAllPartners)
- - [trackEvent](#trackEvent)
+ - [logEvent](#trackEvent)
  - [getConversion Listener](#getConversionListener)
  - [setUserEmails](#setUserEmails)
  - [setCustomerUserID](#setCustomerUserID)
  - [setCurrencyCode](#setCurrencyCode)
- - [disableAppleAdSupportTracking](#disableAppleAdSupportTracking) *(ios only)*
+ - [disableAdvertiserIdentifier](#disableAppleAdSupportTracking) *(ios only)*
  - [setShouldCollectDeviceName](#setShouldCollectDeviceName)*(ios only)*
  - [setAppInviteOneLink](#setAppInviteOneLink)
- - [deviceTrackingDisabled opt-out](#deviceTrackingDisabled)
- - [disableIAdTracking](#disableIAdTracking)*(ios only)*
+ - [anonymizeUser opt-out](#deviceTrackingDisabled)
+ - [disableCollectASA](#disableIAdTracking)*(ios only)*
  - [setUseReceiptValidationSandbox](#setUseReceiptValidationSandbox) *(ios olny)*
  - [setUseUninstallSandbox](#setUseUninstallSandbox) *(ios only)*
- - validateAndTrackInAppPurchase
+ - validateAndLogInAppPurchase
     - [Android](#validateAndTrackInAppPurchase-a)
     - [iOS](#validateAndTrackInAppPurchase-i)
   - [getAppsFlyerUID](#getAppsFlyerUID)
@@ -41,10 +41,10 @@ In order for us to provide optimal support, we would kindly ask you to submit an
     - [iOS](#registerUninstallIOS) 
   - [setHost](#setHost)
   - [setMinTimeBetweenSessions](#setMinTimeBetweenSessions)
-  - [deep linking Tracking](#deep-linking-tracking)
+  - [deep linking Logging](#deep-linking-tracking)
   - generateInviteLink - TBD
-  - trackCrossPromotionImpression - TBD
-  - trackAndOpenStore - TBD
+  - logCrossPromotionImpression - TBD
+  - logAndOpenStore - TBD
     
 
 

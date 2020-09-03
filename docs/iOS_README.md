@@ -29,7 +29,7 @@ How to integrate the AppsFlyer SDK into your Cocos2dx Apple project.
  - `libAppsFlyer/AppsFlyerCrossPromotionHelper.h`
  - `libAppsFlyer/AppsFlyerLinkGenerator.h`
  - `libAppsFlyer/AppsFlyerShareInviteHelper.h`
- - `libAppsFlyer/AppsFlyerTracker.h`
+ - `libAppsFlyer/AppsFlyerLib.h`
  - `libAppsFlyer/libAppsFlyerLib.a`
 
 to `Classes/AppsFlyer`

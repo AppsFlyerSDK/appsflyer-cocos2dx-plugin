@@ -296,19 +296,19 @@ void AppsFlyerXApple::sharingFilterForAllPartners() {
     [[AppsFlyerLib shared] setSharingFilterForAllPartners];
 }
 
-void disableSKAdNetwork(bool shouldDisable){
+void AppsFlyerXApple::disableSKAdNetwork(bool shouldDisable){
     [[AppsFlyerLib shared] setDisableSKAdNetwork:shouldDisable];
 }
 
-bool isDisabledSKAdNetwork(){
+bool AppsFlyerXApple::isDisabledSKAdNetwork(){
      return [[AppsFlyerLib shared] disableSKAdNetwork];
 }
 
-void  waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval){
+void  AppsFlyerXApple::waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval){
     [[AppsFlyerLib shared] waitForAdvertisingIdentifierWithTimeoutInterval:timeoutInterval];
 }
 
-void setPhoneNumber(const std::string& phoneNumber){
+void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
     NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];
      [[AppsFlyerLib shared] setPhoneNumber:phone];
 }

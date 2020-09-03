@@ -94,6 +94,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("942960987");
+    AppsFlyerX::waitForAdvertisingIdentifierWithTimeoutInterval(60);
+
 #endif
 //        std::vector<std::string> partners;
 //         partners.push_back("facebook_int");

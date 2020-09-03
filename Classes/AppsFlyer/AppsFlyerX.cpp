@@ -491,7 +491,7 @@ void AppsFlyerX::sharingFilterForAllPartners(){
 #endif
 }
 
-void logLocation(double longitude, double latitude){
+void AppsFlyerX::logLocation(double longitude, double latitude){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -499,7 +499,7 @@ void logLocation(double longitude, double latitude){
 #endif
 }
 
-void disableSKAdNetwork(bool shouldDisable){
+void AppsFlyerX::disableSKAdNetwork(bool shouldDisable){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
     CCLOGWARN("%s", "disableSKAdNetwork is not supported for Android.");
@@ -508,7 +508,7 @@ void disableSKAdNetwork(bool shouldDisable){
 #endif
 }
 
-bool isDisabledSKAdNetwork(){
+bool AppsFlyerX::isDisabledSKAdNetwork(){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
     CCLOGWARN("%s", "isDisabledSKAdNetwork is not supported for Android.");
@@ -517,7 +517,7 @@ bool isDisabledSKAdNetwork(){
 #endif
 }
 
-void waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval){
+void AppsFlyerX::waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
     CCLOGWARN("%s", "waitForAdvertisingIdentifierWithTimeoutInterval is not supported for Android.");
@@ -527,7 +527,7 @@ void waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterv
 }
 
 
-void setPhoneNumber(const std::string& phoneNumber){
+void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
     CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");

@@ -129,7 +129,7 @@ public:
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
     
-    static void waitForAdvertisingIdentifierWithTimeoutInterval(unsigned long timeoutInterval);
+    static void waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval);
     
     static void disableSKAdNetwork(bool shouldDisable);
     static bool isDisabledSKAdNetwork();
