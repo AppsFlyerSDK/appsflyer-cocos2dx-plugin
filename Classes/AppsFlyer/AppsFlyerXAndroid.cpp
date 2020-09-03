@@ -465,7 +465,7 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(const std::string &publicKey
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
-        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "validateAndLogInAppPurchase",
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "validateAndTrackInAppPurchase",
                                                              "(Landroid/content/Context;"
                                                                      "Ljava/lang/String;"
                                                                      "Ljava/lang/String;"
