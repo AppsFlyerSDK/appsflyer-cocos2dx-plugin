@@ -67,7 +67,10 @@ bool HelloWorld::init()
                 test_map["key1"] = "value1";
                 test_map["key2"] = "eee";
                 test_map["key3"] = "sssss";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
                 AppsFlyerX::validateAndLogInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
+#endif
+              
                 break;
             }
             default:

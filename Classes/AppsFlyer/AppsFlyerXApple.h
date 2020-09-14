@@ -127,7 +127,7 @@ public:
     static void disableSKAdNetwork(bool shouldDisable);
     static bool isDisabledSKAdNetwork();
     
-    static void  waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval);
+    static void  waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
     
     static void setPhoneNumber(const std::string& phoneNumber);
 };

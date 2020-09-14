@@ -304,8 +304,8 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
      return [[AppsFlyerLib shared] disableSKAdNetwork];
 }
 
-void  AppsFlyerXApple::waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval){
-    [[AppsFlyerLib shared] waitForAdvertisingIdentifierWithTimeoutInterval:timeoutInterval];
+void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
+    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
 }
 
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){

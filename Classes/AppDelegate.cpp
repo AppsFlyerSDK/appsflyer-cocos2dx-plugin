@@ -60,7 +60,6 @@ static int register_all_packages()
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
-
     for (auto &t : installData){
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
     }
@@ -94,7 +93,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("942960987");
-    AppsFlyerX::waitForAdvertisingIdentifierWithTimeoutInterval(60);
+   // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
 //        std::vector<std::string> partners;

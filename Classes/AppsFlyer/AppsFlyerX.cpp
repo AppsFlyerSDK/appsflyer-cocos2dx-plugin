@@ -517,12 +517,12 @@ bool AppsFlyerX::isDisabledSKAdNetwork(){
 #endif
 }
 
-void AppsFlyerX::waitForAdvertisingIdentifierWithTimeoutInterval(double timeoutInterval){
+void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
-    CCLOGWARN("%s", "waitForAdvertisingIdentifierWithTimeoutInterval is not supported for Android.");
+    CCLOGWARN("%s", "waitForATTUserAuthorizationWithTimeoutInterval is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::waitForAdvertisingIdentifierWithTimeoutInterval(timeoutInterval);
+    return AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(timeoutInterval);
 #endif
 }
 
