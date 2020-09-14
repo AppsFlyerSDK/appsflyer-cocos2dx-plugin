@@ -40,8 +40,8 @@ public:
     static void setCurrencyCode(const std::string& currencyCode);
     static std::string currencyCode();
     
-    static void disableAppleAdSupportTracking(bool isDisableAppleAdSupportTracking);
-    static bool isDisableAppleAdSupportTracking();
+    static void disableAdvertisingIdentifier(bool shouldDisable);
+    static bool isDisabledAdvertisingIdentifier();
 
     static void setIsDebug(bool isDebug);
     static bool isDebug();
@@ -52,11 +52,11 @@ public:
     static void setAppInviteOneLink(std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
     
-    static void deviceTrackingDisabled(bool deviceTrackingDisabled);
-    static bool isDeviceTrackingDisabled();
+    static void anonymizeUser(bool shouldAnonymize);
+    static bool isAnonymizedUser();
     
-    static void disableIAdTracking(bool disableIAdTracking);
-    static bool isDisableIAdTracking();
+    static void setDisableCollectASA(bool shouldDisable);
+    static bool isDisabledCollectASA();
     
     static void setUseReceiptValidationSandbox(bool useReceiptValidationSandbox);
     static bool isUseReceiptValidationSandbox();
@@ -69,13 +69,11 @@ public:
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
-    static void trackAppLaunch();
+    static void start();
     
-    static void trackEvent(const std::string& eventName, const std::string& value);
+    static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
     
-    static void trackEvent(const std::string& eventName, cocos2d::ValueMap values);
-    
-    static void validateAndTrackInAppPurchase(const std::string& productIdentifier,
+    static void validateAndLogInAppPurchase(const std::string& productIdentifier,
                                               const std::string& price,
                                               const std::string& currency,
                                               const std::string& tranactionId,
@@ -83,11 +81,10 @@ public:
                                               std::function<void(cocos2d::ValueMap)> successBlock,
                                               std::function<void(cocos2d::ValueMap)> failureBlock);
     
-    static void trackLocation(double longitude, double latitude);
+    static void logLocation(double longitude, double latitude);
     
     static std::string getAppsFlyerUID();
     
-    // - (void) loadConversionDataWithDelegate:(id<AppsFlyerTrackerDelegate>) delegate __attribute__((deprecated));
     
     static void handleOpenURL(const std::string& url, const std::string& sourceApplication);
     
@@ -114,7 +111,7 @@ public:
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
 
-    static void stopTracking(bool stopTracking);
+    static void stop(bool stop);
     
     
     // Delegates methods proxy    
@@ -126,6 +123,13 @@ public:
     //Sharing data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
+    
+    static void disableSKAdNetwork(bool shouldDisable);
+    static bool isDisabledSKAdNetwork();
+    
+    static void  waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
+    
+    static void setPhoneNumber(const std::string& phoneNumber);
 };
 
 #endif /* AppsFlyerXApple_h */

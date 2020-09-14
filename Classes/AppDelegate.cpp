@@ -60,7 +60,6 @@ static int register_all_packages()
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
-
     for (auto &t : installData){
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
     }
@@ -86,7 +85,7 @@ static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
 
 bool AppDelegate::applicationDidFinishLaunching() {
 
-    AppsFlyerX::stopTracking(false);
+    AppsFlyerX::stop(false);
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
@@ -94,6 +93,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("942960987");
+   // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
+
 #endif
 //        std::vector<std::string> partners;
 //         partners.push_back("facebook_int");
@@ -105,10 +106,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
 
-    AppsFlyerX::trackEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
+    AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::trackAppLaunch();
+    AppsFlyerX::start();
 #endif
 
     // initialize director
@@ -180,7 +181,7 @@ void AppDelegate::applicationWillEnterForeground() {
     //CCLOG("%s", "~+~+~+~+~   applicationWillEnterForeground ~+~+~+~+~");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::trackAppLaunch();
+    AppsFlyerX::start();
 #endif
 
 #if USE_AUDIO_ENGINE

@@ -44,30 +44,22 @@ bool HelloWorld::init()
     addChild(logo, 1);
     
     auto button = Button::create("CloseNormal.png", "CloseSelected.png", "");
-    button->setTitleText("Track event");
+    button->setTitleText("Log event");
     button->setPosition(Vec2(origin.x + 40, origin.y + size.height - 100));
     // todo: change positioning logic
     button->getTitleLabel()->setPosition(45, 10);
     button->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
         switch (type) {
             case Widget::TouchEventType::ENDED: {
-                std::cout << "Track event raised" << std::endl;
+                std::cout << "Log event raised" << std::endl;
 
-//                AppsFlyerX::trackEvent(AFEventPurchase, {
-//                        { AFEventParamContentId, Value({Value("12344"), Value("98844"), Value("39944")})},
-//                        { AFEventParamCurrency, Value({Value(20), Value(11), Value(61)})},
-//                        { AFEventParamPrice, Value({Value(25), Value(50), Value(10)})},
-//                        { AFEventParamContentType, Value("ELECTRONIC")},
-//                        { AFEventParamCurrency, Value("USD")},
-//                        {AFEventParamRevenue, cocos2d::Value("10.67")}
-//                });
 
                 ValueMap map;
                 map["key1"] = "value1";
                 map["key2"] = 1;
                 map["key3"] = true;
                 map["key4"] = 3.0;
-                AppsFlyerX::trackEvent("test_event", map);
+                AppsFlyerX::logEvent("test_event", map);
 
                 AppsFlyerX::setCustomerUserID("CustomId");
 
@@ -75,7 +67,10 @@ bool HelloWorld::init()
                 test_map["key1"] = "value1";
                 test_map["key2"] = "eee";
                 test_map["key3"] = "sssss";
-                AppsFlyerX::validateAndTrackInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+                AppsFlyerX::validateAndLogInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
+#endif
+              
                 break;
             }
             default:
@@ -108,10 +103,10 @@ bool HelloWorld::init()
     validatePurchase->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
         switch (type) {
             case Widget::TouchEventType::ENDED: {
-                std::cout << "Track event raised" << std::endl;
+                std::cout << "Log event raised" << std::endl;
                 
                 ValueMap params;
-                AppsFlyerX::validateAndTrackInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
+                AppsFlyerX::validateAndLogInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
                     for (auto& t : result)
                         std::cout << t.first << " "
                                   << t.second.asString() << "\n";

@@ -24,7 +24,7 @@
  ****************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "AppsFlyerTracker.h"
+#import "AppsFlyerLib.h"
 
 @class RootViewController;
 

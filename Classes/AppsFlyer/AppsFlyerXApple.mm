@@ -9,7 +9,7 @@
 #include "AppsFlyerXApple.h"
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
-#include "libAppsFlyer/AppsFlyerTracker.h"
+#include "libAppsFlyer/AppsFlyerLib.h"
 
 /* Null, because instance will be initialized on demand. */
 AppsFlyerXApple* AppsFlyerXApple::instance = 0;
@@ -25,22 +25,22 @@ AppsFlyerXApple* AppsFlyerXApple::getInstance() {
 AppsFlyerXApple::AppsFlyerXApple() {}
 
 void AppsFlyerXApple::setCustomerUserID(const std::string& customerUserID) {
-    [[AppsFlyerTracker sharedTracker] setCustomerUserID: [NSString stringWithUTF8String:customerUserID.c_str()]];
+    [[AppsFlyerLib shared] setCustomerUserID: [NSString stringWithUTF8String:customerUserID.c_str()]];
 }
 
 std::string AppsFlyerXApple::customerUserID(){
-    return [[[AppsFlyerTracker sharedTracker] customerUserID] UTF8String];
+    return [[[AppsFlyerLib shared] customerUserID] UTF8String];
 }
 
 void AppsFlyerXApple::setAdditionalData(cocos2d::ValueMap customData) {
-    [[AppsFlyerTracker sharedTracker] setAdditionalData: AppsFlyerXAppleHelper::valueMap2nsDictionary(customData)];
+    [[AppsFlyerLib shared] setAdditionalData: AppsFlyerXAppleHelper::valueMap2nsDictionary(customData)];
 }
 cocos2d::ValueMap AppsFlyerXApple::customData() {
-    return AppsFlyerXAppleHelper::nsDictionary2ValueMap([[AppsFlyerTracker sharedTracker] customData]);
+    return AppsFlyerXAppleHelper::nsDictionary2ValueMap([[AppsFlyerLib shared] customData]);
 }
 
 void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
-    [[AppsFlyerTracker sharedTracker] setAppsFlyerDevKey:[NSString stringWithUTF8String:appsFlyerDevKey.c_str()]];
+    [[AppsFlyerLib shared] setAppsFlyerDevKey:[NSString stringWithUTF8String:appsFlyerDevKey.c_str()]];
     
     static dispatch_once_t onceToken;
     static AppsFlyerXApple *xApple = nil;
@@ -56,131 +56,119 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
          object: nil
          queue: nil
          usingBlock: ^ (NSNotification * note) {
-             [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+             [[AppsFlyerLib shared] start];
          }];
     });
 
-    [[AppsFlyerTracker sharedTracker] setDelegate: delegate];
+    [[AppsFlyerLib shared] setDelegate: delegate];
 }
 
 std::string AppsFlyerXApple::appsFlyerDevKey() {
-    return [[[AppsFlyerTracker sharedTracker] appsFlyerDevKey] UTF8String];
+    return [[[AppsFlyerLib shared] appsFlyerDevKey] UTF8String];
 }
 
 void AppsFlyerXApple::setAppleAppID(const std::string& appleAppID) {
-    [[AppsFlyerTracker sharedTracker] setAppleAppID:[NSString stringWithUTF8String:appleAppID.c_str()]];
+    [[AppsFlyerLib shared] setAppleAppID:[NSString stringWithUTF8String:appleAppID.c_str()]];
 }
 
 std::string AppsFlyerXApple::appleAppID() {
-    return [[[AppsFlyerTracker sharedTracker] appleAppID] UTF8String];
+    return [[[AppsFlyerLib shared] appleAppID] UTF8String];
 }
 
 void AppsFlyerXApple::setCurrencyCode(const std::string& currencyCode) {
-    [[AppsFlyerTracker sharedTracker] setCurrencyCode:[NSString stringWithUTF8String:currencyCode.c_str()]];
+    [[AppsFlyerLib shared] setCurrencyCode:[NSString stringWithUTF8String:currencyCode.c_str()]];
 }
 
 std::string AppsFlyerXApple::currencyCode() {
-    return [[[AppsFlyerTracker sharedTracker] currencyCode] UTF8String];
+    return [[[AppsFlyerLib shared] currencyCode] UTF8String];
 }
 
-void AppsFlyerXApple::disableAppleAdSupportTracking(bool isDisableAppleAdSupportTracking) {
-    [[AppsFlyerTracker sharedTracker] setDisableAppleAdSupportTracking:isDisableAppleAdSupportTracking];
+void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
+    [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
 
-bool AppsFlyerXApple::isDisableAppleAdSupportTracking() {
-    return [[AppsFlyerTracker sharedTracker] disableAppleAdSupportTracking];
+bool AppsFlyerXApple::isDisabledAdvertisingIdentifier() {
+    return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
 }
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
-    [[AppsFlyerTracker sharedTracker] setIsDebug:isDebug];
+    [[AppsFlyerLib shared] setIsDebug:isDebug];
 }
 
 bool AppsFlyerXApple::isDebug() {
-    return [[AppsFlyerTracker sharedTracker] isDebug];
+    return [[AppsFlyerLib shared] isDebug];
 }
 
 void AppsFlyerXApple::setShouldCollectDeviceName(bool isShouldCollectDeviceName) {
-    [[AppsFlyerTracker sharedTracker] setShouldCollectDeviceName:isShouldCollectDeviceName];
+    [[AppsFlyerLib shared] setShouldCollectDeviceName:isShouldCollectDeviceName];
 }
 
 bool AppsFlyerXApple::isShouldCollectDeviceName() {
-    return [[AppsFlyerTracker sharedTracker] shouldCollectDeviceName];
+    return [[AppsFlyerLib shared] shouldCollectDeviceName];
 }
 
 void AppsFlyerXApple::setAppInviteOneLink(std::string& appInviteOneLinkID) {
-    return [[AppsFlyerTracker sharedTracker] setAppInviteOneLink:[NSString stringWithUTF8String:appInviteOneLinkID.c_str()]];
+    return [[AppsFlyerLib shared] setAppInviteOneLink:[NSString stringWithUTF8String:appInviteOneLinkID.c_str()]];
 }
 
 std::string AppsFlyerXApple::appInviteOneLinkID() {
-    return [[[AppsFlyerTracker sharedTracker] appInviteOneLinkID] UTF8String];
+    return [[[AppsFlyerLib shared] appInviteOneLinkID] UTF8String];
 }
 
-void AppsFlyerXApple::deviceTrackingDisabled(bool deviceTrackingDisabled) {
-    [[AppsFlyerTracker sharedTracker] setDeviceTrackingDisabled:deviceTrackingDisabled];
+void AppsFlyerXApple::anonymizeUser(bool shouldAnonymize) {
+    [[AppsFlyerLib shared] setAnonymizeUser:shouldAnonymize];
 }
 
-bool AppsFlyerXApple::isDeviceTrackingDisabled() {
-    return [[AppsFlyerTracker sharedTracker] deviceTrackingDisabled];
+bool AppsFlyerXApple::isAnonymizedUser() {
+    return [[AppsFlyerLib shared] anonymizeUser];
 }
 
-void AppsFlyerXApple::disableIAdTracking(bool disableIAdTracking) {
-    [[AppsFlyerTracker sharedTracker] setDisableIAdTracking:disableIAdTracking];
+void AppsFlyerXApple::setDisableCollectASA(bool shouldDisable) {
+    [[AppsFlyerLib shared] setDisableCollectASA:shouldDisable];
 }
 
-bool AppsFlyerXApple::isDisableIAdTracking() {
-    return [[AppsFlyerTracker sharedTracker] disableIAdTracking];
+bool AppsFlyerXApple::isDisabledCollectASA() {
+    return [[AppsFlyerLib shared] disableCollectASA];
 }
 
-// weak! id<AppsFlyerTrackerDelegate> delegate;
 
 void AppsFlyerXApple::setUseReceiptValidationSandbox(bool useReceiptValidationSandbox) {
-    [[AppsFlyerTracker sharedTracker] setUseReceiptValidationSandbox:useReceiptValidationSandbox];
+    [[AppsFlyerLib shared] setUseReceiptValidationSandbox:useReceiptValidationSandbox];
 }
 
 bool AppsFlyerXApple::isUseReceiptValidationSandbox() {
-    return [[AppsFlyerTracker sharedTracker] useReceiptValidationSandbox];
+    return [[AppsFlyerLib shared] useReceiptValidationSandbox];
 }
 
 void AppsFlyerXApple::setUseUninstallSandbox(bool setUseUninstallSandbox) {
-    [[AppsFlyerTracker sharedTracker] setUseUninstallSandbox:setUseUninstallSandbox];
+    [[AppsFlyerLib shared] setUseUninstallSandbox:setUseUninstallSandbox];
 }
 
 bool AppsFlyerXApple::isUseUninstallSandbox() {
-    return [[AppsFlyerTracker sharedTracker] useUninstallSandbox];
+    return [[AppsFlyerLib shared] useUninstallSandbox];
 }
 
-void AppsFlyerXApple::setAdvertiserId(const std::string& advertiserId) {
-    [[AppsFlyerTracker sharedTracker] setAdvertiserId:[NSString stringWithUTF8String:advertiserId.c_str()]];
-}
-
-std::string AppsFlyerXApple::advertiserId() {
-    return [[[AppsFlyerTracker sharedTracker] advertiserId] UTF8String];
-}
 
 void AppsFlyerXApple::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
     NSMutableArray *emails = [NSMutableArray new];
     for (auto userEmail : userEmails) {
         [emails addObject:[NSString stringWithUTF8String:userEmail.c_str()]];
     }
-    [[AppsFlyerTracker sharedTracker] setUserEmails:emails withCryptType:(EmailCryptType)[@(type) integerValue]];
+    [[AppsFlyerLib shared] setUserEmails:emails withCryptType:(EmailCryptType)[@(type) integerValue]];
 }
 
-void AppsFlyerXApple::trackAppLaunch() {
-    [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+void AppsFlyerXApple::start() {
+    [[AppsFlyerLib shared] start];
 }
 
-void AppsFlyerXApple::trackEvent(const std::string& eventName, const std::string& value) {
-    [[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:eventName.c_str()]
-                                       withValue:[NSString stringWithUTF8String:value.c_str()]];
-}
 
-void AppsFlyerXApple::trackEvent(const std::string& eventName, cocos2d::ValueMap values) {
+void AppsFlyerXApple::logEvent(const std::string& eventName, cocos2d::ValueMap values) {
     NSDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(values);
     NSString *event = [NSString stringWithUTF8String:eventName.c_str()];
-    [[AppsFlyerTracker sharedTracker] trackEvent:event withValues:dictionary];
+    [[AppsFlyerLib shared] logEvent:event withValues:dictionary];
 }
 
-void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productIdentifier,
+void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIdentifier,
                                                     const std::string& price,
                                                     const std::string& currency,
                                                     const std::string& tranactionId,
@@ -194,7 +182,7 @@ void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productId
     NSString *lTranactionId = [NSString stringWithUTF8String:tranactionId.c_str()];
     NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
     
-    [[AppsFlyerTracker sharedTracker] validateAndTrackInAppPurchase:lProductIdentifier
+    [[AppsFlyerLib shared] validateAndLogInAppPurchase:lProductIdentifier
                                                               price:lPrice
                                                            currency:lCurrency
                                                       transactionId:lTranactionId
@@ -215,31 +203,29 @@ void AppsFlyerXApple::validateAndTrackInAppPurchase(const std::string& productId
     }];
 }
 
-void AppsFlyerXApple::trackLocation(double longitude, double latitude) {
-    [[AppsFlyerTracker sharedTracker] trackLocation:longitude latitude:latitude];
+void AppsFlyerXApple::logLocation(double longitude, double latitude) {
+    [[AppsFlyerLib shared] logLocation:longitude latitude:latitude];
 }
 
 std::string AppsFlyerXApple::getAppsFlyerUID() {
-    return [[[AppsFlyerTracker sharedTracker] getAppsFlyerUID] UTF8String];
+    return [[[AppsFlyerLib shared] getAppsFlyerUID] UTF8String];
 }
-
-// - (void) loadConversionDataWithDelegate:(id<AppsFlyerTrackerDelegate>) delegate __attribute__((deprecated));
 
 void AppsFlyerXApple::handleOpenURL(const std::string& url, const std::string& sourceApplication) {
     NSURL *nsurl = [NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]];
-    [[AppsFlyerTracker sharedTracker] handleOpenURL:nsurl
+    [[AppsFlyerLib shared] handleOpenURL:nsurl
                                   sourceApplication:[NSString stringWithUTF8String:sourceApplication.c_str()]];
 }
 
 void AppsFlyerXApple::handleOpenURL(std::string url, std::string sourceApplication, void* annotation) {
     // annotation unused
     NSURL *nsurl = [NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]];
-    [[AppsFlyerTracker sharedTracker] handleOpenURL:nsurl sourceApplication:[NSString stringWithUTF8String:sourceApplication.c_str()] withAnnotation:nil];
+    [[AppsFlyerLib shared] handleOpenURL:nsurl sourceApplication:[NSString stringWithUTF8String:sourceApplication.c_str()] withAnnotation:nil];
 }
 
 void AppsFlyerXApple::handleOpenURL(std::string url, cocos2d::ValueMap options) {
     NSURL *nsurl = [NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]];
-    [[AppsFlyerTracker sharedTracker] handleOpenUrl:nsurl options:AppsFlyerXAppleHelper::valueMap2nsDictionary(options)];
+    [[AppsFlyerLib shared] handleOpenUrl:nsurl options:AppsFlyerXAppleHelper::valueMap2nsDictionary(options)];
 }
 
 /*
@@ -248,35 +234,32 @@ void AppsFlyerXApple::handleOpenURL(std::string url, cocos2d::ValueMap options) 
  */
 
 void AppsFlyerXApple::handlePushNotification(cocos2d::ValueMap pushPayload) {
-    [[AppsFlyerTracker sharedTracker] handlePushNotification: AppsFlyerXAppleHelper::valueMap2nsDictionary(pushPayload)];
+    [[AppsFlyerLib shared] handlePushNotification: AppsFlyerXAppleHelper::valueMap2nsDictionary(pushPayload)];
 }
 
 void AppsFlyerXApple::registerUninstall(void* deviceToken, unsigned long length) {
-    [[AppsFlyerTracker sharedTracker] registerUninstall: [NSData dataWithBytes:deviceToken length:length]];
+    [[AppsFlyerLib shared] registerUninstall: [NSData dataWithBytes:deviceToken length:length]];
 }
 
-// std::string AppsFlyerXApple::getSDKVersion() {
-//     return [[[AppsFlyerTracker sharedTracker] getSDKVersion] UTF8String];
-// }
 
 void AppsFlyerXApple::remoteDebuggingCallWithData(const std::string& data) {
-    [[AppsFlyerTracker sharedTracker] remoteDebuggingCallWithData:[NSString stringWithUTF8String:data.c_str()]];
+    [[AppsFlyerLib shared] remoteDebuggingCallWithData:[NSString stringWithUTF8String:data.c_str()]];
 }
 
 void AppsFlyerXApple::setHost(const std::string& host) {
-    return [[AppsFlyerTracker sharedTracker] setHost:[NSString stringWithUTF8String:host.c_str()]];
+    return [[AppsFlyerLib shared] setHost:[NSString stringWithUTF8String:host.c_str()]];
 }
 
 std::string AppsFlyerXApple::getHost() {
-    return [[[AppsFlyerTracker sharedTracker] host] UTF8String];
+    return [[[AppsFlyerLib shared] host] UTF8String];
 }
 
 void AppsFlyerXApple::setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions) {
-    [[AppsFlyerTracker sharedTracker] setMinTimeBetweenSessions:minTimeBetweenSessions];
+    [[AppsFlyerLib shared] setMinTimeBetweenSessions:minTimeBetweenSessions];
 }
 
 unsigned long AppsFlyerXApple::getMinTimeBetweenSessions() {
-    return [[AppsFlyerTracker sharedTracker] minTimeBetweenSessions];
+    return [[AppsFlyerLib shared] minTimeBetweenSessions];
 }
 
 // Delegates methods proxy
@@ -297,18 +280,35 @@ void AppsFlyerXApple::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::Va
     static_cast<AppsFlyerXAppleDelegate *>(AppsFlyerXApple::getInstance()->delegate).onAppOpenAttributionFailureCallback = callback;
 }
 
-void AppsFlyerXApple::stopTracking(bool stopTracking) {
-    [[AppsFlyerTracker sharedTracker] setIsStopTracking:stopTracking];
+void AppsFlyerXApple::stop(bool stop) {
+    [[AppsFlyerLib shared] setIsStopped:stop];
 }
 
 void AppsFlyerXApple::sharingFilter(std::vector<std::string> partners){
     NSMutableArray *filteredPartners = [NSMutableArray new];
     for (auto partner : partners) {
         [filteredPartners addObject:[NSString stringWithUTF8String:partner.c_str()]];
-     [[AppsFlyerTracker sharedTracker] setSharingFilter:filteredPartners];
+     [[AppsFlyerLib shared] setSharingFilter:filteredPartners];
     }   
 }
 
 void AppsFlyerXApple::sharingFilterForAllPartners() {
-    [[AppsFlyerTracker sharedTracker] setSharingFilterForAllPartners];
+    [[AppsFlyerLib shared] setSharingFilterForAllPartners];
+}
+
+void AppsFlyerXApple::disableSKAdNetwork(bool shouldDisable){
+    [[AppsFlyerLib shared] setDisableSKAdNetwork:shouldDisable];
+}
+
+bool AppsFlyerXApple::isDisabledSKAdNetwork(){
+     return [[AppsFlyerLib shared] disableSKAdNetwork];
+}
+
+void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
+    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+}
+
+void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
+    NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];
+     [[AppsFlyerLib shared] setPhoneNumber:phone];
 }

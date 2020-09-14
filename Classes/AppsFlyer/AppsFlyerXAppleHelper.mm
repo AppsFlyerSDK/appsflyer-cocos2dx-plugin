@@ -35,6 +35,9 @@ void AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic, ValueMap &v
         } else if ([obj isKindOfClass:[NSNumber class]]) {
             //Number
             vm[key] = [[(NSNumber *)obj stringValue] cStringUsingEncoding:NSUTF8StringEncoding];
+        } else if ([obj isKindOfClass:[NSNull class]]) {
+            //Null
+            vm[key] = cocos2d::Value::Null;
         } else {
             NSLog(@"%s - Non supported type %@", __FUNCTION__, [obj class]);
         }
