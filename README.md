@@ -589,3 +589,20 @@ TBD
 
 #### <a id="dl-ios"> iOS URL Types
 TBD
+ 
+ ## **Migration Guide to v6**
+[Integration guide](https://support.appsflyer.com//hc/en-us/articles/207032066#introduction)
+[Migration guide](https://support.appsflyer.com/hc/en-us/articles/360011571778)
+In v6 of AppsFlyer SDK there are some api breaking changes: 
+
+|Before v6   | v6  |
+|---|---|
+| trackAppLaunch | start|
+| trackEvent  | logEvent  |
+| trackLocation | logLocation|
+| stopTracking  | stop  |
+| validateAndTrackInAppPurchase  | validateAndLogInAppPurchase  |
+| setDeviceTrackingDisabled | anonymizeUser|
+
+### iOS
+on iOS you need to implement IDFA request pop up and add AppTrackTransparency framework in order for the plugin to work
