@@ -1,5 +1,19 @@
 # Versions
 
+## 6.0.3
+    - iOS SDK 6.0.3
+    - APIs renamed:
+    |Before v6   | v6  |
+|---|---|
+| trackAppLaunch | start|
+| trackEvent  | logEvent  |
+| trackLocation | logLocation|
+| stopTracking  | stop  |
+| validateAndTrackInAppPurchase  | validateAndLogInAppPurchase  |
+| setDeviceTrackingDisabled | anonymizeUser|
+
+----------
+
 ## 5.4.1
 
 Release date: Aug 5, 2020

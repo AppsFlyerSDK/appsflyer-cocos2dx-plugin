@@ -24,6 +24,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
  - [setUserEmails](#setUserEmails)
  - [setCustomerUserID](#setCustomerUserID)
  - [setCurrencyCode](#setCurrencyCode)
+ - [waitForATTUserAuthorizationWithTimeoutInterval](#waitForATTUserAuthorizationWithTimeoutInterval) *(ios only)*
  - [disableAdvertiserIdentifier](#disableAppleAdSupportTracking) *(ios only)*
  - [setShouldCollectDeviceName](#setShouldCollectDeviceName)*(ios only)*
  - [setAppInviteOneLink](#setAppInviteOneLink)
@@ -280,6 +281,12 @@ AppsFlyerX::customerUserId("<USER_ID>");
 ```cpp
 AppsFlyerX::setCurrencyCode("<CURRENCY_ID>");
 ```
+
+---
+##### <a id="waitForATTUserAuthorizationWithTimeoutInterval"> **`waitForATTUserAuthorizationWithTimeoutInterval(double): void`** *(ios only)*
+| parameter   | type                  | Default     | description |
+| ----------- |-----------------------|-------------|-------------|
+| `timeoutInterval`| `double`         |             |  See additional info [HERE](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#api-reference-waitforattuserauthorization) |
 
 ---
 
