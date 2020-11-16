@@ -304,7 +304,7 @@ void AppsFlyerX::validateAndLogInAppPurchase(const std::string& productIdentifie
     AppsFlyerXApple::validateAndLogInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
         successBlock(result);
     }, [&] (cocos2d::ValueMap error) {
-        successBlock(error);
+        failureBlock(error);
     });
 #endif
 }
