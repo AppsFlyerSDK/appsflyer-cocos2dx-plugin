@@ -36,6 +36,6 @@ to `Classes/AppsFlyer`
 
 If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk), download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/Strict/AppsFlyer). 
 
-3\. It looks like in the image below.
+2\. It looks like in the image below.
 
 ![add-iOS-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-iOS-mk.png?raw=true)
