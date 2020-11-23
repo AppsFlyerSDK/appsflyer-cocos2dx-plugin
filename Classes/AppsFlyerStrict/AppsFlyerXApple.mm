@@ -84,7 +84,7 @@ std::string AppsFlyerXApple::currencyCode() {
 }
 
 void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
-    if ([[AppsFlyerLib shared] respondsToSelector:@selector(setDisableAdvertisingIdentifier)])
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
         [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
 
@@ -307,7 +307,8 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
 }
 
 void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
-    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(waitForATTUserAuthorizationWithTimeoutInterval:)])
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
 }
 
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
