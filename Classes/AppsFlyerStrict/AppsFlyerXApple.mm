@@ -84,11 +84,13 @@ std::string AppsFlyerXApple::currencyCode() {
 }
 
 void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
-    [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(setDisableAdvertisingIdentifier)])
+        [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
 
 bool AppsFlyerXApple::isDisabledAdvertisingIdentifier() {
-    return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
+        return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
 }
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
