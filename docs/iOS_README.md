@@ -12,9 +12,7 @@ There's a sample project in the `proj.ios_mac` directory.
 
 How to integrate the AppsFlyer SDK into your Cocos2dx Apple project.
 
-1\. Create a folder AppsFlyer in Classes
-
-2\. Download the [source files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/AppsFlyer) and copy them to your project
+1\. Download the [source files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/AppsFlyer) and copy them to your project
 
  - `AppsFlyerX.cpp`
  - `AppsFlyerX.h`
@@ -36,7 +34,7 @@ How to integrate the AppsFlyer SDK into your Cocos2dx Apple project.
 
 to `Classes/AppsFlyer`
 
-If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk), download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/AppsFlyerStrict). 
+If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk), download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/Strict/AppsFlyer). 
 
 3\. It looks like in the image below.
 
