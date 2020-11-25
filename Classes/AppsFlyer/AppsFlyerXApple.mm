@@ -84,11 +84,13 @@ std::string AppsFlyerXApple::currencyCode() {
 }
 
 void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
-    [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
+        [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
 
 bool AppsFlyerXApple::isDisabledAdvertisingIdentifier() {
-    return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
+        return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
 }
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
@@ -305,7 +307,8 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
 }
 
 void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
-    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    if ([[AppsFlyerLib shared] respondsToSelector:@selector(waitForATTUserAuthorizationWithTimeoutInterval:)])
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
 }
 
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){

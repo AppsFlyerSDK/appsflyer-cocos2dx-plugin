@@ -246,23 +246,6 @@ bool AppsFlyerX::isUseUninstallSandbox() {
 #endif
 }
 
-void AppsFlyerX::setAdvertiserId(const std::string& advertiserId) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "setAdvertiserId is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setAdvertiserId(advertiserId);
-#endif
-}
-
-std::string AppsFlyerX::advertiserId() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "advertiserId is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::advertiserId();
-#endif
-}
 
 void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

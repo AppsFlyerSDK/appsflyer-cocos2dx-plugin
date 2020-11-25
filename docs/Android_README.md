@@ -60,7 +60,7 @@ implementation 'com.appsflyer:af-android-sdk:5.4.1@aar'
 For Google Install Referrer, please, add also:
 
 ```
-implementation 'com.android.installreferrer:installreferrer:1.0'
+implementation 'com.android.installreferrer:installreferrer:2.1'
 implementation 'com.android.support:appcompat-v7:28.0.0'
 ``` 
 
