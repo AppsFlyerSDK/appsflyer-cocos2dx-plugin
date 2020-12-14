@@ -60,9 +60,28 @@ static int register_all_packages()
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
+    std::string gcd = "Conversion Data : ";
+    
     for (auto &t : installData){
+        
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+        gcd.append(t.first.c_str());
+        gcd.append(" : ");
+        gcd.append(t.second.asString().c_str());
+        gcd.append("\n");
+       
     }
+    auto gcdStr = gcd;
+    auto currentScene = Director::getInstance()->getRunningScene();
+    auto size = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto myLabel = Label::createWithSystemFont(gcd.c_str(), "Arial", 6);
+    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+    //myLabel->setHeight( origin.y + size.height - 180);
+    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+    currentScene->addChild(myLabel,1);
+   
+    
 }
 
 static void onConversionDataFail(cocos2d::ValueMap map) {
@@ -83,16 +102,66 @@ static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
     }
 }
 
+static void didResolveDeepLink(cocos2d::ValueMap map) {
+    CCLOG("%s", "AppDelegate.cpp got deep link");
+    std::string ddl = "Deep link : \n";
+    std::string status = map["status"].asString().c_str();
+    if (status == "notFound")
+    {
+        CCLOG("%s", "Deep link not found");
+    } else if (status == "found")
+    {
+        CCLOG("%s", "Deep link data is :\n");
+        auto deeplink = map["deepLink"];
+        for (auto &t : map["deepLink"].asValueMap() ){
+          
+            
+            switch (t.second.getType()) {
+                case cocos2d::Value::Type::STRING:
+                    ddl.append(t.first.c_str());
+                    ddl.append(" : ");
+                    CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+                    ddl.append(t.second.asString().c_str());
+                    ddl.append("\n");
+                    break;
+                case cocos2d::Value::Type::BOOLEAN:
+                    CCLOG("%s - %s", t.first.c_str(), t.second.asBool() ? "true": "false");
+                    break;
+                case cocos2d::Value::Type::MAP:
+                    for (auto &i : t.second.asValueMap() ){
+                        CCLOG("%s - %s", i.first.c_str(), i.second.asString().c_str());
+                    }
+                default:
+                    break;
+            }
+        }
+    } else if (status == "failure")
+    {
+        CCLOG("%s", "Error :\n");
+        for (auto &t : map["error"].asValueMap() ){
+            CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+        }
+    }
+    auto currentScene = Director::getInstance()->getRunningScene();
+    auto size = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+    myLabel->setLineBreakWithoutSpace(true);
+    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
+    myLabel->setDimensions(200, 0);
+    currentScene->addChild(myLabel,1);
+}
+
 bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::stop(false);
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
+    AppsFlyerX::setAppsFlyerDevKey("devkey");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("942960987");
+    AppsFlyerX::setAppleAppID("app_id");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
@@ -105,6 +174,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
+       AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
     AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});
@@ -153,7 +223,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
-
+    
     // run
     director->runWithScene(scene);
 

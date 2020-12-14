@@ -136,6 +136,9 @@ public:
     
     static void setPhoneNumber(const std::string& phoneNumber);
     
+    //ddl
+    static void setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result));
+    
 };
 
 #endif /* AppsFlyerX_h */

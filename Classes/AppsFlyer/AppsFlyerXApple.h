@@ -20,6 +20,10 @@ private:
     /* Private constructor to prevent instancing. */
     AppsFlyerXApple();
     
+    
+    void * deepLinkDelegate;
+    
+    
     void * delegate;
 public:
     
@@ -130,6 +134,10 @@ public:
     static void  waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
     
     static void setPhoneNumber(const std::string& phoneNumber);
+    
+    //DDL
+    static void setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result));
+    
 };
 
 #endif /* AppsFlyerXApple_h */
