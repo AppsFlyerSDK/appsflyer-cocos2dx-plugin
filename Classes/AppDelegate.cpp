@@ -70,17 +70,16 @@ static void onConversionDataSuccess(cocos2d::ValueMap installData) {
         gcd.append(" : ");
         gcd.append(t.second.asString().c_str());
         gcd.append("\n");
-       
     }
-    auto gcdStr = gcd;
-    auto currentScene = Director::getInstance()->getRunningScene();
-    auto size = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto myLabel = Label::createWithSystemFont(gcd.c_str(), "Arial", 6);
-    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
-    //myLabel->setHeight( origin.y + size.height - 180);
-    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-    currentScene->addChild(myLabel,1);
+//    auto gcdStr = gcd;
+//    auto currentScene = Director::getInstance()->getRunningScene();
+//    auto size = Director::getInstance()->getVisibleSize();
+//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//    auto myLabel = Label::createWithSystemFont(gcd.c_str(), "Arial", 6);
+//    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+//    //myLabel->setHeight( origin.y + size.height - 180);
+//    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+//    currentScene->addChild(myLabel,1);
    
     
 }
@@ -142,14 +141,14 @@ static void didResolveDeepLink(cocos2d::ValueMap map) {
             CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
         }
     }
-//    auto currentScene = Director::getInstance()->getRunningScene();
-//    auto size = Director::getInstance()->getVisibleSize();
-//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-//    myLabel->setLineBreakWithoutSpace(true);
-//    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
-//    myLabel->setDimensions(200, 0);
-//    currentScene->addChild(myLabel,1);
+    auto currentScene = Director::getInstance()->getRunningScene();
+    auto size = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial",6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+    myLabel->setLineBreakWithoutSpace(true);
+    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
+    myLabel->setDimensions(200, 0);
+    currentScene->addChild(myLabel,1);
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -174,7 +173,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-       AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+      // AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
     AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});
