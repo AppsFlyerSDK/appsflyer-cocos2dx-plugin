@@ -13,6 +13,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
+cocos2d::ValueMap getMapForCallbackDDL(JNIEnv *env, jobject attributionObject);
 
 void setAttributionCallbackOnConversionDataReceived(
         void (*callbackMethod)(cocos2d::ValueMap installData)) {
@@ -41,6 +42,14 @@ void setAttributionCallbackOnAppOpenAttributionFailure(
         attributionCallbackOnAppOpenAttributionFailure = callbackMethod;
     }
 }
+
+void setCallbackOnDeepLinking(
+        void (*callbackMethod)(cocos2d::ValueMap result)) {
+    if (NULL == callbackOnDeepLinking) {
+        callbackOnDeepLinking = callbackMethod;
+    }
+}
+
 
 /**
  * TODO: handle other types of data
@@ -88,6 +97,19 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
 
     attributionCallbackOnConversionDataRequestFailure(getMapForCallback(env,stringError));
 }
+
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
+            (JNIEnv *env, jobject obj, jobject result) {
+
+        CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative is called");
+
+        if (NULL == callbackOnDeepLinking) {
+            return;
+        }
+
+    callbackOnDeepLinking(getMapForCallbackDDL(env,result));
+    }
+
 
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
@@ -139,6 +161,229 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     return map;
 }
 
+cocos2d::ValueMap getMapForCallbackDDL(JNIEnv *env, jobject result) {
+    cocos2d::ValueMap map;
+    cocos2d::ValueMap mapDL;
+    if (result == NULL) {
+        return map;
+    }
+    jclass cls = env->GetObjectClass(result);
+    if (cls == NULL) {
+        return map;
+    }
+
+    //Status
+    jmethodID methodId = env->GetMethodID(cls, "getStatus", "()Lcom/appsflyer/deeplink/DeepLinkResult$Status;");
+    jobject status = env->CallObjectMethod(result,methodId);
+    if (status != NULL) {
+        jclass clsEnumStatus = env->FindClass("com/appsflyer/deeplink/DeepLinkResult$Status");
+        jmethodID statusGetValueMethod = env->GetMethodID(clsEnumStatus, "ordinal", "()I");
+        jint value = env->CallIntMethod(status, statusGetValueMethod);
+        switch (value) {
+            case 0:
+                map["status"] = "FOUND";
+                break;
+            case 1:
+                map["status"] = "NOT_FOUND";
+                break;
+            default:
+                map["status"] = "ERROR";
+                break;
+        }
+    }
+
+    //Error
+    methodId = env->GetMethodID(cls, "getError", "()Lcom/appsflyer/deeplink/DeepLinkResult$Error;");
+    jobject error = env->CallObjectMethod(result,methodId);
+    if (error != NULL) {
+        jclass clsEnumError = env->FindClass("com/appsflyer/deeplink/DeepLinkResult$Error");
+        jmethodID errorGetValueMethod = env->GetMethodID(clsEnumError, "ordinal", "()I");
+        jint value = env->CallIntMethod(error, errorGetValueMethod);
+        switch (value) {
+            //TIMEOUT, NETWORK, HTTP_STATUS_CODE, UNEXPECTED
+            case 0:
+                map["error"] = "TIMEOUT";
+                break;
+            case 1:
+                map["error"] = "NETWORK";
+                break;
+            case 2:
+                map["error"] = "HTTP_STATUS_CODE";
+                break;
+            default:
+                map["error"] = "UNEXPECTED";
+                break;
+        }
+    }
+
+    //Deep link
+    methodId = env->GetMethodID(cls, "getDeepLink", "()Lcom/appsflyer/deeplink/DeepLink;");
+    jobject resultDL = (jobject) env->CallObjectMethod(result,methodId);
+    jclass clsDL = env->GetObjectClass(resultDL);
+    if (clsDL == NULL)
+        return map;
+    //AfSub1
+    methodId = env->GetMethodID(clsDL, "getAfSub1", "()Ljava/lang/String;");
+    const char *name_char = "";
+    jstring afSub1Str = (jstring) env->CallObjectMethod(resultDL, methodId);
+    if (afSub1Str != NULL) {
+        name_char = env->GetStringUTFChars(afSub1Str, NULL);
+        std::string afSub1 = std::string(name_char);
+        mapDL["afSub1"] = afSub1;
+    }
+
+    //AfSub2
+    methodId = env->GetMethodID(clsDL, "getAfSub2", "()Ljava/lang/String;");
+    jstring afSub2Str = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (afSub2Str != NULL) {
+        name_char = env->GetStringUTFChars(afSub2Str, NULL);
+        std::string afSub2 = std::string(name_char);
+        mapDL["afSub2"] = afSub2;
+    }
+
+    //AfSub3
+    methodId = env->GetMethodID(clsDL, "getAfSub3", "()Ljava/lang/String;");
+    jstring afSub3Str = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (afSub3Str != NULL) {
+        name_char = env->GetStringUTFChars(afSub3Str, NULL);
+        printf("this is hte name 3 %s", name_char);
+        std::string afSub3 = std::string(name_char);
+        mapDL["afSub3"] = afSub3;
+    }
+
+    //AfSub4
+    methodId = env->GetMethodID(clsDL, "getAfSub4", "()Ljava/lang/String;");
+    jstring afSub4Str = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (afSub4Str != NULL) {
+        name_char = env->GetStringUTFChars(afSub4Str, NULL);
+        std::string afSub4 = std::string(name_char);
+        mapDL["afSub4"] = afSub4;
+    }
+
+    //AfSub5
+    methodId = env->GetMethodID(clsDL, "getAfSub5", "()Ljava/lang/String;");
+    jstring afSub5Str = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (afSub5Str != NULL) {
+        name_char = env->GetStringUTFChars(afSub5Str, NULL);
+        std::string afSub5 = std::string(name_char);
+        mapDL["afSub5"] = afSub5;
+    }
+
+    //Campagaign
+    methodId = env->GetMethodID(clsDL, "getCampaign", "()Ljava/lang/String;");
+    jstring campaignStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (campaignStr != NULL) {
+        name_char = env->GetStringUTFChars(campaignStr, NULL);
+        std::string campaign = std::string(name_char);
+        mapDL["campaign"] = campaign;
+    }
+
+    //Campaign id
+    methodId = env->GetMethodID(clsDL, "getCampaignId", "()Ljava/lang/String;");
+    jstring campaignIdStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (campaignIdStr != NULL) {
+        name_char = env->GetStringUTFChars(campaignIdStr, NULL);
+        std::string campaignID = std::string(name_char);
+        mapDL["campaign_id"] = campaignID;
+    }
+
+    //click_http_referrer
+    methodId = env->GetMethodID(clsDL, "getClickHttpReferrer", "()Ljava/lang/String;");
+    jstring clickHttpReferrerStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (clickHttpReferrerStr != NULL) {
+        name_char = env->GetStringUTFChars(clickHttpReferrerStr, NULL);
+        std::string clickHttpReferrer = std::string(name_char);
+        mapDL["click_http_referrer"] = clickHttpReferrer;
+    }
+
+    //is_deferred
+    methodId = env->GetMethodID(clsDL, "isDeferred", "()Ljava/lang/Boolean;");
+    jobject isDeferredBoolean =  env->CallObjectMethod(resultDL, methodId);
+    jclass jBooleanClass = env->FindClass("java/lang/Boolean");
+    if (isDeferredBoolean != NULL && env->IsInstanceOf(isDeferredBoolean, jBooleanClass)) {
+        jmethodID booleanValueMID = env->GetMethodID(jBooleanClass, "booleanValue", "()Z");
+        bool booleanValue = (bool) env->CallBooleanMethod(isDeferredBoolean, booleanValueMID);
+        mapDL["is_deferred"] = booleanValue;
+    }
+
+    //Deep link value
+    methodId = env->GetMethodID(clsDL, "getDeepLinkValue", "()Ljava/lang/String;");
+    jstring deep_link_valueStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (deep_link_valueStr != NULL) {
+        name_char = env->GetStringUTFChars(deep_link_valueStr, NULL);
+        std::string deep_link_value = std::string(name_char);
+        mapDL["deep_link_value"] = deep_link_value;
+
+    }
+
+    //media source
+    methodId = env->GetMethodID(clsDL, "getMediaSource", "()Ljava/lang/String;");
+    jstring media_sourceStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (media_sourceStr != NULL) {
+        name_char = env->GetStringUTFChars(media_sourceStr, NULL);
+        std::string media_source = std::string(name_char);
+        mapDL["media_source"] = media_source;
+    }
+
+
+    //match type
+    methodId = env->GetMethodID(clsDL, "getMatchType", "()Ljava/lang/String;");
+    jstring match_typeStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+    // Convert jstring to string
+    if (match_typeStr != NULL) {
+        name_char = env->GetStringUTFChars(match_typeStr, NULL);
+        std::string match_type = std::string(name_char);
+        mapDL["match_type"] = match_type;
+    }
+
+    //Deep link value
+    methodId = env->GetMethodID(clsDL, "toString", "()Ljava/lang/String;");
+    if (methodId != NULL) {
+        jstring clickEventStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+        if (clickEventStr != NULL) {
+            name_char = env->GetStringUTFChars(clickEventStr, NULL);
+            std::string click_event = std::string(name_char);
+            mapDL["deepLink"] = click_event;
+        }
+    }
+
+    map["deepLink"] = mapDL;
+
+
+
+
+
+    //Delete
+    env->DeleteLocalRef(status);
+    env->DeleteLocalRef(error);
+    env->DeleteLocalRef(afSub1Str);
+    env->DeleteLocalRef(afSub2Str);
+    env->DeleteLocalRef(afSub3Str);
+    env->DeleteLocalRef(afSub4Str);
+    env->DeleteLocalRef(afSub5Str);
+    env->DeleteLocalRef(campaignIdStr);
+    env->DeleteLocalRef(campaignStr);
+    env->DeleteLocalRef(media_sourceStr);
+    env->DeleteLocalRef(match_typeStr);
+    env->DeleteLocalRef(deep_link_valueStr);
+    env->DeleteLocalRef(isDeferredBoolean);
+    env->DeleteLocalRef(clickHttpReferrerStr);
+    env->DeleteLocalRef(resultDL);
+
+   return map;
+
+
+
+}
 
 #endif
 

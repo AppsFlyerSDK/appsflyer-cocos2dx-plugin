@@ -21,6 +21,8 @@ static void (*attributionCallbackOnAppOpenAttribution)(cocos2d::ValueMap attribu
 
 static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap error);
 
+static void (*callbackOnDeepLinking)(cocos2d::ValueMap result);
+
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *, jobject, jobject);
@@ -29,6 +31,8 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttributionFailureNative
+        (JNIEnv *, jobject, jobject);
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
         (JNIEnv *, jobject, jobject);
 
  void setAttributionCallbackOnConversionDataReceived(
@@ -42,6 +46,9 @@ void setAttributionCallbackOnConversionDataRequestFailure(
 
 void setAttributionCallbackOnAppOpenAttributionFailure(
         void (*callbackMethod)(cocos2d::ValueMap error));
+
+void setCallbackOnDeepLinking(
+        void (*callbackMethod)(cocos2d::ValueMap result));
 
 }
 #endif

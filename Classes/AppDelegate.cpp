@@ -17,6 +17,7 @@ using namespace CocosDenshion;
 #endif
 
 #include "AppsFlyer/AppsFlyerX.h"
+#include "AppsFlyer/AppsFlyerXAppleDeepLinkResult.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 USING_NS_CC;
@@ -106,16 +107,14 @@ static void didResolveDeepLink(cocos2d::ValueMap map) {
     CCLOG("%s", "AppDelegate.cpp got deep link");
     std::string ddl = "Deep link : \n";
     std::string status = map["status"].asString().c_str();
-    if (status == "notFound")
+    if (status == "NOT_FOUND")
     {
         CCLOG("%s", "Deep link not found");
-    } else if (status == "found")
+    } else if (status == "FOUND")
     {
         CCLOG("%s", "Deep link data is :\n");
         auto deeplink = map["deepLink"];
         for (auto &t : map["deepLink"].asValueMap() ){
-          
-            
             switch (t.second.getType()) {
                 case cocos2d::Value::Type::STRING:
                     ddl.append(t.first.c_str());
@@ -135,21 +134,22 @@ static void didResolveDeepLink(cocos2d::ValueMap map) {
                     break;
             }
         }
-    } else if (status == "failure")
+        CCLOG("%s", ddl.c_str());
+    } else if (status == "ERROR")
     {
         CCLOG("%s", "Error :\n");
         for (auto &t : map["error"].asValueMap() ){
             CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
         }
     }
-    auto currentScene = Director::getInstance()->getRunningScene();
-    auto size = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-    myLabel->setLineBreakWithoutSpace(true);
-    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
-    myLabel->setDimensions(200, 0);
-    currentScene->addChild(myLabel,1);
+//    auto currentScene = Director::getInstance()->getRunningScene();
+//    auto size = Director::getInstance()->getVisibleSize();
+//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+//    myLabel->setLineBreakWithoutSpace(true);
+//    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
+//    myLabel->setDimensions(200, 0);
+//    currentScene->addChild(myLabel,1);
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -158,7 +158,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("devkey");
+    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerX::setAppleAppID("app_id");
@@ -169,7 +169,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //         partners.push_back("facebook_int");
 //         partners.push_back("googleadwords_int");
 //         AppsFlyerX::sharingFilter(partners);
-        AppsFlyerX::sharingFilterForAllPartners();
+//        AppsFlyerX::sharingFilterForAllPartners();
         AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);

@@ -540,8 +540,7 @@ void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
     
 void AppsFlyerX::setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result)){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
-    CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");
+    AppsFlyerXAndroid::setOnDeepLinking(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setDidResolveDeepLink(callback);
 #endif
