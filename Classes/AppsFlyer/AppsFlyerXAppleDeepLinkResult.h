@@ -14,7 +14,7 @@
 
 
 enum DeepLinkResultStatus {FOUND, NOTFOUND, FAILURE};
-enum DeepLinkError {TIMEOUT, NETWORK, HTTP_STATUS_CODE, UNEXPECTED};
+enum DeepLinkError {NONE, TIMEOUT, NETWORK, HTTP_STATUS_CODE, UNEXPECTED};
 
 class AppsFlyerXAppleDeepLinkResult {
 
@@ -22,9 +22,9 @@ private:
     std::string getDeepLinkParameter(std::string key);
 
     public :
-    DeepLinkResultStatus status;
-    DeepLinkError error;
-    cocos2d::ValueMap *deepLink;
+     DeepLinkResultStatus status;
+     DeepLinkError error;
+    cocos2d::ValueMap deepLink = {};
     static AppsFlyerXAppleDeepLinkResult *instance;
     //AppsFlyerXAppleDeepLinkResult();
     std::string getMatchType();

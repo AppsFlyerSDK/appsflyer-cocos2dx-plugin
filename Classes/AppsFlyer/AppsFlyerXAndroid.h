@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "EmailCryptTypeX.h"
+#include "AppsFlyerXAppleDeepLinkResult.h"
 
 class AppsFlyerXAndroid {
 private:
@@ -121,9 +122,10 @@ public:
     static void sharingFilterForAllPartners();
 
     //ddl delegate
-    static void setOnDeepLinking(void(*callback)(cocos2d::ValueMap result));
+    static void setOnDeepLinking(void(*callback)(AppsFlyerXAppleDeepLinkResult result));
 
 };
+
 
 #endif //PROJ_ANDROID_STUDIO_APPSFLYERXANDROID_H
 

@@ -7,10 +7,11 @@
 
 #include "AppsFlyerXAppleDeepLinkResult.h"
 
+
 std::string AppsFlyerXAppleDeepLinkResult::getDeepLinkParameter(std::string key){
-    if (!deepLink->empty() && deepLink->find(key) != deepLink->end())
+    if (!deepLink.empty() && deepLink.find(key) != deepLink.end())
     {
-        return deepLink->find(key)->second.asString();
+        return deepLink.find(key)->second.asString();
     }
     return NULL;
 }
@@ -51,9 +52,9 @@ std::string AppsFlyerXAppleDeepLinkResult::getAfSub5(){
 }
 
 bool AppsFlyerXAppleDeepLinkResult::isDeferred(){
-    if (!deepLink->empty() && deepLink->find("isDeferred") != deepLink->end())
+    if (!deepLink.empty() && deepLink.find("isDeferred") != deepLink.end())
     {
-        return deepLink->find("isDeferred")->second.asBool();
+        return deepLink.find("isDeferred")->second.asBool();
     }
     return NULL;
 }

@@ -574,7 +574,7 @@ void AppsFlyerXAndroid::sharingFilterForAllPartners(){
     }
 }
 
-void AppsFlyerXAndroid::setOnDeepLinking(void(*callback)(cocos2d::ValueMap result)) {
+void AppsFlyerXAndroid::setOnDeepLinking(void(*callback)(AppsFlyerXAppleDeepLinkResult result)) {
 
     if (!isSubscribedForDeepLink) {
         subscribeForDeepLink();
