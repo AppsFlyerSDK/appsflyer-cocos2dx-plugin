@@ -14,6 +14,7 @@
 
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXMacro.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 class AppsFlyerX {
 public:
@@ -58,6 +59,9 @@ public:
     
     static void setUseUninstallSandbox(bool setUseUninstallSandbox);
     static bool isUseUninstallSandbox();
+    
+    static void setAdvertiserId(const std::string& advertiserId);
+    static std::string advertiserId();
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
@@ -132,6 +136,9 @@ public:
     static bool isDisabledSKAdNetwork();
     
     static void setPhoneNumber(const std::string& phoneNumber);
+    
+    //ddl
+    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
     
 };
 

@@ -16,6 +16,7 @@
 #include "AppsFlyerXApple.h"
 #endif
 
+
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setCustomerUserID(customerUserID);
@@ -516,5 +517,13 @@ void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
     CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setPhoneNumber(phoneNumber);
+#endif
+}
+    
+void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setOnDeepLinking(callback);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setDidResolveDeepLink(callback);
 #endif
 }

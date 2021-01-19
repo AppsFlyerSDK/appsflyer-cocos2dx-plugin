@@ -44,8 +44,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="m.onelink.me"
-                    android:scheme="http" />
+                    android:host="af-dima.onelink.me"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>

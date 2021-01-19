@@ -6,10 +6,13 @@
 //  Copyright © 2017 AppsFlyer. All rights reserved.
 //
 
+
+
 #include "AppsFlyerXApple.h"
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
-#include "libAppsFlyer/AppsFlyerLib.h"
+#include "AppsFlyerXAppleDeepLinkDelegate.h"
+#import "libAppsFlyer/AppsFlyerLib.h"
 
 /* Null, because instance will be initialized on demand. */
 AppsFlyerXApple* AppsFlyerXApple::instance = 0;
@@ -21,6 +24,16 @@ AppsFlyerXApple* AppsFlyerXApple::getInstance() {
     
     return instance;
 }
+//
+//class AppsFlyerXAppleDeepLinkResult() {
+//    public:
+//        (instancetype)initWithDeepLink:(id)deeplink error:(NSError *)error;
+//}
+//
+//class AppsFlyerXAppleDeepLink(){
+//    + (instancetype _Nullable)withParameters:(NSDictionary * _Nullable)parameters;
+//    + (instancetype _Nullable)withOneLink:(NSDictionary * _Nullable)parameters;
+//}
 
 AppsFlyerXApple::AppsFlyerXApple() {}
 
@@ -45,12 +58,15 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static dispatch_once_t onceToken;
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
+    static AppsFlyerXAppleDeepLinkDelegate *deepLinkDelegate = nil;
     
     dispatch_once(&onceToken, ^{
         
         xApple = AppsFlyerXApple::getInstance();
         delegate = [[AppsFlyerXAppleDelegate alloc] init];
+        deepLinkDelegate = [[AppsFlyerXAppleDeepLinkDelegate alloc] init];
         xApple->delegate = delegate;
+        xApple->deepLinkDelegate = deepLinkDelegate;
         
         [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationDidBecomeActiveNotification
          object: nil
@@ -61,6 +77,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     });
 
     [[AppsFlyerLib shared] setDelegate: delegate];
+    [[AppsFlyerLib shared] setDeepLinkDelegate: deepLinkDelegate];
 }
 
 std::string AppsFlyerXApple::appsFlyerDevKey() {
@@ -314,4 +331,8 @@ void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double tim
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
     NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];
      [[AppsFlyerLib shared] setPhoneNumber:phone];
+}
+
+void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)) {
+    static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
 }

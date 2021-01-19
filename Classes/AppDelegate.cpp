@@ -17,6 +17,7 @@ using namespace CocosDenshion;
 #endif
 
 #include "AppsFlyer/AppsFlyerX.h"
+#include "AppsFlyer/AppsFlyerXDeepLinkResult.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 USING_NS_CC;
@@ -60,9 +61,27 @@ static int register_all_packages()
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
+    std::string gcd = "Conversion Data : ";
+    
     for (auto &t : installData){
+        
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+        gcd.append(t.first.c_str());
+        gcd.append(" : ");
+        gcd.append(t.second.asString().c_str());
+        gcd.append("\n");
     }
+//    auto gcdStr = gcd;
+//    auto currentScene = Director::getInstance()->getRunningScene();
+//    auto size = Director::getInstance()->getVisibleSize();
+//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//    auto myLabel = Label::createWithSystemFont(gcd.c_str(), "Arial", 6);
+//    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+//    //myLabel->setHeight( origin.y + size.height - 180);
+//    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+//    currentScene->addChild(myLabel,1);
+   
+    
 }
 
 static void onConversionDataFail(cocos2d::ValueMap map) {
@@ -83,16 +102,51 @@ static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
     }
 }
 
+static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
+    CCLOG("%s", "AppDelegate.cpp got ddl!");
+    std::string ddl = "Deep link data is \n";
+    switch (result.status) {
+    case NOTFOUND:
+            CCLOG("deep link not found");
+            break;
+        case FOUND:
+            if (!result.deepLink.empty()){
+                if (!result.getMediaSource().empty()) {
+                    CCLOG("Media source is %s", result.getMediaSource().c_str());
+                }
+                for (auto &t : result.deepLink){
+                    CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+                    ddl.append(t.first.c_str());
+                    ddl.append(" : ");
+                    ddl.append(t.second.asString().c_str());
+                    ddl.append("\n");
+                }
+            }
+    }
+    auto currentScene = Director::getInstance()->getRunningScene();
+    auto child = currentScene->getChildByTag(1);
+    if (child != NULL)
+        currentScene->removeChildByTag(1);
+    auto size = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
+    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+    //myLabel->setHeight( origin.y + size.height - 180);
+    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+    currentScene->addChild(myLabel,1, 1);
+
+}
+
 bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::stop(false);
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
+    AppsFlyerX::setAppsFlyerDevKey("<devKey>>");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("942960987");
+    AppsFlyerX::setAppleAppID("<appid>>");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
@@ -100,11 +154,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //         partners.push_back("facebook_int");
 //         partners.push_back("googleadwords_int");
 //         AppsFlyerX::sharingFilter(partners);
-        AppsFlyerX::sharingFilterForAllPartners();
+//        AppsFlyerX::sharingFilterForAllPartners();
         AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
+       AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
     AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});
@@ -153,7 +208,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
-
+    
     // run
     director->runWithScene(scene);
 

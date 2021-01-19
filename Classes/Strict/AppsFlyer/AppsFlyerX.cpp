@@ -16,6 +16,7 @@
 #include "AppsFlyerXApple.h"
 #endif
 
+
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setCustomerUserID(customerUserID);
@@ -246,6 +247,23 @@ bool AppsFlyerX::isUseUninstallSandbox() {
 #endif
 }
 
+void AppsFlyerX::setAdvertiserId(const std::string& advertiserId) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    // Not supported for Android
+    CCLOGWARN("%s", "setAdvertiserId is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setAdvertiserId(advertiserId);
+#endif
+}
+
+std::string AppsFlyerX::advertiserId() {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    // Not supported for Android
+    CCLOGWARN("%s", "advertiserId is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::advertiserId();
+#endif
+}
 
 void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -516,5 +534,13 @@ void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
     CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setPhoneNumber(phoneNumber);
+#endif
+}
+    
+void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setOnDeepLinking(callback);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setDidResolveDeepLink(callback);
 #endif
 }

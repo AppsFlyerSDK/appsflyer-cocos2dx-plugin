@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "EmailCryptTypeX.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 class AppsFlyerXAndroid {
 private:
@@ -74,7 +75,7 @@ public:
 
     static void validateAndLogInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
 
-    static void trackLocation(double longitude, double latitude);
+    static void logLocation(double longitude, double latitude);
 
     static std::string getAppsFlyerUID();
 
@@ -119,7 +120,12 @@ public:
       //Sharing data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
+
+    //ddl delegate
+    static void setOnDeepLinking(void(*callback)(AppsFlyerXDeepLinkResult result));
+
 };
+
 
 #endif //PROJ_ANDROID_STUDIO_APPSFLYERXANDROID_H
 

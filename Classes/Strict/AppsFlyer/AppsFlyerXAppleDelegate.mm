@@ -5,8 +5,9 @@
 //  Created by AndreyG-AF on 10/7/17.
 //
 
-#import "AppsFlyerXAppleDelegate.h"
+
 #include "AppsFlyerXAppleHelper.h"
+#include "AppsFlyerXAppleDelegate.h"
 
 @implementation AppsFlyerXAppleDelegate
 

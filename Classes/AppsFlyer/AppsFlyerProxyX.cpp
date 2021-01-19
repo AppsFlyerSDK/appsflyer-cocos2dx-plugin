@@ -4,7 +4,9 @@
 
 #include <string>
 #include "AppsFlyerProxyX.h"
+#include "AppsFlyerXDeepLinkResult.h"
 #include <typeinfo>
+#include<algorithm>
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 
@@ -13,6 +15,8 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
+AppsFlyerXDeepLinkResult getResultForCallbackDDL(JNIEnv *env, jobject result);
+cocos2d::ValueMap stringToMap(std::string &s);
 
 void setAttributionCallbackOnConversionDataReceived(
         void (*callbackMethod)(cocos2d::ValueMap installData)) {
@@ -41,6 +45,14 @@ void setAttributionCallbackOnAppOpenAttributionFailure(
         attributionCallbackOnAppOpenAttributionFailure = callbackMethod;
     }
 }
+
+void setCallbackOnDeepLinking(
+        void (*callbackMethod)(AppsFlyerXDeepLinkResult result)) {
+    if (NULL == callbackOnDeepLinking) {
+        callbackOnDeepLinking = callbackMethod;
+    }
+}
+
 
 /**
  * TODO: handle other types of data
@@ -89,6 +101,19 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
     attributionCallbackOnConversionDataRequestFailure(getMapForCallback(env,stringError));
 }
 
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
+            (JNIEnv *env, jobject obj, jobject result) {
+
+        CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative is called");
+
+        if (NULL == callbackOnDeepLinking) {
+            return;
+        }
+
+    callbackOnDeepLinking(getResultForCallbackDDL(env,result));
+    }
+
+
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     jclass clsHashMap = env->GetObjectClass(attributionObject);
@@ -114,7 +139,6 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     int arraySize = env->GetArrayLength(arrayOfKeys);
     jclass jBooleanClass = env->FindClass("java/lang/Boolean");
     jclass jStringClass = env->FindClass("java/lang/String");
-
     for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
@@ -135,10 +159,110 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
 
         env->DeleteLocalRef(objValue);
     }
-
     return map;
 }
 
+AppsFlyerXDeepLinkResult getResultForCallbackDDL(JNIEnv *env, jobject result) {
+    AppsFlyerXDeepLinkResult deepLinkResult = AppsFlyerXDeepLinkResult();
+    cocos2d::ValueMap map;
+    cocos2d::ValueMap mapDL;
+    if (result == NULL) {
+        return deepLinkResult;
+    }
+    jclass cls = env->GetObjectClass(result);
+    if (cls == NULL) {
+        return deepLinkResult;
+    }
+
+    //Status
+    jmethodID methodId = env->GetMethodID(cls, "getStatus", "()Lcom/appsflyer/deeplink/DeepLinkResult$Status;");
+    jobject status = env->CallObjectMethod(result,methodId);
+    if (status != NULL) {
+        jclass clsEnumStatus = env->FindClass("com/appsflyer/deeplink/DeepLinkResult$Status");
+        jmethodID statusGetValueMethod = env->GetMethodID(clsEnumStatus, "ordinal", "()I");
+        jint value = env->CallIntMethod(status, statusGetValueMethod);
+        switch (value) {
+            case 0:
+                deepLinkResult.status = FOUND;
+                break;
+            case 1:
+                deepLinkResult.status = NOTFOUND;
+                break;
+            default:
+                deepLinkResult.status = FAILURE;
+                break;
+        }
+    }
+
+    //Error
+    methodId = env->GetMethodID(cls, "getError", "()Lcom/appsflyer/deeplink/DeepLinkResult$Error;");
+    jobject error = env->CallObjectMethod(result,methodId);
+    if (error != NULL) {
+        jclass clsEnumError = env->FindClass("com/appsflyer/deeplink/DeepLinkResult$Error");
+        jmethodID errorGetValueMethod = env->GetMethodID(clsEnumError, "ordinal", "()I");
+        jint value = env->CallIntMethod(error, errorGetValueMethod);
+        switch (value) {
+            case 0:
+                deepLinkResult.error = TIMEOUT;
+                break;
+            case 1:
+                deepLinkResult.error = NETWORK;
+                break;
+            case 2:
+                deepLinkResult.error = HTTP_STATUS_CODE;
+                break;
+            case 3:
+                deepLinkResult.error = UNEXPECTED;
+                break;
+            default:
+                deepLinkResult.error = NONE;
+                break;
+        }
+    }
+
+    //Deep link
+    methodId = env->GetMethodID(cls, "getDeepLink", "()Lcom/appsflyer/deeplink/DeepLink;");
+    jobject resultDL = (jobject) env->CallObjectMethod(result,methodId);
+    if (resultDL != NULL) {
+        jclass clsDL = env->GetObjectClass(resultDL);
+        if (clsDL == NULL)
+            return deepLinkResult;
+       // Deep link value
+        methodId = env->GetMethodID(clsDL, "toString", "()Ljava/lang/String;");
+        if (methodId != NULL) {
+            jstring clickEventStr = (jstring) env->CallObjectMethod(resultDL, methodId);
+            if (clickEventStr != NULL) {
+                const char *name_char = env->GetStringUTFChars(clickEventStr, NULL);
+                std::string click_event = std::string(name_char);
+                mapDL["deepLink"] = click_event;
+                deepLinkResult.deepLink = stringToMap(click_event);
+            }
+        }
+    }
+
+    //Delete
+    env->DeleteLocalRef(status);
+    env->DeleteLocalRef(error);
+    env->DeleteLocalRef(resultDL);
+
+   return deepLinkResult;
+
+
+
+}
+
+cocos2d::ValueMap stringToMap(std::string &s) {
+    cocos2d::ValueMap m;
+    s.erase(std::remove(s.begin(), s.end(), '{'), s.end());
+    s.erase(std::remove(s.begin(), s.end(), '}'), s.end());
+    s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
+    std::string key, val;
+    std::istringstream iss(s);
+    while(std::getline(std::getline(iss, key, ':') >> std::ws, val, ',')) {
+        m[key] = val;
+    }
+    return m;
+}
 
 #endif
 

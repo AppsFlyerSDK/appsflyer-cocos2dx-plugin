@@ -46,7 +46,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - generateInviteLink - TBD
   - logCrossPromotionImpression - TBD
   - logAndOpenStore - TBD
-    
+   - [Unified deep linking](#ddl) 
 
 
 ### <a id="integration"> Integration:
@@ -596,6 +596,42 @@ TBD
 
 #### <a id="dl-ios"> iOS URL Types
 TBD
+ 
+ ### <a id="ddl"> Unified deep linking
+```cpp 
+#import "AppsFlyerLib.h"
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//...
+ AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+//..
+}
+static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
+    CCLOG("%s", "AppDelegate.cpp got ddl!");
+    std::string ddl = "Deep link data is \n";
+    switch (result.status) {
+    case NOTFOUND:
+            CCLOG("deep link not found");
+            break;
+        case FOUND:
+            if (!result.deepLink.empty()){
+                if (!result.getMediaSource().empty()) {
+                    CCLOG("Media source is %s", result.getMediaSource().c_str());
+                }
+                for (auto &t : result.deepLink){
+                    CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+                    ddl.append(t.first.c_str());
+                    ddl.append(" : ");
+                    ddl.append(t.second.asString().c_str());
+                    ddl.append("\n");
+                }
+            }
+    }
+    }
+}
+```
+
+ 
  
  ## **Migration Guide to v6**
 [Integration guide](https://support.appsflyer.com//hc/en-us/articles/207032066#introduction)

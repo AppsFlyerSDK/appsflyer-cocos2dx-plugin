@@ -9,8 +9,13 @@
 #define AppsFlyerXApple_h
 
 #include <iostream>
-
 #include "EmailCryptTypeX.h"
+//#include "libAppsFlyer/AppsFlyerLib.h"
+//#include "AppsFlyerXApple.h"
+//#include "AppsFlyerXAppleHelper.h"
+//#include "AppsFlyerXAppleDelegate.h"
+//#include "EmailCryptTypeX.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 class AppsFlyerXApple {
 private:
@@ -19,6 +24,10 @@ private:
     
     /* Private constructor to prevent instancing. */
     AppsFlyerXApple();
+    
+    
+    void * deepLinkDelegate;
+    
     
     void * delegate;
 public:
@@ -63,6 +72,9 @@ public:
     
     static void setUseUninstallSandbox(bool setUseUninstallSandbox);
     static bool isUseUninstallSandbox();
+    
+    static void setAdvertiserId(const std::string& advertiserId);
+    static std::string advertiserId();
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
@@ -127,6 +139,10 @@ public:
     static void  waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
     
     static void setPhoneNumber(const std::string& phoneNumber);
+    
+    //DDL
+    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
+    
 };
 
 #endif /* AppsFlyerXApple_h */

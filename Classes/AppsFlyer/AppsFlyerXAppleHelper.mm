@@ -6,14 +6,16 @@
 //  AppsFlyer
 
 #include "AppsFlyerXAppleHelper.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
-ValueMap AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic) {
-    ValueMap vm;
+
+cocos2d::ValueMap AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic) {
+    cocos2d::ValueMap vm;
     nsDictionary2ValueMap(dic, vm);
     return vm;
 }
 
-void AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic, ValueMap &vm) {
+void AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic, cocos2d::ValueMap &vm) {
     NSArray *keys = [dic allKeys];
     for (NSString *k : keys) {
         id obj = dic[k];
@@ -21,12 +23,12 @@ void AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic, ValueMap &v
         
         if ([obj isKindOfClass:[NSDictionary class]]) {
             //Dictionary
-            ValueMap vmm;
+            cocos2d::ValueMap vmm;
             nsDictionary2ValueMap((NSDictionary *) obj, vmm);
             vm[key] = vmm;
         } else if ([obj isKindOfClass:[NSArray class]]) {
             //Array
-            ValueVector vv;
+            cocos2d::ValueVector vv;
             nsArray2ValueVector((NSArray *) obj, vv);
             vm[key] = vv;
         } else if ([obj isKindOfClass:[NSString class]]) {
@@ -123,4 +125,112 @@ NSArray *AppsFlyerXAppleHelper::valueVector2nsArray(ValueVector &vv) {
         }
     }
     return array;
+}
+
+ValueMap AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *result) {
+    ValueMap vm;
+    deepLinkResult2ValueMap(result, vm);
+    return vm;
+}
+
+
+void AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *result, ValueMap &vm) {
+    AFSDKDeepLinkResultStatus status = [result status];
+    std::string statusDL;
+    switch (status) {
+        case AFSDKDeepLinkResultStatusNotFound:
+            statusDL = "notFound";
+            break;
+        case AFSDKDeepLinkResultStatusFound:
+            statusDL = "found";
+            break;
+        case AFSDKDeepLinkResultStatusFailure:
+            statusDL = "failure";
+            break;
+        default:
+            break;
+    }
+    vm["status"] = Value(statusDL);
+
+    //AppsFlyerXAppleDeepLink *deepLink = [[AppsFlyerXAppleDeepLink alloc] init];
+    ValueMap deepLink;
+    id obj = [result deepLink].afSub1 ? [result deepLink].afSub1 : @"";
+    deepLink["afSub1"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].afSub2 ? [result deepLink].afSub2 : @"";
+    deepLink["afSub2"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].afSub3  ? [result deepLink].afSub3 : @"";
+    deepLink["afSub3"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].afSub4 ? [result deepLink].afSub4 : @"";
+    deepLink["afSub4"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].afSub5 ?  [result deepLink].afSub5  : @"";
+    deepLink["afSub5"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].deeplinkValue ? [result deepLink].deeplinkValue : @"";
+    deepLink["deeplinkValue"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].matchType  ? [result deepLink].matchType : @"";
+    deepLink["matchType"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].clickHTTPReferrer ? [result deepLink].clickHTTPReferrer : @"";
+    deepLink["clickHTTPReferrer"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].mediaSource ?  [result deepLink].mediaSource : @"";
+    deepLink["mediaSource"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].campaign ?  [result deepLink].campaign : @"";
+    deepLink["campaign"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    obj = [result deepLink].campaignId ? [result deepLink].campaignId : @"";
+    deepLink["campaignId"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
+    deepLink["isDeferred"] = [result deepLink].isDeferred;
+    obj = [result deepLink].clickEvent;
+    ValueMap vmm;
+    nsDictionary2ValueMap((NSDictionary *) obj, vmm);
+    deepLink["clickEvent"] =  vmm;
+    vm["deepLink"] = deepLink;
+    vm["error"] = nil;
+    if ([result error] != nil)
+    {
+    NSDictionary * errorDictionary = @{@"errorCode":[NSNumber numberWithInteger:[result error].code],
+                                       @"errorDescription":[result error].localizedDescription};
+    vm["error"] = errorDictionary;
+    }
+}
+
+AppsFlyerXDeepLinkResult AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult* result){
+    AppsFlyerXDeepLinkResult xresult;
+    //AppsFlyerXAppleDeepLink *deepLink = [[AppsFlyerXAppleDeepLink alloc] init];
+    xresult.deepLink = {};
+    deepLinkResult2XDeepLinkResult(result, xresult);
+    return xresult;
+}
+
+void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result, AppsFlyerXDeepLinkResult &xresult) {
+    AFSDKDeepLinkResultStatus status = [result status];
+    DeepLinkResultStatus xstatus;
+    switch (status) {
+        case AFSDKDeepLinkResultStatusNotFound:
+            xstatus = NOTFOUND;
+            break;
+        case AFSDKDeepLinkResultStatusFound:
+            xstatus = FOUND;
+            break;
+        case AFSDKDeepLinkResultStatusFailure:
+            xstatus = FAILURE;
+            break;
+        default:
+            break;
+    }
+    xresult.status = xstatus;
+    if ([result deepLink] != nil)
+    {
+        ValueMap deepLink;
+        id clickEvent = [result deepLink].clickEvent;
+        xresult.deepLink = AppsFlyerXAppleHelper::nsDictionary2ValueMap(clickEvent);
+    }
+    DeepLinkError xerror = NONE;
+    if ([result error] != nil){
+        std::string error = std::string([[result error].localizedDescription UTF8String]);
+       if (error == "TIMEOUT")
+                xerror = TIMEOUT;
+        else if (error == "NETWORK")
+                xerror = NETWORK;
+        else if (error == "HTTP_STATUS_CODE")
+                xerror = HTTP_STATUS_CODE;
+    }
+        xresult.error = xerror;
 }

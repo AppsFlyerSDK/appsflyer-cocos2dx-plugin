@@ -12,7 +12,12 @@ namespace {
 std::unique_ptr<AppDelegate> appDelegate;
 }
 
-void cocos_android_app_init(JNIEnv* env) {
+#if COCOS2D_VERSION <= 0x00030600
+void cocos_android_app_init(JNIEnv* env, jobject thiz)
+#else
+void cocos_android_app_init(JNIEnv* env)
+#endif
+ {
     LOGD("cocos_android_app_init");
     appDelegate.reset(new AppDelegate());
 }

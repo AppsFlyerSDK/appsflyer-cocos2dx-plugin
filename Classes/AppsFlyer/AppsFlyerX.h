@@ -14,6 +14,7 @@
 
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXMacro.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 class AppsFlyerX {
 public:
@@ -132,6 +133,9 @@ public:
     static bool isDisabledSKAdNetwork();
     
     static void setPhoneNumber(const std::string& phoneNumber);
+    
+    //ddl
+    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
     
 };
 
