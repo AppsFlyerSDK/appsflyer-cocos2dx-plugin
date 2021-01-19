@@ -194,11 +194,12 @@ void AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *res
 AppsFlyerXAppleDeepLinkResult AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult* result){
     AppsFlyerXAppleDeepLinkResult xresult;
     //AppsFlyerXAppleDeepLink *deepLink = [[AppsFlyerXAppleDeepLink alloc] init];
+    xresult.deepLink = {};
     deepLinkResult2XDeepLinkResult(result, xresult);
     return xresult;
 }
 
-void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result, AppsFlyerXAppleDeepLinkResult xresult) {
+void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result, AppsFlyerXAppleDeepLinkResult &xresult) {
     AFSDKDeepLinkResultStatus status = [result status];
     DeepLinkResultStatus xstatus;
     switch (status) {
@@ -217,87 +218,19 @@ void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResu
     xresult.status = xstatus;
     if ([result deepLink] != nil)
     {
-//        AppsFlyerXAppleDeepLink xdeepLink;
-//        id obj = [result deepLink].afSub1 ? [result deepLink].afSub1 : @"";
-//        xdeepLink.afSub1 = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub2 ? [result deepLink].afSub2 : @"";
-//        xdeepLink.afSub2  =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub3  ? [result deepLink].afSub3 : @"";
-//        xdeepLink.afSub3 =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub4 ? [result deepLink].afSub4 : @"";
-//        xdeepLink.afSub4 =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub5 ?  [result deepLink].afSub5  : @"";
-//        xdeepLink.afSub5 =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].deeplinkValue ? [result deepLink].deeplinkValue : @"";
-//        xdeepLink.deeplinkValue = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].matchType  ? [result deepLink].matchType : @"";
-//        xdeepLink.matchType  =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].clickHTTPReferrer ? [result deepLink].clickHTTPReferrer : @"";
-//        xdeepLink.clickHTTPReferrer =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].mediaSource ?  [result deepLink].mediaSource : @"";
-//        xdeepLink.mediaSource = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].campaign ?  [result deepLink].campaign : @"";
-//        xdeepLink.campaign =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].campaignId ? [result deepLink].campaignId : @"";
-//        xdeepLink.campaignId =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        xdeepLink.isDeferred = [result deepLink].isDeferred;
-//        ValueMap xclickEvent;
-//        nsDictionary2ValueMap([result deepLink].clickEvent, xclickEvent);
-//        xdeepLink.clickEvent = xclickEvent;
-//        xresult.deepLink = &xdeepLink;
         ValueMap deepLink;
         id clickEvent = [result deepLink].clickEvent;
-        for (NSString *key in clickEvent)
-        {
-            deepLink[[(NSString *) key cStringUsingEncoding:NSUTF8StringEncoding]] = clickEvent[key];
-        }
+        xresult.deepLink = AppsFlyerXAppleHelper::nsDictionary2ValueMap(clickEvent);
     }
+    DeepLinkError xerror = NONE;
     if ([result error] != nil){
         std::string error = std::string([[result error].localizedDescription UTF8String]);
-        DeepLinkError xerror;
        if (error == "TIMEOUT")
                 xerror = TIMEOUT;
         else if (error == "NETWORK")
                 xerror = NETWORK;
         else if (error == "HTTP_STATUS_CODE")
                 xerror = HTTP_STATUS_CODE;
-        xresult.error = xerror;
     }
-//        id obj = [result deepLink].afSub1 ? [result deepLink].afSub1 : @"";
-//        deepLink["afSub1"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub2 ? [result deepLink].afSub2 : @"";
-//        deepLink["afSub2"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub3  ? [result deepLink].afSub3 : @"";
-//        deepLink["afSub3"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub4 ? [result deepLink].afSub4 : @"";
-//        deepLink["afSub4"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].afSub5 ?  [result deepLink].afSub5  : @"";
-//        deepLink["afSub5"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].deeplinkValue ? [result deepLink].deeplinkValue : @"";
-//        deepLink["deeplinkValue"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].matchType  ? [result deepLink].matchType : @"";
-//        deepLink["matchType"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].clickHTTPReferrer ? [result deepLink].clickHTTPReferrer : @"";
-//        deepLink["clickHTTPReferrer"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].mediaSource ?  [result deepLink].mediaSource : @"";
-//        deepLink["mediaSource"] = [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].campaign ?  [result deepLink].campaign : @"";
-//        deepLink["campaign"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        obj = [result deepLink].campaignId ? [result deepLink].campaignId : @"";
-//        deepLink["campaignId"] =  [(NSString *) obj cStringUsingEncoding:NSUTF8StringEncoding];
-//        deepLink["isDeferred"] = [result deepLink].isDeferred;
-//        obj = [result deepLink].clickEvent;
-//        ValueMap vmm;
-//        nsDictionary2ValueMap((NSDictionary *) obj, vmm);
-//        deepLink["clickEvent"] =  vmm;
-//        xresult.deepLink = deepLink;
-        
-        
- //   }
-//    if ([result error] != nil)
-//    {
-//        ValueMap xError;
-//        xError["errorCode"] = [NSNumber numberWithInteger:[result error].code];
-//        xError["errorDescription"] = [result error].localizedDescription;
-//    }
+        xresult.error = xerror;
 }

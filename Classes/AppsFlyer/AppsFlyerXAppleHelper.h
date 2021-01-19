@@ -33,7 +33,7 @@ public:
     static void deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *result, ValueMap &vm);
     
     static AppsFlyerXAppleDeepLinkResult deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result);
-    static void deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result,  AppsFlyerXAppleDeepLinkResult xresult);
+    static void deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result,  AppsFlyerXAppleDeepLinkResult &xresult);
 
 };
 
