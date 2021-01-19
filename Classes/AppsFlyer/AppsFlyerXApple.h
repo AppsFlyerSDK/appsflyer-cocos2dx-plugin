@@ -15,7 +15,7 @@
 //#include "AppsFlyerXAppleHelper.h"
 //#include "AppsFlyerXAppleDelegate.h"
 //#include "EmailCryptTypeX.h"
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 class AppsFlyerXApple {
 private:

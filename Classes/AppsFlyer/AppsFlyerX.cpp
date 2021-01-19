@@ -537,7 +537,7 @@ void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
 #endif
 }
     
-void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result)){
+void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setOnDeepLinking(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)

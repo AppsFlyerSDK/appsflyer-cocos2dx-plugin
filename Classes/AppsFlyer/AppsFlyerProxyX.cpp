@@ -4,7 +4,7 @@
 
 #include <string>
 #include "AppsFlyerProxyX.h"
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 #include <typeinfo>
 #include<algorithm>
 #include "../../cocos2d/cocos/platform/CCPlatformMacros.h"
@@ -15,7 +15,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
-AppsFlyerXAppleDeepLinkResult getMapForCallbackDDL(JNIEnv *env, jobject result);
+AppsFlyerXDeepLinkResult getResultForCallbackDDL(JNIEnv *env, jobject result);
 cocos2d::ValueMap stringToMap(std::string &s);
 
 void setAttributionCallbackOnConversionDataReceived(
@@ -47,7 +47,7 @@ void setAttributionCallbackOnAppOpenAttributionFailure(
 }
 
 void setCallbackOnDeepLinking(
-        void (*callbackMethod)(AppsFlyerXAppleDeepLinkResult result)) {
+        void (*callbackMethod)(AppsFlyerXDeepLinkResult result)) {
     if (NULL == callbackOnDeepLinking) {
         callbackOnDeepLinking = callbackMethod;
     }
@@ -110,19 +110,17 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepL
             return;
         }
 
-    callbackOnDeepLinking(getMapForCallbackDDL(env,result));
+    callbackOnDeepLinking(getResultForCallbackDDL(env,result));
     }
 
 
 
 cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
-    CCLOG("getMapForCallback");
     jclass clsHashMap = env->GetObjectClass(attributionObject);
     cocos2d::ValueMap map;
     jmethodID midKeySet = env->GetMethodID(clsHashMap, "keySet", "()Ljava/util/Set;");
 
     if (midKeySet == NULL) {
-        CCLOG("getMapForCallback method null");
         return map; /* method not found */
     }
 
@@ -141,7 +139,6 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     int arraySize = env->GetArrayLength(arrayOfKeys);
     jclass jBooleanClass = env->FindClass("java/lang/Boolean");
     jclass jStringClass = env->FindClass("java/lang/String");
-    CCLOG("arry size %d", arraySize);
     for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
@@ -162,14 +159,11 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
 
         env->DeleteLocalRef(objValue);
     }
-    for (auto &t : map){
-        CCLOG(" map deep link %s - %s", t.first.c_str(), t.second.asString().c_str());
-    }
     return map;
 }
 
-AppsFlyerXAppleDeepLinkResult getMapForCallbackDDL(JNIEnv *env, jobject result) {
-    AppsFlyerXAppleDeepLinkResult deepLinkResult = AppsFlyerXAppleDeepLinkResult();
+AppsFlyerXDeepLinkResult getResultForCallbackDDL(JNIEnv *env, jobject result) {
+    AppsFlyerXDeepLinkResult deepLinkResult = AppsFlyerXDeepLinkResult();
     cocos2d::ValueMap map;
     cocos2d::ValueMap mapDL;
     if (result == NULL) {
@@ -208,7 +202,6 @@ AppsFlyerXAppleDeepLinkResult getMapForCallbackDDL(JNIEnv *env, jobject result) 
         jmethodID errorGetValueMethod = env->GetMethodID(clsEnumError, "ordinal", "()I");
         jint value = env->CallIntMethod(error, errorGetValueMethod);
         switch (value) {
-            //TIMEOUT, NETWORK, HTTP_STATUS_CODE, UNEXPECTED
             case 0:
                 deepLinkResult.error = TIMEOUT;
                 break;
@@ -231,139 +224,14 @@ AppsFlyerXAppleDeepLinkResult getMapForCallbackDDL(JNIEnv *env, jobject result) 
     methodId = env->GetMethodID(cls, "getDeepLink", "()Lcom/appsflyer/deeplink/DeepLink;");
     jobject resultDL = (jobject) env->CallObjectMethod(result,methodId);
     if (resultDL != NULL) {
-        CCLOG("result DL is not null");
-//        deepLinkResult.deepLink = getMapForCallback(env,resultDL);
-//    }
         jclass clsDL = env->GetObjectClass(resultDL);
         if (clsDL == NULL)
             return deepLinkResult;
-
-////    CllickEvent getClickEvent()Lorg/json/JSONObject;
-//    methodId = env->GetMethodID(clsDL, "getClickEvent", "()Lorg/json/JSONObject;");
-//    jobject clickEvent = (jobject) env->CallObjectMethod(resultDL, methodId);
-//    if (clickEvent != NULL) {
-//       CCLOG("clickevent not null click %s", clickEvent.afSub1)
-//    }
-//
-//    //AfSub2
-//    methodId = env->GetMethodID(clsDL, "getAfSub2", "()Ljava/lang/String;");
-//    jstring afSub2Str = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (afSub2Str != NULL) {
-//        name_char = env->GetStringUTFChars(afSub2Str, NULL);
-//        std::string afSub2 = std::string(name_char);
-//        mapDL["afSub2"] = afSub2;
-//    }
-//
-//    //AfSub3
-//    methodId = env->GetMethodID(clsDL, "getAfSub3", "()Ljava/lang/String;");
-//    jstring afSub3Str = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (afSub3Str != NULL) {
-//        name_char = env->GetStringUTFChars(afSub3Str, NULL);
-//        printf("this is hte name 3 %s", name_char);
-//        std::string afSub3 = std::string(name_char);
-//        mapDL["afSub3"] = afSub3;
-//    }
-//
-//    //AfSub4
-//    methodId = env->GetMethodID(clsDL, "getAfSub4", "()Ljava/lang/String;");
-//    jstring afSub4Str = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (afSub4Str != NULL) {
-//        name_char = env->GetStringUTFChars(afSub4Str, NULL);
-//        std::string afSub4 = std::string(name_char);
-//        mapDL["afSub4"] = afSub4;
-//    }
-//
-//    //AfSub5
-//    methodId = env->GetMethodID(clsDL, "getAfSub5", "()Ljava/lang/String;");
-//    jstring afSub5Str = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (afSub5Str != NULL) {
-//        name_char = env->GetStringUTFChars(afSub5Str, NULL);
-//        std::string afSub5 = std::string(name_char);
-//        mapDL["afSub5"] = afSub5;
-//    }
-//
-//    //Campagaign
-//    methodId = env->GetMethodID(clsDL, "getCampaign", "()Ljava/lang/String;");
-//    jstring campaignStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (campaignStr != NULL) {
-//        name_char = env->GetStringUTFChars(campaignStr, NULL);
-//        std::string campaign = std::string(name_char);
-//        mapDL["campaign"] = campaign;
-//    }
-//
-//    //Campaign id
-//    methodId = env->GetMethodID(clsDL, "getCampaignId", "()Ljava/lang/String;");
-//    jstring campaignIdStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (campaignIdStr != NULL) {
-//        name_char = env->GetStringUTFChars(campaignIdStr, NULL);
-//        std::string campaignID = std::string(name_char);
-//        mapDL["campaign_id"] = campaignID;
-//    }
-//
-//    //click_http_referrer
-//    methodId = env->GetMethodID(clsDL, "getClickHttpReferrer", "()Ljava/lang/String;");
-//    jstring clickHttpReferrerStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (clickHttpReferrerStr != NULL) {
-//        name_char = env->GetStringUTFChars(clickHttpReferrerStr, NULL);
-//        std::string clickHttpReferrer = std::string(name_char);
-//        mapDL["click_http_referrer"] = clickHttpReferrer;
-//    }
-//
-//    //is_deferred
-//    methodId = env->GetMethodID(clsDL, "isDeferred", "()Ljava/lang/Boolean;");
-//    jobject isDeferredBoolean =  env->CallObjectMethod(resultDL, methodId);
-//    jclass jBooleanClass = env->FindClass("java/lang/Boolean");
-//    if (isDeferredBoolean != NULL && env->IsInstanceOf(isDeferredBoolean, jBooleanClass)) {
-//        jmethodID booleanValueMID = env->GetMethodID(jBooleanClass, "booleanValue", "()Z");
-//        bool booleanValue = (bool) env->CallBooleanMethod(isDeferredBoolean, booleanValueMID);
-//        mapDL["is_deferred"] = booleanValue;
-//    }
-//
-//    //Deep link value
-//    methodId = env->GetMethodID(clsDL, "getDeepLinkValue", "()Ljava/lang/String;");
-//    jstring deep_link_valueStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (deep_link_valueStr != NULL) {
-//        name_char = env->GetStringUTFChars(deep_link_valueStr, NULL);
-//        std::string deep_link_value = std::string(name_char);
-//        mapDL["deep_link_value"] = deep_link_value;
-//
-//    }
-//
-//    //media source
-//    methodId = env->GetMethodID(clsDL, "getMediaSource", "()Ljava/lang/String;");
-//    jstring media_sourceStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (media_sourceStr != NULL) {
-//        name_char = env->GetStringUTFChars(media_sourceStr, NULL);
-//        std::string media_source = std::string(name_char);
-//        mapDL["media_source"] = media_source;
-//    }
-//
-//
-//    //match type
-//    methodId = env->GetMethodID(clsDL, "getMatchType", "()Ljava/lang/String;");
-//    jstring match_typeStr = (jstring) env->CallObjectMethod(resultDL, methodId);
-//    // Convert jstring to string
-//    if (match_typeStr != NULL) {
-//        name_char = env->GetStringUTFChars(match_typeStr, NULL);
-//        std::string match_type = std::string(name_char);
-//        mapDL["match_type"] = match_type;
-//    }
-  // deepLinkResult.deepLink = getMapForCallback(env,resultDL);
        // Deep link value
         methodId = env->GetMethodID(clsDL, "toString", "()Ljava/lang/String;");
         if (methodId != NULL) {
             jstring clickEventStr = (jstring) env->CallObjectMethod(resultDL, methodId);
             if (clickEventStr != NULL) {
-                CCLOG("click event stringt not null");
                 const char *name_char = env->GetStringUTFChars(clickEventStr, NULL);
                 std::string click_event = std::string(name_char);
                 mapDL["deepLink"] = click_event;
@@ -372,27 +240,9 @@ AppsFlyerXAppleDeepLinkResult getMapForCallbackDDL(JNIEnv *env, jobject result) 
         }
     }
 
-  // map["deepLink"] = mapDL;
-
-
-
-
-
     //Delete
     env->DeleteLocalRef(status);
     env->DeleteLocalRef(error);
-//    env->DeleteLocalRef(afSub1Str);
-//    env->DeleteLocalRef(afSub2Str);
-//    env->DeleteLocalRef(afSub3Str);
-//    env->DeleteLocalRef(afSub4Str);
-//    env->DeleteLocalRef(afSub5Str);
-//    env->DeleteLocalRef(campaignIdStr);
-//    env->DeleteLocalRef(campaignStr);
-//    env->DeleteLocalRef(media_sourceStr);
-//    env->DeleteLocalRef(match_typeStr);
-//    env->DeleteLocalRef(deep_link_valueStr);
-//    env->DeleteLocalRef(isDeferredBoolean);
-//    env->DeleteLocalRef(clickHttpReferrerStr);
     env->DeleteLocalRef(resultDL);
 
    return deepLinkResult;
@@ -407,15 +257,8 @@ cocos2d::ValueMap stringToMap(std::string &s) {
     s.erase(std::remove(s.begin(), s.end(), '}'), s.end());
     std::string key, val;
     std::istringstream iss(s);
-    CCLOG("string to map %s", s.c_str());
     while(std::getline(std::getline(iss, key, ':') >> std::ws, val, ',')) {
-        CCLOG("string to map key %s", key.c_str());
-        CCLOG("string to map val %s", val.c_str());
         m[key] = val;
-    }
-
-    for (auto &t : m){
-        CCLOG("string to map %s - %s", t.first.c_str(), t.second.asString().c_str());
     }
     return m;
 }

@@ -574,7 +574,7 @@ void AppsFlyerXAndroid::sharingFilterForAllPartners(){
     }
 }
 
-void AppsFlyerXAndroid::setOnDeepLinking(void(*callback)(AppsFlyerXAppleDeepLinkResult result)) {
+void AppsFlyerXAndroid::setOnDeepLinking(void(*callback)(AppsFlyerXDeepLinkResult result)) {
 
     if (!isSubscribedForDeepLink) {
         subscribeForDeepLink();

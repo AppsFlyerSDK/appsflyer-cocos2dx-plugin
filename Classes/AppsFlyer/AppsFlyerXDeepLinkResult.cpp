@@ -5,7 +5,7 @@
 //  Created by Margot Guetta on 15/12/2020.
 //
 
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 
 std::string AppsFlyerXAppleDeepLinkResult::getDeepLinkParameter(std::string key){

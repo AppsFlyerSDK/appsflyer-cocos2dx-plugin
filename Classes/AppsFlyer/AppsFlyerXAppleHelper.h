@@ -10,7 +10,7 @@
 
 #include "cocos2d.h"
 #include <iostream>
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
 
 //#import <UIKit/UIKit.h>

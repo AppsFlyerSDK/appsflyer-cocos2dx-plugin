@@ -17,7 +17,7 @@ using namespace CocosDenshion;
 #endif
 
 #include "AppsFlyer/AppsFlyerX.h"
-#include "AppsFlyer/AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyer/AppsFlyerXDeepLinkResult.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
 USING_NS_CC;
@@ -102,53 +102,36 @@ static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
     }
 }
 
-static void didResolveDeepLink(cocos2d::ValueMap map) {
-    CCLOG("%s", "AppDelegate.cpp got deep link");
-    std::string ddl = "Deep link : \n";
-    std::string status = map["status"].asString().c_str();
-    if (status == "NOT_FOUND")
-    {
-        CCLOG("%s", "Deep link not found");
-    } else if (status == "FOUND")
-    {
-        CCLOG("%s", "Deep link data is :\n");
-        auto deeplink = map["deepLink"];
-        for (auto &t : map["deepLink"].asValueMap() ){
-            switch (t.second.getType()) {
-                case cocos2d::Value::Type::STRING:
-                    ddl.append(t.first.c_str());
-                    ddl.append(" : ");
+static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
+    CCLOG("%s", "AppDelegate.cpp got ddl!");
+    std::string ddl = "Deep link data is \n";
+    switch (result.status) {
+    case NOTFOUND:
+            CCLOG("deep link not found");
+            break;
+        case FOUND:
+            if (!result.deepLink.empty()){
+                for (auto &t : result.deepLink){
                     CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+                    ddl.append(t.first.c_str());
+                    ddl.append(" : " );
                     ddl.append(t.second.asString().c_str());
-                    ddl.append("\n");
-                    break;
-                case cocos2d::Value::Type::BOOLEAN:
-                    CCLOG("%s - %s", t.first.c_str(), t.second.asBool() ? "true": "false");
-                    break;
-                case cocos2d::Value::Type::MAP:
-                    for (auto &i : t.second.asValueMap() ){
-                        CCLOG("%s - %s", i.first.c_str(), i.second.asString().c_str());
-                    }
-                default:
-                    break;
+                    ddl.append("\n" );
+                }
             }
-        }
-        CCLOG("%s", ddl.c_str());
-    } else if (status == "ERROR")
-    {
-        CCLOG("%s", "Error :\n");
-        for (auto &t : map["error"].asValueMap() ){
-            CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-        }
     }
     auto currentScene = Director::getInstance()->getRunningScene();
+    auto child = currentScene->getChildByTag(1);
+    if (child != NULL)
+        currentScene->removeChildByTag(1);
     auto size = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial",6 ,Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-    myLabel->setLineBreakWithoutSpace(true);
-    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 250));
-    myLabel->setDimensions(200, 0);
-    currentScene->addChild(myLabel,1);
+    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
+    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+    //myLabel->setHeight( origin.y + size.height - 180);
+    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+    currentScene->addChild(myLabel,1, 1);
+
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -160,7 +143,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("app_id");
+    AppsFlyerX::setAppleAppID("0677951033");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
@@ -173,7 +156,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-       //AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+       AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
     AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});

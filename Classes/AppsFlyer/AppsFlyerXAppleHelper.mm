@@ -6,7 +6,7 @@
 //  AppsFlyer
 
 #include "AppsFlyerXAppleHelper.h"
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 
 cocos2d::ValueMap AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic) {

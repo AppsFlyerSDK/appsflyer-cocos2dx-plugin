@@ -10,7 +10,7 @@
 #include <jni.h>
 #include "cocos2d.h"
 #include <typeinfo>
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 extern "C" {
 
@@ -22,7 +22,7 @@ static void (*attributionCallbackOnAppOpenAttribution)(cocos2d::ValueMap attribu
 
 static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap error);
 
-static void (*callbackOnDeepLinking)(AppsFlyerXAppleDeepLinkResult result);
+static void (*callbackOnDeepLinking)(AppsFlyerXDeepLinkResult result);
 
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
@@ -49,7 +49,7 @@ void setAttributionCallbackOnAppOpenAttributionFailure(
         void (*callbackMethod)(cocos2d::ValueMap error));
 
 void setCallbackOnDeepLinking(
-        void (*callbackMethod)(AppsFlyerXAppleDeepLinkResult result));
+        void (*callbackMethod)(AppsFlyerXDeepLinkResult result));
 
 }
 #endif

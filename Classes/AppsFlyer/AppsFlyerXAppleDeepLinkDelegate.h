@@ -10,7 +10,7 @@
 
 #include "libAppsFlyer/AppsFlyerLib.h"
 #include "AppsFlyerXAppleHelper.h"
-#include "AppsFlyerXAppleDeepLinkResult.h"
+#include "AppsFlyerXDeepLinkResult.h"
 
 
 
