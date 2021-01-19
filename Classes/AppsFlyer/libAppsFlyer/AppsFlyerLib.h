@@ -611,20 +611,20 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
  parameters are not appended to the url.
  
  @param containsString string to check in URL.
- @param parameters NSDictionary, which containins parameters to append to the deeplink url after it passed validation.
  */
+ @param parameters NSDictionary, which containins parameters to append to the deeplink url after it passed validation.
 - (void)appendParametersToDeepLinkingURLWithString:(NSString *)containsString
                                         parameters:(NSDictionary<NSString *, NSString*> *)parameters
 NS_SWIFT_NAME(appendParametersToDeeplinkURL(contains:parameters:));
 
 /**
- Adds array of keys, which are used to compose key path
- to resolve deeplink from push notification payload `userInfo`.
- 
- @param deepLinkPath an array of strings which contains keys to search for deeplink in payload.
- */
-- (void)addPushNotificationDeepLinkPath:(NSArray<NSString *> *)deepLinkPath;
 
+- (void)addPushNotificationDeepLinkPath:(NSArray<NSString *> *)deepLinkPath;
+ */
+ @param deepLinkPath an array of strings which contains keys to search for deeplink in payload.
+ 
+ to resolve deeplink from push notification payload `userInfo`.
+ Adds array of keys, which are used to compose key path
 @end
 
 NS_ASSUME_NONNULL_END
