@@ -6,11 +6,13 @@
 //  Copyright © 2017 AppsFlyer. All rights reserved.
 //
 
+
+
 #include "AppsFlyerXApple.h"
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
-#include "libAppsFlyer/AppsFlyerLib.h"
 #include "AppsFlyerXAppleDeepLinkDelegate.h"
+#import "libAppsFlyer/AppsFlyerLib.h"
 
 /* Null, because instance will be initialized on demand. */
 AppsFlyerXApple* AppsFlyerXApple::instance = 0;
@@ -328,7 +330,6 @@ void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
      [[AppsFlyerLib shared] setPhoneNumber:phone];
 }
 
-void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result)) {
- //(void(*callback)AppsFlyerDeepLinkResult *_Nonnull result)){
+void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result)) {
     static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
 }

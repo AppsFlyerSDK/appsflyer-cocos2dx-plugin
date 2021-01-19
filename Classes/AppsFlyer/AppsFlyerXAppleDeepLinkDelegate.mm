@@ -6,15 +6,14 @@
 //
 
 #import "AppsFlyerXAppleDeepLinkDelegate.h"
-#include "AppsFlyerXAppleHelper.h"
+
 
 @implementation AppsFlyerXAppleDeepLinkDelegate
 
 - (void)didResolveDeepLink:(AppsFlyerDeepLinkResult *_Nonnull)result {
     if (_didResolveDeepLinkCallback){
-        _didResolveDeepLinkCallback(AppsFlyerXAppleHelper::deepLinkResult2ValueMap(result));
+        _didResolveDeepLinkCallback(AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(result));
     }
 }
-
 
 @end

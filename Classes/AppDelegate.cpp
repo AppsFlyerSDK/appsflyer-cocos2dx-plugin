@@ -173,7 +173,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
         AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-      // AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+       //AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
     AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
                                              { "key2", cocos2d::Value("value2")}});

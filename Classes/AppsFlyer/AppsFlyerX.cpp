@@ -16,7 +16,6 @@
 #include "AppsFlyerXApple.h"
 #endif
 
-enum deepLinkStatus { notFound, found, failure};
 
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -538,7 +537,7 @@ void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
 #endif
 }
     
-void AppsFlyerX::setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result)){
+void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result)){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setOnDeepLinking(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)

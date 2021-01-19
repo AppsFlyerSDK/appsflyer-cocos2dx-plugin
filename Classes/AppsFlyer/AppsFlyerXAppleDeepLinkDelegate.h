@@ -7,10 +7,15 @@
 
 #ifndef AppsFlyerXAppleDeepLinkDelegate_h
 #define AppsFlyerXAppleDeepLinkDelegate_h
-#import "AppsFlyerLib.h"
+
+#include "libAppsFlyer/AppsFlyerLib.h"
+#include "AppsFlyerXAppleHelper.h"
+#include "AppsFlyerXAppleDeepLinkResult.h"
+
+
 
 @interface AppsFlyerXAppleDeepLinkDelegate: NSObject<AppsFlyerDeepLinkDelegate>
 
-@property (nonatomic) void (* _Nullable didResolveDeepLinkCallback)(cocos2d::ValueMap result);
+@property (nonatomic) void (* _Nullable didResolveDeepLinkCallback)(AppsFlyerXAppleDeepLinkResult result);
 @end
 #endif /* AppsFlyerXAppleDeepLinkDelegate_h */

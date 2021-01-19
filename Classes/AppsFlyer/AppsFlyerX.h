@@ -14,6 +14,7 @@
 
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXMacro.h"
+#include "AppsFlyerXAppleDeepLinkResult.h"
 
 class AppsFlyerX {
 public:
@@ -137,7 +138,7 @@ public:
     static void setPhoneNumber(const std::string& phoneNumber);
     
     //ddl
-    static void setDidResolveDeepLink(void(*callback)(cocos2d::ValueMap result));
+    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result));
     
 };
 

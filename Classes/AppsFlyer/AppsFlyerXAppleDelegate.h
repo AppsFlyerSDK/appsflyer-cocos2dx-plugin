@@ -4,8 +4,11 @@
 //
 //  Created by AndreyG-AF on 10/7/17.
 //
+#ifndef AppsFlyerXAppleDelegate_h
+#define AppsFlyerXAppleDelegate_h
 
 #import "AppsFlyerLib.h"
+
 
 @interface AppsFlyerXAppleDelegate: NSObject<AppsFlyerLibDelegate>
 
@@ -15,3 +18,4 @@
 @property (nonatomic) void (* onAppOpenAttributionFailureCallback)(cocos2d::ValueMap error);
 
 @end
+#endif /* AppsFlyerXAppleDelegate_h */

@@ -10,7 +10,10 @@
 
 #include "cocos2d.h"
 #include <iostream>
-#include "libAppsFlyer/AppsFlyerLib.h"
+#include "AppsFlyerXAppleDeepLinkResult.h"
+#import "libAppsFlyer/AppsFlyerLib.h"
+
+//#import <UIKit/UIKit.h>
 
 using namespace cocos2d;
 
@@ -28,6 +31,9 @@ public:
     
     static ValueMap deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *result);
     static void deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *result, ValueMap &vm);
+    
+    static AppsFlyerXAppleDeepLinkResult deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result);
+    static void deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result,  AppsFlyerXAppleDeepLinkResult xresult);
 
 };
 
