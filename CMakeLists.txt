@@ -53,6 +53,7 @@ list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AppsFlyerProxyX.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
+     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppsFlyer/AppsFlyerX.h
@@ -60,6 +61,7 @@ list(APPEND GAME_HEADER
      Classes/AppsFlyer/AppsFlyerProxyX.h
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
+     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
      )
 
 if(ANDROID)

@@ -16,6 +16,6 @@
 
 @interface AppsFlyerXAppleDeepLinkDelegate: NSObject<AppsFlyerDeepLinkDelegate>
 
-@property (nonatomic) void (* _Nullable didResolveDeepLinkCallback)(AppsFlyerXAppleDeepLinkResult result);
+@property (nonatomic) void (* _Nullable didResolveDeepLinkCallback)(AppsFlyerXDeepLinkResult result);
 @end
 #endif /* AppsFlyerXAppleDeepLinkDelegate_h */

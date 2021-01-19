@@ -191,15 +191,15 @@ void AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *res
     }
 }
 
-AppsFlyerXAppleDeepLinkResult AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult* result){
-    AppsFlyerXAppleDeepLinkResult xresult;
+AppsFlyerXDeepLinkResult AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult* result){
+    AppsFlyerXDeepLinkResult xresult;
     //AppsFlyerXAppleDeepLink *deepLink = [[AppsFlyerXAppleDeepLink alloc] init];
     xresult.deepLink = {};
     deepLinkResult2XDeepLinkResult(result, xresult);
     return xresult;
 }
 
-void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result, AppsFlyerXAppleDeepLinkResult &xresult) {
+void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result, AppsFlyerXDeepLinkResult &xresult) {
     AFSDKDeepLinkResultStatus status = [result status];
     DeepLinkResultStatus xstatus;
     switch (status) {

@@ -141,7 +141,7 @@ public:
     static void setPhoneNumber(const std::string& phoneNumber);
     
     //DDL
-    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result));
+    static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
     
 };
 

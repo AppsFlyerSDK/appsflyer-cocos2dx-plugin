@@ -1,5 +1,12 @@
 # Versions
 
+## 6.1.4
+    - iOS SDK 6.1.3
+    - Android SDK 6.1.4
+    - new API for unified deep linking
+   
+----------
+
 ## 6.0.3
     - iOS SDK 6.0.3
     - APIs renamed:

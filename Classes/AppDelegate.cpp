@@ -111,12 +111,15 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
             break;
         case FOUND:
             if (!result.deepLink.empty()){
+                if (!result.getMediaSource().empty()) {
+                    CCLOG("Media source is %s", result.getMediaSource().c_str());
+                }
                 for (auto &t : result.deepLink){
                     CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
                     ddl.append(t.first.c_str());
-                    ddl.append(" : " );
+                    ddl.append(" : ");
                     ddl.append(t.second.asString().c_str());
-                    ddl.append("\n" );
+                    ddl.append("\n");
                 }
             }
     }
@@ -140,10 +143,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
+    AppsFlyerX::setAppsFlyerDevKey("<devKey>>");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("0677951033");
+    AppsFlyerX::setAppleAppID("<appid>>");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif

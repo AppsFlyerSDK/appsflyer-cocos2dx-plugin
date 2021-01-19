@@ -255,6 +255,7 @@ cocos2d::ValueMap stringToMap(std::string &s) {
     cocos2d::ValueMap m;
     s.erase(std::remove(s.begin(), s.end(), '{'), s.end());
     s.erase(std::remove(s.begin(), s.end(), '}'), s.end());
+    s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
     std::string key, val;
     std::istringstream iss(s);
     while(std::getline(std::getline(iss, key, ':') >> std::ws, val, ',')) {

@@ -330,6 +330,6 @@ void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
      [[AppsFlyerLib shared] setPhoneNumber:phone];
 }
 
-void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXAppleDeepLinkResult result)) {
+void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)) {
     static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
 }
