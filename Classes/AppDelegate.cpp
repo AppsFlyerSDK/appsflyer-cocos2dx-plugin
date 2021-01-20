@@ -121,19 +121,19 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
                     ddl.append(t.second.asString().c_str());
                     ddl.append("\n");
                 }
+                auto currentScene = Director::getInstance()->getRunningScene();
+                auto child = currentScene->getChildByTag(1);
+                if (child != NULL)
+                    currentScene->removeChildByTag(1);
+                auto size = Director::getInstance()->getVisibleSize();
+                Vec2 origin = Director::getInstance()->getVisibleOrigin();
+                auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
+                myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+                //myLabel->setHeight( origin.y + size.height - 180);
+                //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+                currentScene->addChild(myLabel,1, 1);
             }
     }
-    auto currentScene = Director::getInstance()->getRunningScene();
-    auto child = currentScene->getChildByTag(1);
-    if (child != NULL)
-        currentScene->removeChildByTag(1);
-    auto size = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
-    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
-    //myLabel->setHeight( origin.y + size.height - 180);
-    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-    currentScene->addChild(myLabel,1, 1);
 
 }
 
@@ -143,10 +143,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("<devKey>>");
+    AppsFlyerX::setAppsFlyerDevKey("<devkey>");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("<appid>>");
+    AppsFlyerX::setAppleAppID("<appid>");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
