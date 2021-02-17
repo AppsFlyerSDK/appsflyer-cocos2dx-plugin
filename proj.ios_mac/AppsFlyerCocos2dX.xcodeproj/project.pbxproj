@@ -60,10 +60,11 @@
 		521A8EAA19F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B47A461A53D09B004E4C60 /* Security.framework */; };
 		551900D91F8BBE7300150B9D /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 551900D71F8BBE7300150B9D /* logo.png */; };
-		551900EA1F8CCFF500150B9D /* AppsFlyerX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
+		8611713225DD9BC400ACD63A /* AppsFlyerXApple.h in Sources */ = {isa = PBXBuildFile; fileRef = 551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */; };
+		8611716625DDA24800ACD63A /* AppsFlyerX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */; };
+		8611716925DDA25400ACD63A /* AppsFlyerX.h in Sources */ = {isa = PBXBuildFile; fileRef = 8611715725DD9FF300ACD63A /* AppsFlyerX.h */; };
 		86224DAA25B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86224DA825B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp */; };
-		86224DB225B7464C008982C8 /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86224DB125B7464C008982C8 /* libAppsFlyerLib.a */; };
 		86224DB325B7464C008982C8 /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86224DB125B7464C008982C8 /* libAppsFlyerLib.a */; };
 		866C441025B5791E00C09CB5 /* AppsFlyerXApple.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */; };
 		866C441625B579D000C09CB5 /* AppsFlyerXAppleDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 551900E01F8CCFF400150B9D /* AppsFlyerXAppleDelegate.mm */; };
@@ -71,6 +72,7 @@
 		866C441825B579D000C09CB5 /* AppsFlyerX+AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559592F91F9628B500EFD43C /* AppsFlyerX+AppController.m */; };
 		866C441925B579D000C09CB5 /* AppsFlyerXAppleDeepLinkDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 86ECDDB32563C48000F24194 /* AppsFlyerXAppleDeepLinkDelegate.mm */; };
 		86FA27CA25B6CC900027EC9E /* AppsFlyerXAppleDeepLinkDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 86ECDDB62563C52600F24194 /* AppsFlyerXAppleDeepLinkDelegate.h */; };
+		86FE885825DD8978005C9878 /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86224DB125B7464C008982C8 /* libAppsFlyerLib.a */; };
 		94953C7F22D38A590096F048 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94953C7E22D38A580096F048 /* CFNetwork.framework */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
@@ -159,8 +161,6 @@
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		551900D71F8BBE7300150B9D /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppsFlyerX.cpp; sourceTree = "<group>"; };
-		551900DC1F8CCFF400150B9D /* AppsFlyerX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerX.h; sourceTree = "<group>"; };
 		551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXApple.h; sourceTree = "<group>"; };
 		551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppsFlyerXApple.mm; sourceTree = "<group>"; };
 		551900DF1F8CCFF400150B9D /* AppsFlyerXAppleDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXAppleDelegate.h; sourceTree = "<group>"; };
@@ -176,6 +176,8 @@
 		55BAEFC91FC424CB0015BEB1 /* AppsFlyerXMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppsFlyerXMacro.h; sourceTree = "<group>"; };
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8611715725DD9FF300ACD63A /* AppsFlyerX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerX.h; sourceTree = "<group>"; };
+		8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppsFlyerX.cpp; sourceTree = "<group>"; };
 		86224DA825B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppsFlyerXDeepLinkResult.cpp; path = AppsFlyer/AppsFlyerXDeepLinkResult.cpp; sourceTree = "<group>"; };
 		86224DA925B7384B008982C8 /* AppsFlyerXDeepLinkResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppsFlyerXDeepLinkResult.h; path = AppsFlyer/AppsFlyerXDeepLinkResult.h; sourceTree = "<group>"; };
 		86224DB125B7464C008982C8 /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
@@ -205,7 +207,7 @@
 				294D0D641D0D56D500F7F5D4 /* CoreText.framework in Frameworks */,
 				ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */,
 				52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */,
-				86224DB225B7464C008982C8 /* libAppsFlyerLib.a in Frameworks */,
+				86FE885825DD8978005C9878 /* libAppsFlyerLib.a in Frameworks */,
 				1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */,
 				D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -396,8 +398,8 @@
 		551900DA1F8CCFF400150B9D /* AppsFlyer */ = {
 			isa = PBXGroup;
 			children = (
-				551900DB1F8CCFF400150B9D /* AppsFlyerX.cpp */,
-				551900DC1F8CCFF400150B9D /* AppsFlyerX.h */,
+				8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */,
+				8611715725DD9FF300ACD63A /* AppsFlyerX.h */,
 				551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */,
 				551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */,
 				551900DF1F8CCFF400150B9D /* AppsFlyerXAppleDelegate.h */,
@@ -592,6 +594,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8611716925DDA25400ACD63A /* AppsFlyerX.h in Sources */,
+				8611713225DD9BC400ACD63A /* AppsFlyerXApple.h in Sources */,
 				86FA27CA25B6CC900027EC9E /* AppsFlyerXAppleDeepLinkDelegate.h in Sources */,
 				866C441025B5791E00C09CB5 /* AppsFlyerXApple.mm in Sources */,
 				866C441625B579D000C09CB5 /* AppsFlyerXAppleDelegate.mm in Sources */,
@@ -602,7 +606,7 @@
 				1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */,
 				1AF87B8B1F6F782A007BE51C /* RootViewController.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				551900EA1F8CCFF500150B9D /* AppsFlyerX.cpp in Sources */,
+				8611716625DDA24800ACD63A /* AppsFlyerX.cpp in Sources */,
 				1AF87B8A1F6F7822007BE51C /* main.m in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
 			);

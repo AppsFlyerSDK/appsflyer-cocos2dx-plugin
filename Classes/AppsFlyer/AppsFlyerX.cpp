@@ -527,3 +527,11 @@ void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult 
     return AppsFlyerXApple::setDidResolveDeepLink(callback);
 #endif
 }
+
+void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setPartnerData(partnerId, data);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setPartnerData(partnerId, data);
+#endif
+}
