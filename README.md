@@ -631,6 +631,7 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
     }
 }
 ```
+--- 
  
 ##### <a id="partnerData"> **`setPartnerData("partnerId", data): void`**
 
