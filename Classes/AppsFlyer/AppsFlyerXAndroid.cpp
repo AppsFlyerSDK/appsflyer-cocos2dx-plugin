@@ -584,6 +584,54 @@ void AppsFlyerXAndroid::setOnDeepLinking(void(*callback)(AppsFlyerXDeepLinkResul
 
 }
 
+void AppsFlyerXAndroid::setPartnerData(const std::string& partnerId, cocos2d::ValueMap data){
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+
+    if (NULL != afInstance) {
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+            if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                         "org/cocos2dx/lib/Cocos2dxActivity",
+                                                         "getContext",
+                                                         "()Landroid/content/Context;")) {
+                return;
+            }
+
+
+            jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                    jniGetContext.classID, jniGetContext.methodID);
+
+
+        jobject hashMapObj = valueMapToHashMap(jniGetInstance, data);
+        jstring jpartnerId = jniGetInstance.env->NewStringUTF(partnerId.c_str());
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setPartnerData",
+                                                             "(Ljava/lang/String;Ljava/util/Map;)V");
+
+
+
+
+
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jpartnerId, hashMapObj);
+
+        jniGetInstance.env->DeleteLocalRef(hashMapObj);
+        jniGetInstance.env->DeleteLocalRef(jpartnerId);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
 
 
 //================== Utils ==================//

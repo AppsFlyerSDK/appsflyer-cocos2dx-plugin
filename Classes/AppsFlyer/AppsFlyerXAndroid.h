@@ -124,7 +124,7 @@ public:
     //ddl delegate
     static void setOnDeepLinking(void(*callback)(AppsFlyerXDeepLinkResult result));
 
-    static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
+    static void setPartnerData(const std::string& partnerId, cocos2d::ValueMap data);
 };
 
 
