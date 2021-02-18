@@ -143,10 +143,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::setIsDebug(true);
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("2fRSe9XZe7mSNL47cmANsG");
+    AppsFlyerX::setAppsFlyerDevKey("devkey");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("0666151819");
+    AppsFlyerX::setAppleAppID("appid");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
@@ -161,7 +161,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
        AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
     ValueMap data;
-    data["“thePartnerId”"] = "abcd";
+    data["thePartnerId"] = "abcd";
     data["Item_id"] = 1;
     data["isLegacy"] = false;
     AppsFlyerX::setPartnerData("partnerID", data);

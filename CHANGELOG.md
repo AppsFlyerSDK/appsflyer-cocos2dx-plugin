@@ -1,5 +1,10 @@
 # Versions
 
+## 6.2.0
+    - iOS SDK 6.2.0
+    - Android SDK 6.2.0
+    - new API setPartnerData
+
 ## 6.1.4
     - iOS SDK 6.1.3
     - Android SDK 6.1.4
