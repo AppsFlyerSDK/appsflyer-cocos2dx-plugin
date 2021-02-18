@@ -109,3 +109,7 @@ proj.win32/Release.*/
 
 # others
 cocos2d
+
+.vscode/
+
+proj.android-studio/.idea/

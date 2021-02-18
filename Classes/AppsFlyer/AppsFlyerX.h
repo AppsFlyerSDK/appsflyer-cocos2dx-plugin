@@ -136,6 +136,8 @@ public:
     
     //ddl
     static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
+
+    static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
 };
 

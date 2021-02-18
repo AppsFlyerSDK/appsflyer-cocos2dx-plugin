@@ -46,7 +46,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - generateInviteLink - TBD
   - logCrossPromotionImpression - TBD
   - logAndOpenStore - TBD
-   - [Unified deep linking](#ddl) 
+   - [Unified deep linking](#ddl)
+   - [setPartnerData](#partnerData) 
 
 
 ### <a id="integration"> Integration:
@@ -630,8 +631,27 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
     }
 }
 ```
-
  
+##### <a id="partnerData"> **`setPartnerData("partnerId", data): void`**
+
+Partners and advertisers can add more data in SDK events.
+
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `partnerId`   | `String`                  | partner identifier|
+| `data`        | `cocos2d::ValueMap`       | data to add|
+
+```cpp 
+  ValueMap data;
+    data["thePartnerId"] = "abcd";
+    data["Item_id"] = 1;
+    data["isLegacy"] = false;
+    AppsFlyerX::setPartnerData("partnerID", data);
+```
+
+---
+
  
  ## **Migration Guide to v6**
 [Integration guide](https://support.appsflyer.com//hc/en-us/articles/207032066#introduction)

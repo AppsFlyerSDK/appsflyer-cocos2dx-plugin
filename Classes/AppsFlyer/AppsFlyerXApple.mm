@@ -336,3 +336,7 @@ void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
 void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)) {
     static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
 }
+
+void AppsFlyerXApple::setPartnerData(const std::string& partnerId, cocos2d::ValueMap data){
+    [[AppsFlyerLib shared]  setPartnerDataWithPartnerId:[NSString stringWithUTF8String:partnerId.c_str()] partnerInfo:AppsFlyerXAppleHelper::valueMap2nsDictionary(data)];
+}
