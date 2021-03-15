@@ -100,6 +100,7 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
+#ifndef AFSDK_NO_IDFA 
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -108,7 +109,9 @@ void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
     return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
 #endif
 }
+#endif
 
+#ifndef AFSDK_NO_IDFA
 bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -117,6 +120,7 @@ bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
     return AppsFlyerXApple::isDisabledAdvertisingIdentifier();
 #endif
 }
+#endif
 
  void AppsFlyerX::didEnterBackground(){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -501,6 +505,7 @@ bool AppsFlyerX::isDisabledSKAdNetwork(){
 #endif
 }
 
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
@@ -509,6 +514,7 @@ void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutIn
     return AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(timeoutInterval);
 #endif
 }
+#endif
 
 
 void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){

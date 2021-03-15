@@ -1,5 +1,9 @@
 # Versions
 
+## 6.2.4
+    - iOS SDK 6.2.34
+    - fixes
+
 ## 6.2.3
     - iOS SDK 6.2.3 
 

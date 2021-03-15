@@ -99,14 +99,17 @@ void AppsFlyerXApple::setCurrencyCode(const std::string& currencyCode) {
 std::string AppsFlyerXApple::currencyCode() {
     return [[[AppsFlyerLib shared] currencyCode] UTF8String];
 }
-
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
     [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
+#endif
 
+#ifndef AFSDK_NO_IDFA
 bool AppsFlyerXApple::isDisabledAdvertisingIdentifier() {
     return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
 }
+#endif
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
     [[AppsFlyerLib shared] setIsDebug:isDebug];
@@ -321,9 +324,13 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
      return [[AppsFlyerLib shared] disableSKAdNetwork];
 }
 
+#ifndef AFSDK_NO_IDFA
 void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
-    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    if (@available(iOS 14, *)) {
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    }
 }
+#endif
 
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
     NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];
@@ -332,4 +339,8 @@ void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
 
 void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)) {
     static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
+}
+
+void AppsFlyerXApple::setPartnerData(const std::string& partnerId, cocos2d::ValueMap data){
+    [[AppsFlyerLib shared]  setPartnerDataWithPartnerId:[NSString stringWithUTF8String:partnerId.c_str()] partnerInfo:AppsFlyerXAppleHelper::valueMap2nsDictionary(data)];
 }
