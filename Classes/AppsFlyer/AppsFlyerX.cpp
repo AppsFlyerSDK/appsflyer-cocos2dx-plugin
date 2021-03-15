@@ -100,7 +100,7 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
-#if !AFSDK_NO_IDFA
+#if AFSDK_NO_IDFA
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -111,7 +111,7 @@ void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 }
 #endif
 
-#if !AFSDK_NO_IDFA
+#if AFSDK_NO_IDFA
 bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -505,7 +505,7 @@ bool AppsFlyerX::isDisabledSKAdNetwork(){
 #endif
 }
 
-#if !AFSDK_NO_IDFA
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
