@@ -65,7 +65,7 @@ implementation 'com.android.support:appcompat-v7:28.0.0'
 ``` 
 
 
-As alternative way, take the latest ![`AF-Android-SDK.jar`](https://s3-eu-west-1.amazonaws.com/download.appsflyer.com/Android/AF-Android-SDK.jar) library and copy it to your project's `libs` folder.
+As alternative way, take the latest [`AF-Android-SDK.jar`](https://s3-eu-west-1.amazonaws.com/download.appsflyer.com/Android/AF-Android-SDK.jar) library and copy it to your project's `libs` folder.
 
 ### 4. Add permissions
 
