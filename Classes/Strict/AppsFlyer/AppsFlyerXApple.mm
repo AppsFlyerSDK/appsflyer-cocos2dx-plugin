@@ -326,7 +326,9 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
 
 #ifndef AFSDK_NO_IDFA
 void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
-    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    if (@available(iOS 14, *)) {
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    }
 }
 #endif
 
