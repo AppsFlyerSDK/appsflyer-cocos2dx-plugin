@@ -37,9 +37,9 @@ to `Classes/AppsFlyer`
 
 2\. It looks like in the image below.
 
-![add-iOS-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/preprocessor_macro.png?raw=true)
+![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/add-to-iOS-mk.png)
 
 If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk): <br>
 1\. Download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/Strict/AppsFlyer) and copy them to your project
 2\. Inside Xcode, go to your target, then **Build Settings** and define the Preprocessor Macro `AFSDK_NO_IDFA=1` <br>
-![preprocessor_macro](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/preprocessor_macro.png?raw=true)
+![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/preprocessor_macro.png)
