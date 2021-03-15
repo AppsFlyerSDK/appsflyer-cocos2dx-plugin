@@ -100,6 +100,7 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
+#if !AFSDK_NO_IDFA
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -108,15 +109,18 @@ void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
     return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
 #endif
 }
+#endif
 
+#if !AFSDK_NO_IDFA
 bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
     CCLOGWARN("%s", "isDisabledAdvertiserIdentifier is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) 
     return AppsFlyerXApple::isDisabledAdvertisingIdentifier();
 #endif
 }
+#endif
 
  void AppsFlyerX::didEnterBackground(){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -518,6 +522,7 @@ bool AppsFlyerX::isDisabledSKAdNetwork(){
 #endif
 }
 
+#if !AFSDK_NO_IDFA
 void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
@@ -526,6 +531,7 @@ void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutIn
     return AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(timeoutInterval);
 #endif
 }
+#endif
 
 
 void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
@@ -542,5 +548,13 @@ void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult 
     AppsFlyerXAndroid::setOnDeepLinking(callback);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setDidResolveDeepLink(callback);
+#endif
+}
+
+void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setPartnerData(partnerId, data);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setPartnerData(partnerId, data);
 #endif
 }

@@ -99,16 +99,17 @@ void AppsFlyerXApple::setCurrencyCode(const std::string& currencyCode) {
 std::string AppsFlyerXApple::currencyCode() {
     return [[[AppsFlyerLib shared] currencyCode] UTF8String];
 }
-
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerXApple::disableAdvertisingIdentifier(bool shouldDisable) {
-    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
-        [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
+    [[AppsFlyerLib shared] setDisableAdvertisingIdentifier:shouldDisable];
 }
+#endif
 
+#ifndef AFSDK_NO_IDFA
 bool AppsFlyerXApple::isDisabledAdvertisingIdentifier() {
-    if ([[AppsFlyerLib shared] respondsToSelector:@selector(disableAdvertisingIdentifier)])
-        return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
+    return [[AppsFlyerLib shared] disableAdvertisingIdentifier];
 }
+#endif
 
 void AppsFlyerXApple::setIsDebug(bool isDebug) {
     [[AppsFlyerLib shared] setIsDebug:isDebug];
@@ -323,10 +324,11 @@ bool AppsFlyerXApple::isDisabledSKAdNetwork(){
      return [[AppsFlyerLib shared] disableSKAdNetwork];
 }
 
+#ifndef AFSDK_NO_IDFA
 void  AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
-    if ([[AppsFlyerLib shared] respondsToSelector:@selector(waitForATTUserAuthorizationWithTimeoutInterval:)])
-        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
 }
+#endif
 
 void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
     NSString *phone = [NSString stringWithUTF8String:phoneNumber.c_str()];

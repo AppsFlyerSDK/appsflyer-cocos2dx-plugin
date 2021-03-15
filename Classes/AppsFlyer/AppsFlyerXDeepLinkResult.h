@@ -24,9 +24,7 @@ private:
     public :
      DeepLinkResultStatus status;
      DeepLinkError error;
-    cocos2d::ValueMap deepLink = {};
-   // static AppsFlyerXAppleDeepLinkResult *instance;
-    //AppsFlyerXAppleDeepLinkResult();
+    cocos2d::ValueMap deepLink;
     std::string getMatchType();
     std::string getDeepLinkValue();;
     std::string getClickHttpReferrer();

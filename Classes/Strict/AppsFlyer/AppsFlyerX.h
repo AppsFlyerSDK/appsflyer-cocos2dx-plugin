@@ -33,10 +33,10 @@ public:
     
     static void setCurrencyCode(const std::string& currencyCode);
     static std::string currencyCode();
-    
+
     static void disableAdvertisingIdentifier(bool shouldDisable);
     static bool isDisabledAdvertisingIdentifier();
-    
+
     static void setIsDebug(bool isDebug);
     static bool isDebug();
 
@@ -129,9 +129,8 @@ public:
     //Sharing Data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
-    
+
     static void waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
-    
     static void disableSKAdNetwork(bool shouldDisable);
     static bool isDisabledSKAdNetwork();
     
@@ -139,6 +138,8 @@ public:
     
     //ddl
     static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
+    
+    static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
 };
 
