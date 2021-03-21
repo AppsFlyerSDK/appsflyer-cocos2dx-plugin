@@ -183,9 +183,20 @@ void AppsFlyerXApple::start() {
 
 
 void AppsFlyerXApple::logEvent(const std::string& eventName, cocos2d::ValueMap values) {
-    NSDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(values);
+    NSMutableDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(values).mutableCopy;
     NSString *event = [NSString stringWithUTF8String:eventName.c_str()];
+    
+    
+    id revenueString = dictionary[@"af_revenue"];
+    if (revenueString && [revenueString isKindOfClass:[NSString class]]) {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        NSNumber *revenueNumber = [formatter numberFromString:revenueString];
+        dictionary[@"af_revenue"] = revenueNumber;
+    }
+    
     [[AppsFlyerLib shared] logEvent:event withValues:dictionary];
+    
 }
 
 void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIdentifier,
