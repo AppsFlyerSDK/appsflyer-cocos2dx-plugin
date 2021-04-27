@@ -1,5 +1,9 @@
 # Versions
 
+## 6.2.6
+    - iOS SDK 6.2.6
+    - Android SDK 6.2.3
+
 ## 6.2.41
     - fix
 
