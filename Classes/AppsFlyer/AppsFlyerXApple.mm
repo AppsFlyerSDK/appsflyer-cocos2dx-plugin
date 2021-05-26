@@ -58,16 +58,13 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static dispatch_once_t onceToken;
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
-    static AppsFlyerXAppleDeepLinkDelegate *deepLinkDelegate = nil;
     
     dispatch_once(&onceToken, ^{
         
         xApple = AppsFlyerXApple::getInstance();
         delegate = [[AppsFlyerXAppleDelegate alloc] init];
-        deepLinkDelegate = [[AppsFlyerXAppleDeepLinkDelegate alloc] init];
+
         xApple->delegate = delegate;
-        xApple->deepLinkDelegate = deepLinkDelegate;
-        
         [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationDidBecomeActiveNotification
          object: nil
          queue: nil
@@ -77,7 +74,6 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     });
 
     [[AppsFlyerLib shared] setDelegate: delegate];
-    [[AppsFlyerLib shared] setDeepLinkDelegate: deepLinkDelegate];
 }
 
 std::string AppsFlyerXApple::appsFlyerDevKey() {
@@ -319,8 +315,8 @@ void AppsFlyerXApple::sharingFilter(std::vector<std::string> partners){
     NSMutableArray *filteredPartners = [NSMutableArray new];
     for (auto partner : partners) {
         [filteredPartners addObject:[NSString stringWithUTF8String:partner.c_str()]];
-     [[AppsFlyerLib shared] setSharingFilter:filteredPartners];
-    }   
+    }
+    [[AppsFlyerLib shared] setSharingFilter:filteredPartners];
 }
 
 void AppsFlyerXApple::sharingFilterForAllPartners() {
@@ -349,9 +345,28 @@ void AppsFlyerXApple::setPhoneNumber(const std::string& phoneNumber){
 }
 
 void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)) {
+    static dispatch_once_t onceToken;
+       static AppsFlyerXApple *xApple = nil;
+       static AppsFlyerXAppleDeepLinkDelegate *deepLinkDelegate = nil;
+       
+       dispatch_once(&onceToken, ^{
+           
+           xApple = AppsFlyerXApple::getInstance();
+           deepLinkDelegate = [[AppsFlyerXAppleDeepLinkDelegate alloc] init];
+           xApple->deepLinkDelegate = deepLinkDelegate;
+       });
+       [[AppsFlyerLib shared] setDeepLinkDelegate: deepLinkDelegate];
     static_cast<AppsFlyerXAppleDeepLinkDelegate *>(AppsFlyerXApple::getInstance()->deepLinkDelegate).didResolveDeepLinkCallback = callback;
 }
 
 void AppsFlyerXApple::setPartnerData(const std::string& partnerId, cocos2d::ValueMap data){
     [[AppsFlyerLib shared]  setPartnerDataWithPartnerId:[NSString stringWithUTF8String:partnerId.c_str()] partnerInfo:AppsFlyerXAppleHelper::valueMap2nsDictionary(data)];
+}
+
+void AppsFlyerXApple::setOneLinkCustomDomains(std::vector<std::string> domains){
+    NSMutableArray *customDomains = [NSMutableArray new];
+    for (auto domain : domains) {
+        [customDomains addObject:[NSString stringWithUTF8String:domain.c_str()]];
+    }
+    [AppsFlyerLib shared].oneLinkCustomDomains = customDomains;
 }

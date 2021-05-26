@@ -139,9 +139,9 @@ public:
 
     static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
+    static void setOneLinkCustomDomains(std::vector<std::string> domains);
 };
-
-#endif /* AppsFlyerX_h */
+#endif /* A;ppsFlyerX_h */
 
 
 

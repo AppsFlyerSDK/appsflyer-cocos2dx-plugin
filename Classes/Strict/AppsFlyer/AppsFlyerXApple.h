@@ -73,9 +73,6 @@ public:
     static void setUseUninstallSandbox(bool setUseUninstallSandbox);
     static bool isUseUninstallSandbox();
     
-    static void setAdvertiserId(const std::string& advertiserId);
-    static std::string advertiserId();
-    
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
     static void start();
@@ -144,6 +141,7 @@ public:
     static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
     
     static void setPartnerData(const std::string& partnerId, cocos2d::ValueMap data);
+    static void setOneLinkCustomDomains(std::vector<std::string> domains);
 };
 
 #endif /* AppsFlyerXApple_h */
