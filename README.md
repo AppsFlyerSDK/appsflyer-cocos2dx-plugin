@@ -47,7 +47,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - logCrossPromotionImpression - TBD
   - logAndOpenStore - TBD
    - [Unified deep linking](#ddl)
-   - [setPartnerData](#partnerData) 
+   - [setPartnerData](#partnerData)
+- [setOneLinkCustomDomain](#customDomains) 
 
 
 ### <a id="integration"> Integration:
@@ -653,6 +654,24 @@ Partners and advertisers can add more data in SDK events.
 
 ---
 
+##### <a id="customDomains"> **`setOneLinkCustomDomain(domains);`**
+ Use to get conversion data with Branded links. 
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `eventName` | `std::vector<std::string>`  | list of custom domains
+
+
+*Example:*
+
+```cpp
+  std::vector<std::string> domains;
+  partners.push_back("test.domain.com");
+  partners.push_back("myDomain.com");
+  AppsFlyerX::setOneLinkCustomDomain(domains);
+```
+
+---
  
  ## **Migration Guide to v6**
 [Integration guide](https://support.appsflyer.com//hc/en-us/articles/207032066#introduction)

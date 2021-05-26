@@ -1,5 +1,10 @@
 # Versions
 
+## 6.3.0
+    - iOS SDK 6.3.0
+    - Android SDK 6.3.0
+    -new API setOneLinkCustomDomain
+
 ## 6.2.6
     - iOS SDK 6.2.6
     - Android SDK 6.2.3
