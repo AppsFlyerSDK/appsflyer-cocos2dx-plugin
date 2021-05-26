@@ -368,5 +368,5 @@ void AppsFlyerXApple::setOneLinkCustomDomains(std::vector<std::string> domains){
     for (auto domain : domains) {
         [customDomains addObject:[NSString stringWithUTF8String:domain.c_str()]];
     }
-    [[AppsFlyerLib shared] setOneLinkCustomDomains:customDomains];
+    [AppsFlyerLib shared].oneLinkCustomDomains = customDomains;
 }
