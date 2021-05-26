@@ -543,9 +543,9 @@ void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
 }
 
 void AppsFlyerX::setOneLinkCustomDomains(std::vector<std::string> domains) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//AppsFlyerXAndroid::setPartnerData(partnerId, data);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setOneLinkCustomDomains(domains);
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOneLinkCustomDomains(domains);
-#endif
+    #endif
 }

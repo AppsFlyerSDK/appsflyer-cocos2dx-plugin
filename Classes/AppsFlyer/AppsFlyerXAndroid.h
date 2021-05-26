@@ -125,6 +125,8 @@ public:
     static void setOnDeepLinking(void(*callback)(AppsFlyerXDeepLinkResult result));
 
     static void setPartnerData(const std::string& partnerId, cocos2d::ValueMap data);
+
+    static void setOneLinkCustomDomains(std::vector<std::string> domains);
 };
 
 
