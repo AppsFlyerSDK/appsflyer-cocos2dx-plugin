@@ -33,10 +33,10 @@ public:
     
     static void setCurrencyCode(const std::string& currencyCode);
     static std::string currencyCode();
-
+    
     static void disableAdvertisingIdentifier(bool shouldDisable);
     static bool isDisabledAdvertisingIdentifier();
-
+    
     static void setIsDebug(bool isDebug);
     static bool isDebug();
 
@@ -59,9 +59,6 @@ public:
     
     static void setUseUninstallSandbox(bool setUseUninstallSandbox);
     static bool isUseUninstallSandbox();
-    
-    static void setAdvertiserId(const std::string& advertiserId);
-    static std::string advertiserId();
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
@@ -129,8 +126,9 @@ public:
     //Sharing Data filter
     static void sharingFilter(std::vector<std::string> partners);
     static void sharingFilterForAllPartners();
-
+    
     static void waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
+    
     static void disableSKAdNetwork(bool shouldDisable);
     static bool isDisabledSKAdNetwork();
     
@@ -138,12 +136,12 @@ public:
     
     //ddl
     static void setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result));
-    
+
     static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
+    static void setOneLinkCustomDomains(std::vector<std::string> domains);
 };
-
-#endif /* AppsFlyerX_h */
+#endif /* A;ppsFlyerX_h */
 
 
 

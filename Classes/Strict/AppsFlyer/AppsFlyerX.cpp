@@ -100,7 +100,7 @@ std::string AppsFlyerX::currencyCode() {
 #endif
 }
 
-#if !AFSDK_NO_IDFA
+#ifndef AFSDK_NO_IDFA 
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
@@ -111,12 +111,12 @@ void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 }
 #endif
 
-#if !AFSDK_NO_IDFA
+#ifndef AFSDK_NO_IDFA
 bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Not supported for Android
     CCLOGWARN("%s", "isDisabledAdvertiserIdentifier is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) 
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::isDisabledAdvertisingIdentifier();
 #endif
 }
@@ -251,23 +251,6 @@ bool AppsFlyerX::isUseUninstallSandbox() {
 #endif
 }
 
-void AppsFlyerX::setAdvertiserId(const std::string& advertiserId) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "setAdvertiserId is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setAdvertiserId(advertiserId);
-#endif
-}
-
-std::string AppsFlyerX::advertiserId() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "advertiserId is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::advertiserId();
-#endif
-}
 
 void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -522,7 +505,7 @@ bool AppsFlyerX::isDisabledSKAdNetwork(){
 #endif
 }
 
-#if !AFSDK_NO_IDFA
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     //not supported for Android
@@ -557,4 +540,12 @@ void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setPartnerData(partnerId, data);
 #endif
+}
+
+void AppsFlyerX::setOneLinkCustomDomains(std::vector<std::string> domains) {
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setOneLinkCustomDomains(domains);
+    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setOneLinkCustomDomains(domains);
+    #endif
 }

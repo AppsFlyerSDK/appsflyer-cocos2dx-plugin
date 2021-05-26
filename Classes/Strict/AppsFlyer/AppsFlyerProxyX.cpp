@@ -14,7 +14,7 @@
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
-cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject);
+cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject, bool success);
 AppsFlyerXDeepLinkResult getResultForCallbackDDL(JNIEnv *env, jobject result);
 cocos2d::ValueMap stringToMap(std::string &s);
 
@@ -63,7 +63,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
     if (NULL == attributionCallbackOnConversionDataReceived) {
         return;
     }
-    attributionCallbackOnConversionDataReceived(getMapForCallback(env, attributionObject));
+    attributionCallbackOnConversionDataReceived(getMapForCallback(env, attributionObject, true));
 }
 
 
@@ -74,7 +74,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOp
     if (NULL == attributionCallbackOnAppOpenAttribution) {
         return;
     }
-    attributionCallbackOnAppOpenAttribution(getMapForCallback(env, attributionObject));
+    attributionCallbackOnAppOpenAttribution(getMapForCallback(env, attributionObject, true));
 
 }
 
@@ -86,7 +86,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttri
     if (NULL == attributionCallbackOnAppOpenAttributionFailure) {
         return;
     }
-    attributionCallbackOnAppOpenAttributionFailure(getMapForCallback(env,stringError));
+    attributionCallbackOnAppOpenAttributionFailure(getMapForCallback(env,stringError, false));
 }
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
@@ -98,7 +98,7 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
         return;
     }
 
-    attributionCallbackOnConversionDataRequestFailure(getMapForCallback(env,stringError));
+    attributionCallbackOnConversionDataRequestFailure(getMapForCallback(env,stringError, false));
 }
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
@@ -115,8 +115,10 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepL
 
 
 
-cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
+cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject, bool success) {
     jclass clsHashMap = env->GetObjectClass(attributionObject);
+    std::string s = typeid(clsHashMap).name();
+    std::string s1 = typeid(attributionObject).name();
     cocos2d::ValueMap map;
     jmethodID midKeySet = env->GetMethodID(clsHashMap, "keySet", "()Ljava/util/Set;");
 
@@ -142,8 +144,12 @@ cocos2d::ValueMap getMapForCallback(JNIEnv *env, jobject attributionObject) {
     for (int i=0; i < arraySize; ++i){
         jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
         const char* c_string_key = env->GetStringUTFChars(objKey, 0);
-        jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
-        jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
+       jmethodID midGet;
+        if (success)
+             midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+        else
+             midGet  = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/String;)Ljava/lang/Object;");
+    jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
         if   (objValue == NULL) {
             map[std::string(c_string_key)] = cocos2d::Value::Null;
         }
