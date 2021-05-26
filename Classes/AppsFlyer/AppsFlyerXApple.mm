@@ -315,8 +315,8 @@ void AppsFlyerXApple::sharingFilter(std::vector<std::string> partners){
     NSMutableArray *filteredPartners = [NSMutableArray new];
     for (auto partner : partners) {
         [filteredPartners addObject:[NSString stringWithUTF8String:partner.c_str()]];
-     [[AppsFlyerLib shared] setSharingFilter:filteredPartners];
-    }   
+    }
+    [[AppsFlyerLib shared] setSharingFilter:filteredPartners];
 }
 
 void AppsFlyerXApple::sharingFilterForAllPartners() {
@@ -361,4 +361,12 @@ void AppsFlyerXApple::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkRe
 
 void AppsFlyerXApple::setPartnerData(const std::string& partnerId, cocos2d::ValueMap data){
     [[AppsFlyerLib shared]  setPartnerDataWithPartnerId:[NSString stringWithUTF8String:partnerId.c_str()] partnerInfo:AppsFlyerXAppleHelper::valueMap2nsDictionary(data)];
+}
+
+void AppsFlyerXApple::setOneLinkCustomDomains(std::vector<std::string> domains){
+    NSMutableArray *customDomains = [NSMutableArray new];
+    for (auto domain : domains) {
+        [customDomains addObject:[NSString stringWithUTF8String:domain.c_str()]];
+    }
+    [[AppsFlyerLib shared] setOneLinkCustomDomains:customDomains];
 }
