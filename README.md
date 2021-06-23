@@ -25,7 +25,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
  - [setCustomerUserID](#setCustomerUserID)
  - [setCurrencyCode](#setCurrencyCode)
  - [waitForATTUserAuthorizationWithTimeoutInterval](#waitForATTUserAuthorizationWithTimeoutInterval) *(ios only)*
- - [disableAdvertiserIdentifier](#disableAppleAdSupportTracking) *(ios only)*
+ - [disableAdvertiserIdentifier](#disableAppleAdSupportTracking)
  - [setShouldCollectDeviceName](#setShouldCollectDeviceName)*(ios only)*
  - [setAppInviteOneLink](#setAppInviteOneLink)
  - [anonymizeUser opt-out](#deviceTrackingDisabled)
@@ -292,7 +292,7 @@ AppsFlyerX::setCurrencyCode("<CURRENCY_ID>");
 
 ---
 
-##### <a id="disableAdvertiserIdentifier"> **`disableAppleAdSupportTracking(bool): void`** *(ios only)*
+##### <a id="disableAdvertiserIdentifier"> **`disableAdvertiserIdentifier(bool): void`**
 
 
 | parameter   | type                  | Default     | description |
