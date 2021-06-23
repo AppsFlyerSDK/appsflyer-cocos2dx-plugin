@@ -1,5 +1,10 @@
 # Versions
 
+## 6.3.2
+    - iOS SDK 6.3.2
+    - Android SDK 6.3.2
+    -disableAdvertiserIdentifier support for Android added
+
 ## 6.3.0
     - iOS SDK 6.3.0
     - Android SDK 6.3.0
