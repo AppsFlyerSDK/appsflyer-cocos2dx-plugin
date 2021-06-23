@@ -103,8 +103,7 @@ std::string AppsFlyerX::currencyCode() {
 #ifndef AFSDK_NO_IDFA 
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "disableAdvertiserIdentifier is not supported for Android.");
+    AppsFlyerXAndroid::setDisableAdvertisingIdentifiers(shouldDisable);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
 #endif
