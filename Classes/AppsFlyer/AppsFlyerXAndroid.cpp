@@ -1037,4 +1037,33 @@ void subscribeForDeepLink() {
             CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
         }
 }
+
+    void AppsFlyerXAndroid::setDisableAdvertisingIdentifiers(bool disable){
+        cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+        jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                jniGetInstance.classID, jniGetInstance.methodID);
+
+        if (NULL != afInstance) {
+            CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+            jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setDisableAdvertisingIdentifiers", "(Z)V");
+
+            cocos2d::JniMethodInfo miGetContext;
+            if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+                return;
+            }
+            jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+
+            jniGetInstance.env->CallVoidMethod(afInstance, methodId, disable, jContext);
+
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+        } else {
+            CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+        }
+}
 #endif
