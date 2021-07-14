@@ -2,8 +2,10 @@
 
 # Cocos2dX AppsFlyer plugin for Android and iOS.
 
-
+[![GitHub tag](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)
 ----------
+
+
 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
 *When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , production steps, logs, code snippets and any additional relevant information.*
@@ -49,6 +51,12 @@ In order for us to provide optimal support, we would kindly ask you to submit an
    - [Unified deep linking](#ddl)
    - [setPartnerData](#partnerData)
 - [setOneLinkCustomDomain](#customDomains) 
+
+
+### <a id="plugin-build-for"> This plugin is built for
+
+- Android AppsFlyer SDK **v6.3.2** 
+- iOS AppsFlyer SDK **v6.3.2**
 
 
 ### <a id="integration"> Integration:
