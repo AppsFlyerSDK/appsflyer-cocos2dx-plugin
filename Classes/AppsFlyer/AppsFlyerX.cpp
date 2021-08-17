@@ -542,9 +542,19 @@ void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
 }
 
 void AppsFlyerX::setOneLinkCustomDomains(std::vector<std::string> domains) {
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setOneLinkCustomDomains(domains);
-    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOneLinkCustomDomains(domains);
-    #endif
+#endif
+}
+
+
+void AppsFlyerX::setCurrentDeviceLanguage(const std::string& language) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "setCurrentDeviceLanguage is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setCurrentDeviceLanguage(language);
+#endif
 }

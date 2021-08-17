@@ -140,6 +140,8 @@ public:
     static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
     static void setOneLinkCustomDomains(std::vector<std::string> domains);
+    
+    static void setCurrentDeviceLanguage(const std::string& language);
 };
 #endif /* A;ppsFlyerX_h */
 

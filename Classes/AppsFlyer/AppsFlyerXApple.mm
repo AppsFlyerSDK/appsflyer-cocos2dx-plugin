@@ -370,3 +370,7 @@ void AppsFlyerXApple::setOneLinkCustomDomains(std::vector<std::string> domains){
     }
     [AppsFlyerLib shared].oneLinkCustomDomains = customDomains;
 }
+
+void AppsFlyerXApple::setCurrentDeviceLanguage(const std::string& language) {
+    [AppsFlyerLib shared].currentDeviceLanguage = [NSString stringWithUTF8String:language.c_str()];
+}
