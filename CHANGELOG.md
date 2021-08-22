@@ -1,5 +1,9 @@
 # Versions
 
+## 6.3.5
+    - update iOS SDK to 6.3.5
+    - new API for iOS setCurrentDeviceLanguage
+
 ## 6.3.2
     - iOS SDK 6.3.2
     - Android SDK 6.3.2

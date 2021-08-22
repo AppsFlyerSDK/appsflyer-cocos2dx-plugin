@@ -50,13 +50,14 @@ In order for us to provide optimal support, we would kindly ask you to submit an
   - logAndOpenStore - TBD
    - [Unified deep linking](#ddl)
    - [setPartnerData](#partnerData)
-- [setOneLinkCustomDomain](#customDomains) 
+- [setOneLinkCustomDomain](#customDomains)
+- [setCurrentDeviceLanguage](#currentLang) *(ios only)*
 
 
 ### <a id="plugin-build-for"> This plugin is built for
 
 - Android AppsFlyer SDK **v6.3.2** 
-- iOS AppsFlyer SDK **v6.3.2**
+- iOS AppsFlyer SDK **v6.3.5**
 
 
 ### <a id="integration"> Integration:
@@ -667,7 +668,7 @@ Partners and advertisers can add more data in SDK events.
 
 | parameter   | type                        | description |
 | ----------- |-----------------------------|--------------|
-| `eventName` | `std::vector<std::string>`  | list of custom domains
+| `domains` | `std::vector<std::string>`  | list of custom domains
 
 
 *Example:*
@@ -677,6 +678,22 @@ Partners and advertisers can add more data in SDK events.
   partners.push_back("test.domain.com");
   partners.push_back("myDomain.com");
   AppsFlyerX::setOneLinkCustomDomain(domains);
+```
+
+---
+
+##### <a id="currentLang"> **`setCurrentDeviceLanguage(language);`**
+ Use to get conversion data with Branded links. 
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `language` | `std::string`  | Language to set
+
+
+*Example:*
+
+```cpp
+  AppsFlyerX::setCurrentDeviceLanguage("English");
 ```
 
 ---
