@@ -3,7 +3,6 @@
 ## 6.4.0
     - update iOS SDK to 6.4.0
     - update Android SDK to 6.4.0
-    - new API for iOS setCurrentDeviceLanguage
     - new API setSharingFilterForPartners
     - Deprecated API setSharingFilterForAllPartners and setSharingFilter
 
