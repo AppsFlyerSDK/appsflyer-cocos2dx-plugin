@@ -19,8 +19,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
  - [stop](#stopTracking) 
- - [sharingFilter](#sharingFilter)
- - [sharingFilterForAllPartners](#sharingFilterForAllPartners)
+ - [sharingFilter](#sharingFilter) [Deprecated]
+ - [sharingFilterForAllPartners](#sharingFilterForAllPartners) [Deprecated]
  - [logEvent](#trackEvent)
  - [getConversion Listener](#getConversionListener)
  - [setUserEmails](#setUserEmails)
@@ -52,12 +52,13 @@ In order for us to provide optimal support, we would kindly ask you to submit an
    - [setPartnerData](#partnerData)
 - [setOneLinkCustomDomain](#customDomains)
 - [setCurrentDeviceLanguage](#currentLang) *(ios only)*
+- [setSharingFilterForPartners](#SharingFilterForPartners)
 
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.3.2** 
-- iOS AppsFlyer SDK **v6.3.5**
+- Android AppsFlyer SDK **v6.4.0** 
+- iOS AppsFlyer SDK **v6.4.0**
 
 
 ### <a id="integration"> Integration:
@@ -675,8 +676,8 @@ Partners and advertisers can add more data in SDK events.
 
 ```cpp
   std::vector<std::string> domains;
-  partners.push_back("test.domain.com");
-  partners.push_back("myDomain.com");
+  domains.push_back("test.domain.com");
+  domains.push_back("myDomain.com");
   AppsFlyerX::setOneLinkCustomDomain(domains);
 ```
 
@@ -694,6 +695,41 @@ Partners and advertisers can add more data in SDK events.
 
 ```cpp
   AppsFlyerX::setCurrentDeviceLanguage("English");
+```
+
+---
+
+##### <a id="SharingFilterForPartners"> **`setSharingFilterForPartners(partners);`**
+Used by advertisers to set some (one or more) networks/integrated partners to exclude from getting data.
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `partners` | `std::vector<std::string>`  | partners to exclude from getting data
+
+
+*Example:*
+
+```cpp
+  std::vector<std::string> partners;
+  partners.push_back("partners_1");
+  AppsFlyerX::setSharingFilterForPartners(partners); // Single partner
+
+  std::vector<std::string> partners;
+  partners.push_back("partners_1");
+  partners.push_back("partners_2");
+  AppsFlyerX::setSharingFilterForPartners(partners); // Multiple partner
+
+  std::vector<std::string> partners;
+  partners.push_back("all");
+  AppsFlyerX::setSharingFilterForPartners(partners); // All partners
+
+  std::vector<std::string> partners;
+  partners.push_back("");
+  AppsFlyerX::setSharingFilterForPartners(partners); // Reset list (default)
+
+  std::vector<std::string> partners;
+  AppsFlyerX::setSharingFilterForPartners(partners); // Reset list (default)
+
 ```
 
 ---
