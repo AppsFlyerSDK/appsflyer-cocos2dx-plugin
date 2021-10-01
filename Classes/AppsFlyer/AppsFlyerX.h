@@ -142,6 +142,8 @@ public:
     static void setOneLinkCustomDomains(std::vector<std::string> domains);
     
     static void setCurrentDeviceLanguage(const std::string& language);
+
+    static void setSharingFilterForPartners(std::vector<std::string> partners);
 };
 #endif /* A;ppsFlyerX_h */
 

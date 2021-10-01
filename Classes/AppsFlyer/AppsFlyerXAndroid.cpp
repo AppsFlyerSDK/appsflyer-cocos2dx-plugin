@@ -1066,4 +1066,46 @@ void subscribeForDeepLink() {
             CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
         }
 }
+
+    void AppsFlyerXAndroid::setSharingFilterForPartners(std::vector<std::string> partners) {
+        cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+        jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                jniGetInstance.classID, jniGetInstance.methodID);
+
+        if (NULL != afInstance) {
+            //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+            jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+            cocos2d::JniMethodInfo jniGetContext;
+
+            if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                         "org/cocos2dx/lib/Cocos2dxActivity",
+                                                         "getContext",
+                                                         "()Landroid/content/Context;")) {
+                return;
+            }
+
+
+            jobjectArray result;
+            result = (jobjectArray)jniGetInstance.env->NewObjectArray(partners.size(),jniGetInstance.env->FindClass("java/lang/String"),jniGetInstance.env->NewStringUTF(""));
+            for(int i=0; i<partners.size(); i++) {
+                jniGetInstance.env->SetObjectArrayElement(result,i,jniGetInstance.env->NewStringUTF(partners[i].c_str()));
+            }
+
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilterForPartners",
+                                                                 "([Ljava/lang/String;)V");
+
+
+            jniGetInstance.env->CallVoidMethod(afInstance, methodId, result);
+
+            jniGetInstance.env->DeleteLocalRef(result);
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+        } else {
+            CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+        }
+    }
 #endif
