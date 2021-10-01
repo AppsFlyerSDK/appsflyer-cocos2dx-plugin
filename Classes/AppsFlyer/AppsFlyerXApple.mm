@@ -374,3 +374,11 @@ void AppsFlyerXApple::setOneLinkCustomDomains(std::vector<std::string> domains){
 void AppsFlyerXApple::setCurrentDeviceLanguage(const std::string& language) {
     [AppsFlyerLib shared].currentDeviceLanguage = [NSString stringWithUTF8String:language.c_str()];
 }
+
+void AppsFlyerXApple::setSharingFilterForPartners(std::vector<std::string> partners) {
+    NSMutableArray *sharingFilter = [NSMutableArray new];
+    for (auto partner : partners) {
+        [sharingFilter addObject:[NSString stringWithUTF8String:partner.c_str()]];
+    }
+    [[AppsFlyerLib shared] setSharingFilterForPartners: sharingFilter];
+}

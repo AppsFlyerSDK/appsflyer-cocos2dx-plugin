@@ -16,6 +16,7 @@
 #include "AppsFlyerXMacro.h"
 #include "AppsFlyerXDeepLinkResult.h"
 
+
 class AppsFlyerX {
 public:
 
@@ -123,8 +124,9 @@ public:
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
 
-    //Sharing Data filter
+    //deprecated
     static void sharingFilter(std::vector<std::string> partners);
+    //deprecated
     static void sharingFilterForAllPartners();
     
     static void waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
@@ -142,6 +144,8 @@ public:
     static void setOneLinkCustomDomains(std::vector<std::string> domains);
     
     static void setCurrentDeviceLanguage(const std::string& language);
+
+    static void setSharingFilterForPartners(std::vector<std::string> partners);
 };
 #endif /* A;ppsFlyerX_h */
 

@@ -129,6 +129,8 @@ public:
     static void setOneLinkCustomDomains(std::vector<std::string> domains);
 
     static void setDisableAdvertisingIdentifiers(bool disable);
+
+    static void setSharingFilterForPartners(std::vector<std::string> partners);
 };
 
 
