@@ -563,6 +563,7 @@ void AppsFlyerX::setSharingFilterForPartners(std::vector<std::string> partners) 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setSharingFilterForPartners(partners);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::setSharingFilterForPartners(partners);
 #endif
 }
 
