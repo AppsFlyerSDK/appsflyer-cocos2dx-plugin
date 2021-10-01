@@ -462,6 +462,7 @@ void AppsFlyerX::stop(bool shouldStop) {
 #endif
 }
 
+[[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
 void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilter(partners);
@@ -470,6 +471,7 @@ void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
 #endif
 }
 
+[[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
 void AppsFlyerX::sharingFilterForAllPartners(){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilterForAllPartners();
