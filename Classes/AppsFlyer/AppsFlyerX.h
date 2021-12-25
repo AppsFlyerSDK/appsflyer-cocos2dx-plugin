@@ -46,7 +46,7 @@ public:
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
     static bool isShouldCollectDeviceName();
     
-    static void setAppInviteOneLink(std::string& appInviteOneLinkID);
+    static void setAppInviteOneLink(const std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
     
     static void anonymizeUser(bool shouldAnonymize);
@@ -146,6 +146,11 @@ public:
     static void setCurrentDeviceLanguage(const std::string& language);
 
     static void setSharingFilterForPartners(std::vector<std::string> partners);
+    
+    //user-invite
+    static void logInvite(const std::string& channel, cocos2d::ValueMap parameters);
+    static void generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
+
 };
 #endif /* A;ppsFlyerX_h */
 

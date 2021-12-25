@@ -48,7 +48,7 @@ public:
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
     //static bool isShouldCollectDeviceName();
 
-    static void setAppInviteOneLink(std::string& appInviteOneLinkID);
+    static void setAppInviteOneLink(const std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
 
     static void anonymizeUser(bool shouldAnonymize);
@@ -116,6 +116,8 @@ public:
     static void setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
+    static void setOnResponse(void(*callback)(std::string oneLinkURL));
+    static void setOnResponseError(void(*callback)(std::string message));
 
       //Sharing data filter
     static void sharingFilter(std::vector<std::string> partners);
@@ -131,6 +133,8 @@ public:
     static void setDisableAdvertisingIdentifiers(bool disable);
 
     static void setSharingFilterForPartners(std::vector<std::string> partners);
+
+    static void generateInviteUrl(cocos2d::ValueMap parameter, void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
 };
 
 
