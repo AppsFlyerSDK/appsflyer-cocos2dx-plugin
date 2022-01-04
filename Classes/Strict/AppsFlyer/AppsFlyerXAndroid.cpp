@@ -1096,7 +1096,7 @@ void subscribeForDeepLink() {
             }
 
             jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilterForPartners",
-                                                                 " (Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
+                                                                 "([Ljava/lang/String;)V");
 
 
             jniGetInstance.env->CallVoidMethod(afInstance, methodId, result);
