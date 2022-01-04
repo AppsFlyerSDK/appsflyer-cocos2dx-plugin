@@ -1,5 +1,11 @@
 # Versions
 
+## 6.4.4
+    - update iOS SDK to 6.4.4
+    - update Android SDK to 6.4.3
+    - new API generateUserInvite
+    - new API logInvite
+
 ## 6.4.0
     - update iOS SDK to 6.4.0
     - update Android SDK to 6.4.0
