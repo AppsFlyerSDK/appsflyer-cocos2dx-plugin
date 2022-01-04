@@ -16,6 +16,7 @@
 #include "AppsFlyerXMacro.h"
 #include "AppsFlyerXDeepLinkResult.h"
 
+
 class AppsFlyerX {
 public:
 
@@ -45,7 +46,7 @@ public:
     static void setShouldCollectDeviceName(bool isShouldCollectDeviceName);
     static bool isShouldCollectDeviceName();
     
-    static void setAppInviteOneLink(std::string& appInviteOneLinkID);
+    static void setAppInviteOneLink(const std::string& appInviteOneLinkID);
     static std::string appInviteOneLinkID();
     
     static void anonymizeUser(bool shouldAnonymize);
@@ -123,8 +124,9 @@ public:
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
     static void setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error));
 
-    //Sharing Data filter
+    //deprecated
     static void sharingFilter(std::vector<std::string> partners);
+    //deprecated
     static void sharingFilterForAllPartners();
     
     static void waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval);
@@ -140,6 +142,16 @@ public:
     static void setPartnerData(std::string partnerId, cocos2d::ValueMap data);
     
     static void setOneLinkCustomDomains(std::vector<std::string> domains);
+    
+    static void setCurrentDeviceLanguage(const std::string& language);
+
+    static void setSharingFilterForPartners(std::vector<std::string> partners);
+    
+    //user-invite
+    static void logInvite(const std::string& channel, cocos2d::ValueMap parameters);
+    static void generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
+    static void generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback);
+
 };
 #endif /* A;ppsFlyerX_h */
 

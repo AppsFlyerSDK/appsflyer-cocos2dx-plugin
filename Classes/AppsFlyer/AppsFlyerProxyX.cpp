@@ -116,17 +116,14 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInsta
 }
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
-            (JNIEnv *env, jobject obj, jstring oneLinkURL) {
+            (JNIEnv *env, jobject obj, jobject result) {
 
         CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative is called");
 
         if (NULL == callbackOnDeepLinking) {
             return;
         }
-    jboolean isCopy;
-    const char *convertedValue = (env)->GetStringUTFChars(oneLinkURL, &isCopy);
-    std::string string = std::string(convertedValue, (env)->GetStringLength(oneLinkURL));
-    callbackOnResponse(string);
+        callbackOnDeepLinking(getResultForCallbackDDL(env, result));
     }
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseNative

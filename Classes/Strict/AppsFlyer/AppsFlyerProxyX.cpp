@@ -53,6 +53,20 @@ void setCallbackOnDeepLinking(
     }
 }
 
+void setCallbackOnResponse(
+        void (*callbackMethod)(std::string oneLinkURL)) {
+    if (NULL == callbackOnResponse) {
+        callbackOnResponse = callbackMethod;
+    }
+}
+
+void setCallbackOnResponseError(
+        void (*callbackMethod)(std::string oneLinkURL)) {
+    if (NULL == callbackOnResponseError) {
+        callbackOnResponseError = callbackMethod;
+    }
+}
+
 
 /**
  * TODO: handle other types of data
@@ -109,9 +123,38 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepL
         if (NULL == callbackOnDeepLinking) {
             return;
         }
-
-    callbackOnDeepLinking(getResultForCallbackDDL(env,result));
+        callbackOnDeepLinking(getResultForCallbackDDL(env, result));
     }
+
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseNative
+        (JNIEnv *env, jobject obj, jstring message) {
+
+    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseNative is called");
+
+    if (NULL == callbackOnResponse) {
+        CCLOG("%s","callback is null");
+        return;
+    }
+    jboolean isCopy;
+    const char *convertedValue = (env)->GetStringUTFChars(message, &isCopy);
+    std::string string = std::string(convertedValue, (env)->GetStringLength(message));
+    callbackOnResponse(string);
+}
+
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseErrorNative
+        (JNIEnv *env, jstring message) {
+
+    CCLOG("%s","Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseErrorNative is called");
+
+    if (NULL == callbackOnResponseError) {
+        CCLOG("%s","callback error is null");
+        return;
+    }
+    jboolean isCopy;
+    const char *convertedValue = (env)->GetStringUTFChars(message, &isCopy);
+    std::string string = std::string(convertedValue, (env)->GetStringLength(message));
+    callbackOnResponseError(string);
+}
 
 
 

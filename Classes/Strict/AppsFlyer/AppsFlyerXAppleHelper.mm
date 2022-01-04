@@ -151,7 +151,7 @@ void AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *res
             break;
     }
     vm["status"] = Value(statusDL);
-
+    
     //AppsFlyerXAppleDeepLink *deepLink = [[AppsFlyerXAppleDeepLink alloc] init];
     ValueMap deepLink;
     id obj = [result deepLink].afSub1 ? [result deepLink].afSub1 : @"";
@@ -185,9 +185,9 @@ void AppsFlyerXAppleHelper::deepLinkResult2ValueMap(AppsFlyerDeepLinkResult *res
     vm["error"] = nil;
     if ([result error] != nil)
     {
-    NSDictionary * errorDictionary = @{@"errorCode":[NSNumber numberWithInteger:[result error].code],
-                                       @"errorDescription":[result error].localizedDescription};
-    vm["error"] = errorDictionary;
+        NSDictionary * errorDictionary = @{@"errorCode":[NSNumber numberWithInteger:[result error].code],
+                                           @"errorDescription":[result error].localizedDescription};
+        vm["error"] = errorDictionary;
     }
 }
 
@@ -225,12 +225,36 @@ void AppsFlyerXAppleHelper::deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResu
     DeepLinkError xerror = NONE;
     if ([result error] != nil){
         std::string error = std::string([[result error].localizedDescription UTF8String]);
-       if (error == "TIMEOUT")
-                xerror = TIMEOUT;
+        if (error == "TIMEOUT")
+            xerror = TIMEOUT;
         else if (error == "NETWORK")
-                xerror = NETWORK;
+            xerror = NETWORK;
         else if (error == "HTTP_STATUS_CODE")
-                xerror = HTTP_STATUS_CODE;
+            xerror = HTTP_STATUS_CODE;
     }
-        xresult.error = xerror;
+    xresult.error = xerror;
+}
+
+
+AppsFlyerLinkGenerator*  AppsFlyerXAppleHelper::valueMap2LinkGenerator(ValueMap vm, AppsFlyerLinkGenerator *generator){
+    
+    NSMutableDictionary *dictionary = AppsFlyerXAppleHelper::valueMap2nsDictionary(vm).mutableCopy;
+    NSArray* generatorKeys = @[@"channel", @"customerID", @"campaign", @"referrerName", @"referrerImageUrl", @"deeplinkPath", @"baseDeeplink", @"brandDomain"];
+    
+    NSMutableDictionary* mutableDictionary = [dictionary mutableCopy];
+    
+    [generator setChannel:[dictionary objectForKey: @"channel"]];
+    [generator setReferrerCustomerId:[dictionary objectForKey: @"customerID"]];
+    [generator setCampaign:[dictionary objectForKey: @"campaign"]];
+    [generator setReferrerName:[dictionary objectForKey: @"referrerName"]];
+    [generator setReferrerImageURL:[dictionary objectForKey: @"referrerImageUrl"]];
+    [generator setDeeplinkPath:[dictionary objectForKey: @"deeplinkPath"]];
+    [generator setBaseDeeplink:[dictionary objectForKey: @"baseDeeplink"]];
+    [generator setBrandDomain:[dictionary objectForKey: @"brandDomain"]];
+    
+    
+    [mutableDictionary removeObjectsForKeys:generatorKeys];
+    
+    [generator addParameters:mutableDictionary];
+    return generator;
 }

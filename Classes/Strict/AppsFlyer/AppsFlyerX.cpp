@@ -103,8 +103,7 @@ std::string AppsFlyerX::currencyCode() {
 #ifndef AFSDK_NO_IDFA 
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "disableAdvertiserIdentifier is not supported for Android.");
+    AppsFlyerXAndroid::setDisableAdvertisingIdentifiers(shouldDisable);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
 #endif
@@ -163,7 +162,7 @@ bool AppsFlyerX::isShouldCollectDeviceName() {
 #endif
 }
 
-void AppsFlyerX::setAppInviteOneLink(std::string& appInviteOneLinkID) {
+void AppsFlyerX::setAppInviteOneLink(const std::string& appInviteOneLinkID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
    AppsFlyerXAndroid::setAppInviteOneLink(appInviteOneLinkID);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -463,6 +462,7 @@ void AppsFlyerX::stop(bool shouldStop) {
 #endif
 }
 
+[[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
 void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilter(partners);
@@ -471,6 +471,7 @@ void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
 #endif
 }
 
+[[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
 void AppsFlyerX::sharingFilterForAllPartners(){
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::sharingFilterForAllPartners();
@@ -543,9 +544,54 @@ void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
 }
 
 void AppsFlyerX::setOneLinkCustomDomains(std::vector<std::string> domains) {
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     AppsFlyerXAndroid::setOneLinkCustomDomains(domains);
-    #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return AppsFlyerXApple::setOneLinkCustomDomains(domains);
-    #endif
+#endif
+}
+
+
+void AppsFlyerX::setCurrentDeviceLanguage(const std::string& language) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "setCurrentDeviceLanguage is not supported for Android.");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return AppsFlyerXApple::setCurrentDeviceLanguage(language);
+#endif
+}
+
+void AppsFlyerX::setSharingFilterForPartners(std::vector<std::string> partners) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setSharingFilterForPartners(partners);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::setSharingFilterForPartners(partners);
+#endif
+}
+
+void AppsFlyerX::logInvite(const std::string& channel, cocos2d::ValueMap parameters){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::logInvite(channel, parameters);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::logInvite(channel, parameters);
+#endif
+}
+
+
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url)){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::generateInviteUrl(parameters, onResponse, onResponseError);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //not supported for iOS
+    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback) for iOS");
+#endif
+}
+
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url) for Android");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::generateUserInviteLink(parameters, callback);
+#endif
 }
