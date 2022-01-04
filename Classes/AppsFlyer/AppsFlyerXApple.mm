@@ -123,7 +123,7 @@ bool AppsFlyerXApple::isShouldCollectDeviceName() {
     return [[AppsFlyerLib shared] shouldCollectDeviceName];
 }
 
-void AppsFlyerXApple::setAppInviteOneLink(std::string& appInviteOneLinkID) {
+void AppsFlyerXApple::setAppInviteOneLink(const std::string& appInviteOneLinkID) {
     return [[AppsFlyerLib shared] setAppInviteOneLink:[NSString stringWithUTF8String:appInviteOneLinkID.c_str()]];
 }
 
@@ -382,3 +382,17 @@ void AppsFlyerXApple::setSharingFilterForPartners(std::vector<std::string> partn
     }
     [[AppsFlyerLib shared] setSharingFilterForPartners: sharingFilter];
 }
+
+void AppsFlyerXApple::logInvite(const std::string& channel, cocos2d::ValueMap parameters) {
+    NSString *lChannel = [NSString stringWithUTF8String:channel.c_str()];
+    [AppsFlyerShareInviteHelper logInvite:lChannel parameters:AppsFlyerXAppleHelper::valueMap2nsDictionary(parameters)];
+}
+
+void AppsFlyerXApple::generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback) {
+    [AppsFlyerShareInviteHelper generateInviteUrlWithLinkGenerator:^AppsFlyerLinkGenerator * _Nonnull(AppsFlyerLinkGenerator * _Nonnull generator) {
+        return AppsFlyerXAppleHelper::valueMap2LinkGenerator(parameters,  generator);
+    } completionHandler:^(NSURL * _Nullable url) {
+        NSLog(@"url is %@", [url absoluteString]);
+        callback([url.absoluteString UTF8String]);
+    }];
+};

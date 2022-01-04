@@ -24,6 +24,10 @@ static void (*attributionCallbackOnAppOpenAttributionFailure)(cocos2d::ValueMap 
 
 static void (*callbackOnDeepLinking)(AppsFlyerXDeepLinkResult result);
 
+static void (*callbackOnResponse)(std::string oneLinkURL);
+
+static void (*callbackOnResponseError)(std::string message);
+
 
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
         (JNIEnv *, jobject, jobject);
@@ -35,6 +39,10 @@ JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAttri
         (JNIEnv *, jobject, jobject);
 JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onDeepLinkingNative
         (JNIEnv *, jobject, jobject);
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseNative
+        (JNIEnv *, jobject, jstring);
+JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onResponseErrorNative
+        (JNIEnv *, jobject, jstring);
 
  void setAttributionCallbackOnConversionDataReceived(
          void (*callbackMethod)(cocos2d::ValueMap installData));
@@ -50,6 +58,12 @@ void setAttributionCallbackOnAppOpenAttributionFailure(
 
 void setCallbackOnDeepLinking(
         void (*callbackMethod)(AppsFlyerXDeepLinkResult result));
+
+void setCallbackOnResponse(
+        void (*callbackMethod)(std::string oneLinkURL));
+
+void setCallbackOnResponseError(
+        void (*callbackMethod)(std::string message));
 
 }
 #endif

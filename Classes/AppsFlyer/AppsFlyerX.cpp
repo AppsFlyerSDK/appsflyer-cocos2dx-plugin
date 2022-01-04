@@ -162,7 +162,7 @@ bool AppsFlyerX::isShouldCollectDeviceName() {
 #endif
 }
 
-void AppsFlyerX::setAppInviteOneLink(std::string& appInviteOneLinkID) {
+void AppsFlyerX::setAppInviteOneLink(const std::string& appInviteOneLinkID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
    AppsFlyerXAndroid::setAppInviteOneLink(appInviteOneLinkID);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -569,3 +569,29 @@ void AppsFlyerX::setSharingFilterForPartners(std::vector<std::string> partners) 
 #endif
 }
 
+void AppsFlyerX::logInvite(const std::string& channel, cocos2d::ValueMap parameters){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::logInvite(channel, parameters);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::logInvite(channel, parameters);
+#endif
+}
+
+
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url)){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::generateInviteUrl(parameters, onResponse, onResponseError);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //not supported for iOS
+    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback) for iOS");
+#endif
+}
+
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //not supported for Android
+    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url) for Android");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::generateUserInviteLink(parameters, callback);
+#endif
+}

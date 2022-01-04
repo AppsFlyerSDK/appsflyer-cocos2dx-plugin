@@ -34,6 +34,9 @@ public:
     
     static AppsFlyerXDeepLinkResult deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result);
     static void deepLinkResult2XDeepLinkResult(AppsFlyerDeepLinkResult *result,  AppsFlyerXDeepLinkResult &xresult);
+    
+    static AppsFlyerLinkGenerator*  valueMap2LinkGenerator(ValueMap vm, AppsFlyerLinkGenerator *generator);
+    
 
 };
 

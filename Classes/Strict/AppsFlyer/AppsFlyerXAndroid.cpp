@@ -127,7 +127,7 @@ void AppsFlyerXAndroid::setCurrencyCode(const std::string &currencyCode) {
     callVoidMethodWithStringParam(currencyCode, "setCurrencyCode", "(Ljava/lang/String;)V");
 }
 
-void AppsFlyerXAndroid::setAppInviteOneLink(std::string &appInviteOneLinkID) {
+void AppsFlyerXAndroid::setAppInviteOneLink(const std::string &appInviteOneLinkID) {
     callVoidMethodWithStringParam(appInviteOneLinkID, "setAppInviteOneLink",
                                   "(Ljava/lang/String;)V");
 }
@@ -306,7 +306,7 @@ void AppsFlyerXAndroid::start() {
         jmethodID startTrackingMethodId = jniGetInstance.env->GetMethodID(cls,
                                                                           "start",
                                                                           "(Landroid/content/Context;Ljava/lang/String;)V");
-        
+
         // This is what we actually do: afLib.startTracking((Application) context.getApplicationContext())
         jniGetInstance.env->CallVoidMethod(afInstance, startTrackingMethodId, jContext,
                                            jAppsFlyerDevKey);
@@ -922,7 +922,7 @@ void initConvertionCallback() {
         isConveriosnListenerInitialized = true;
 
         // This is what we actually do: afLib.init(appsFlyerDevKey, conversionDataListener, context)
-        jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, 
+        jniGetInstance.env->CallObjectMethod(afInstance, initMethodId,
                                             jAppsFlyerDevKey, jCallbackProxy, jContext);
 
         jniInit.env->DeleteLocalRef(jCallbackProxy);
@@ -1036,5 +1036,240 @@ void subscribeForDeepLink() {
         } else {
             CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
         }
+}
+
+    void AppsFlyerXAndroid::setDisableAdvertisingIdentifiers(bool disable){
+        cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+        jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                jniGetInstance.classID, jniGetInstance.methodID);
+
+        if (NULL != afInstance) {
+            CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+            jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setDisableAdvertisingIdentifiers", "(Z)V");
+
+            cocos2d::JniMethodInfo miGetContext;
+            if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+                return;
+            }
+            jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+
+            jniGetInstance.env->CallVoidMethod(afInstance, methodId, disable, jContext);
+
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+        } else {
+            CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+        }
+}
+
+    void AppsFlyerXAndroid::setSharingFilterForPartners(std::vector<std::string> partners) {
+        cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+        jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+                jniGetInstance.classID, jniGetInstance.methodID);
+
+        if (NULL != afInstance) {
+            //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+            jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+            cocos2d::JniMethodInfo jniGetContext;
+
+            if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                         "org/cocos2dx/lib/Cocos2dxActivity",
+                                                         "getContext",
+                                                         "()Landroid/content/Context;")) {
+                return;
+            }
+
+
+            jobjectArray result;
+            result = (jobjectArray)jniGetInstance.env->NewObjectArray(partners.size(),jniGetInstance.env->FindClass("java/lang/String"),jniGetInstance.env->NewStringUTF(""));
+            for(int i=0; i<partners.size(); i++) {
+                jniGetInstance.env->SetObjectArrayElement(result,i,jniGetInstance.env->NewStringUTF(partners[i].c_str()));
+            }
+
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilterForPartners",
+                                                                 "([Ljava/lang/String;)V");
+
+
+            jniGetInstance.env->CallVoidMethod(afInstance, methodId, result);
+
+            jniGetInstance.env->DeleteLocalRef(result);
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+        } else {
+            CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+        }
+    }
+
+
+void AppsFlyerXAndroid::setOnResponse(void(*callback)(std::string oneLinkURL)) {
+    setCallbackOnResponse(callback);
+}
+
+void AppsFlyerXAndroid::setOnResponseError(void(*callback)(std::string message)) {
+    setCallbackOnResponseError(callback);
+}
+
+void AppsFlyerXAndroid::generateInviteUrl(cocos2d::ValueMap parameter, void(*onResponse)(std::string url), void(*onResponseError)(std::string url)) {
+    setOnResponse(onResponse);
+    setOnResponseError(onResponseError);
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+    cocos2d::JniMethodInfo miGetContext;
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity", "getContext", "()Landroid/content/Context;")) {
+        return;
+    }
+    jobject jContext = (jobject)miGetContext.env->CallStaticObjectMethod(miGetContext.classID, miGetContext.methodID);
+
+
+    jclass clsAppsFlyer2dXConversionCallback = jniGetInstance.env->FindClass(
+            "com/appsflyer/AppsFlyer2dXConversionCallback");
+
+
+    jmethodID callbackMethodId = jniGetInstance.env->GetMethodID(clsAppsFlyer2dXConversionCallback,
+                                                          "<init>", "()V");
+    // instance of 'new AppsFlyer2dXConversionCallback()'
+    jobject jCallbackProxy = jniGetInstance.env->NewObject(clsAppsFlyer2dXConversionCallback,
+                                                    callbackMethodId);
+
+
+    jclass classShareInviteHelper = jniGetInstance.env->FindClass("com/appsflyer/share/ShareInviteHelper");
+    if (classShareInviteHelper == nullptr) {
+        CCLOG("%s", "could not find classShareInviteHelper class");
+    } else {
+        jmethodID mid = jniGetInstance.env->GetStaticMethodID(classShareInviteHelper, "generateInviteUrl", "(Landroid/content/Context;)Lcom/appsflyer/share/LinkGenerator;");
+       jobject  Generator = jniGetInstance.env->CallStaticObjectMethod(classShareInviteHelper, mid, jContext);
+        jclass cls = jniGetInstance.env->GetObjectClass(Generator);
+        if (cls == nullptr) {
+            CCLOG("%s", "could not find class");
+        } else {
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "generateLink",
+                                                  "(Landroid/content/Context;Lcom/appsflyer/CreateOneLinkHttpTask$ResponseListener;)V");
+            jniGetInstance.env->CallVoidMethod(Generator,methodId, jContext,jCallbackProxy);
+        }
+
+    }
+    jniGetInstance.env->DeleteLocalRef(jCallbackProxy);
+    jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+
+}
+
+
+// Initialize AppsFlyerLib with conversion Callback
+void initResponseListener() {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    //AppsFlyerLib afLib instance
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        cocos2d::JniMethodInfo jniInit;
+        // get  'new AppsFlyer2dXConversionCallback()'
+        if (!cocos2d::JniHelper::getMethodInfo(jniInit,
+                                               "com/appsflyer/AppsFlyer2dXConversionCallback",
+                                               "<init>", "()V")) {
+            return;
+        }
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+
+        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                jniGetContext.classID, jniGetContext.methodID);
+
+
+
+        jclass clsAppsFlyer2dXConversionCallback = jniInit.env->FindClass(
+                "com/appsflyer/AppsFlyer2dXConversionCallback");
+
+
+        jmethodID callbackMethodId = jniInit.env->GetMethodID(clsAppsFlyer2dXConversionCallback,
+                                                              "<init>", "()V");
+        // instance of 'new AppsFlyer2dXConversionCallback()'
+        jobject jCallbackProxy = jniInit.env->NewObject(clsAppsFlyer2dXConversionCallback,
+                                                        callbackMethodId);
+
+        jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
+                                                                 "init",
+                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;Landroid/content/Context;)Lcom/appsflyer/AppsFlyerLib;");
+
+        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
+
+        // Conversion Callback is initialized
+        isConveriosnListenerInitialized = true;
+
+        // This is what we actually do: afLib.init(appsFlyerDevKey, conversionDataListener, context)
+        jniGetInstance.env->CallObjectMethod(afInstance, initMethodId,
+                                             jAppsFlyerDevKey, jCallbackProxy, jContext);
+
+        jniInit.env->DeleteLocalRef(jCallbackProxy);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
+
+void AppsFlyerXAndroid::logInvite(const std::string& channel, cocos2d::ValueMap parameters) {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                jniGetContext.classID, jniGetContext.methodID);
+        jclass classShareInviteHelper = jniGetInstance.env->FindClass("com/appsflyer/share/ShareInviteHelper");
+        if (classShareInviteHelper == nullptr) {
+            CCLOG("%s", "could not find classShareInviteHelper class");
+        } else {
+            jmethodID mid = jniGetInstance.env->GetStaticMethodID(classShareInviteHelper, "logInvite",
+                                                                  "(Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
+            jobject hashMapObj = valueMapToHashMap(jniGetInstance, parameters);
+
+
+
+            jstring jChannel = jniGetInstance.env->NewStringUTF(channel.c_str());
+
+            jniGetInstance.env->CallStaticVoidMethod(classShareInviteHelper, mid, jContext, jChannel, hashMapObj);
+
+            jniGetInstance.env->DeleteLocalRef(hashMapObj);
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+       }
+
+    }
 }
 #endif
