@@ -150,6 +150,7 @@ public:
     //user-invite
     static void logInvite(const std::string& channel, cocos2d::ValueMap parameters);
     static void generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
+    static void generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback);
 
 };
 #endif /* A;ppsFlyerX_h */

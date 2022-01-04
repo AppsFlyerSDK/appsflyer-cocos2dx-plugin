@@ -135,6 +135,7 @@ public:
     static void setSharingFilterForPartners(std::vector<std::string> partners);
 
     static void generateInviteUrl(cocos2d::ValueMap parameter, void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
+    static void logInvite(const std::string& channel,cocos2d::ValueMap parameters);
 };
 
 

@@ -1095,7 +1095,7 @@ void subscribeForDeepLink() {
                 jniGetInstance.env->SetObjectArrayElement(result,i,jniGetInstance.env->NewStringUTF(partners[i].c_str()));
             }
 
-            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "logInvite",
+            jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setSharingFilterForPartners",
                                                                  " (Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
 
 
@@ -1225,6 +1225,51 @@ void initResponseListener() {
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
     } else {
         CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
+
+void AppsFlyerXAndroid::logInvite(const std::string& channel, cocos2d::ValueMap parameters) {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                jniGetContext.classID, jniGetContext.methodID);
+        jclass classShareInviteHelper = jniGetInstance.env->FindClass("com/appsflyer/share/ShareInviteHelper");
+        if (classShareInviteHelper == nullptr) {
+            CCLOG("%s", "could not find classShareInviteHelper class");
+        } else {
+            jmethodID mid = jniGetInstance.env->GetStaticMethodID(classShareInviteHelper, "logInvite",
+                                                                  "(Landroid/content/Context;Ljava/lang/String;Ljava/util/Map;)V");
+            jobject hashMapObj = valueMapToHashMap(jniGetInstance, parameters);
+
+
+
+            jstring jChannel = jniGetInstance.env->NewStringUTF(channel.c_str());
+
+            jniGetInstance.env->CallStaticVoidMethod(classShareInviteHelper, mid, jContext, jChannel, hashMapObj);
+
+            jniGetInstance.env->DeleteLocalRef(hashMapObj);
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+       }
+
     }
 }
 #endif
