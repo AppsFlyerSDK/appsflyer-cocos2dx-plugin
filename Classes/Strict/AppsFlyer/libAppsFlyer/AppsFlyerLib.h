@@ -2,7 +2,7 @@
 //  AppsFlyerLib.h
 //  AppsFlyerLib
 //
-//  AppsFlyer iOS SDK 6.5.2 (55)
+//  AppsFlyer iOS SDK 6.8.1 (86)
 //  Copyright (c) 2012-2020 AppsFlyer Ltd. All rights reserved.
 //
 
@@ -95,6 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define AFEventParam8                      @"af_param_8"
 #define AFEventParam9                      @"af_param_9"
 #define AFEventParam10                     @"af_param_10"
+#define AFEventParamTouch                  @"af_touch_obj"
 
 #define AFEventParamDepartingDepartureDate  @"af_departing_departure_date"
 #define AFEventParamReturningDepartureDate  @"af_returning_departure_date"
@@ -129,6 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define AFEventParamAdRevenuePlacementId         @"af_adrev_placement_id"
 #define AFEventParamAdRevenueAdSize              @"af_adrev_ad_size"
 #define AFEventParamAdRevenueMediatedNetworkName @"af_adrev_mediated_network_name"
+
 
 /// Mail hashing type
 typedef enum  {
@@ -210,6 +212,9 @@ NS_SWIFT_NAME(DeepLinkDelegate)
  @return The singleton instance of AppsFlyerLib.
  */
 + (AppsFlyerLib *)shared;
+
+
+- (void)setUpInteroperabilityObject:(id)object;
 
 /**
  In case you use your own user ID in your app, you can set this property to that ID.

@@ -152,6 +152,7 @@ public:
     static void generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
     static void generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback);
 
+    static void setDisableNetworkData(bool disable);
 };
 #endif /* A;ppsFlyerX_h */
 
