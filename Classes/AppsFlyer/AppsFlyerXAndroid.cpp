@@ -1272,4 +1272,8 @@ void AppsFlyerXAndroid::logInvite(const std::string& channel, cocos2d::ValueMap 
 
     }
 }
+
+void AppsFlyerXAndroid::setDisableNetworkData(bool disable) {
+    callVoidMethodWithBoolParam(disable, "setDisableNetworkData", "(Z)V");
+}
 #endif

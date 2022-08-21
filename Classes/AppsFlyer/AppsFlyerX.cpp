@@ -595,3 +595,12 @@ void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, std::funct
     AppsFlyerXApple::generateUserInviteLink(parameters, callback);
 #endif
 }
+
+void AppsFlyerX::setDisableNetworkData(bool disable){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setDisableNetworkData(disable);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //not supported for iOS
+    CCLOGWARN("%s", "setDisableNetworkData is not supported for iOS");
+#endif
+}
