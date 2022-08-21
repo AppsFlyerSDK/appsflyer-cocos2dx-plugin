@@ -52,18 +52,21 @@ In order for us to provide optimal support, we would kindly ask you to submit an
    - [setPartnerData](#partnerData)
 - [setOneLinkCustomDomain](#customDomains)
 - [setCurrentDeviceLanguage](#currentLang) *(ios only)*
-- [setSharingFilterForPartners](#SharingFilterForPartners)
+- [setSharingFilterForPartners](#SharingFilterForPartners) 
+- [setDisableNetworkData](#disableNetworkID)  *(android only)*
 
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.5.2** 
-- iOS AppsFlyer SDK **v6.5.2**
+- Android AppsFlyer SDK **v6.8.0** 
+- iOS AppsFlyer SDK **v6.8.1**
 
 
 ### <a id="integration"> Integration:
  - [Android integration Documents](docs/Android_README.md)
  - [iOS integration Documents](docs/iOS_README.md)
+
+ 
 
 
 
@@ -730,6 +733,23 @@ Used by advertisers to set some (one or more) networks/integrated partners to ex
   std::vector<std::string> partners;
   AppsFlyerX::setSharingFilterForPartners(partners); // Reset list (default)
 
+```
+
+---
+
+
+##### <a id="disableNetworkID"> **`setDisableNetworkData(disable);`**
+Use to opt-out of collecting the network operator name (carrier) and sim operator name from the device.
+
+| parameter   | type                        | description |
+| ----------- |-----------------------------|--------------|
+| `disable` | `bool`  | Defaults to false
+
+
+*Example:*
+
+```cpp
+  AppsFlyerX::setDisableNetworkData(true);
 ```
 
 ---

@@ -74,3 +74,10 @@ In the Package Explorer, open the `AndroidManifest.xml` file of your Android pro
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 ```
+
+### The AD_ID permission for android apps
+
+In v6.8.0 of the AppsFlyer SDK, we added the normal permission com.google.android.gms.permission.AD_ID to the SDK's AndroidManifest, 
+to allow the SDK to collect the Android Advertising ID on apps targeting API 33.
+If your app is targeting children, you may need to revoke this permission to comply with Google's Data policy.
+You can read more about it [here](https://support.appsflyer.com/hc/en-us/articles/7569900844689).
