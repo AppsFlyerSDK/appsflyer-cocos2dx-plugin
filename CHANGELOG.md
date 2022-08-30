@@ -1,5 +1,8 @@
 # Versions
 
+## 6.8.2
+    - update Android SDK to 6.8.2
+
 ## 6.8.0
     - update iOS SDK to 6.8.1
     - update Android SDK to 6.8.0
