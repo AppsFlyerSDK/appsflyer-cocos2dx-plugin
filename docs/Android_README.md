@@ -54,7 +54,7 @@ list(APPEND GAME_HEADER
 We prefer to use `gradle` - as the easiest way to stay up to date. Please add the following lines to your gradle app dependencies:
 
 ```
-implementation 'com.appsflyer:af-android-sdk:6.5.2'
+implementation 'com.appsflyer:af-android-sdk:6.8.2'
 ```
 
 For Google Install Referrer, please, add also:
