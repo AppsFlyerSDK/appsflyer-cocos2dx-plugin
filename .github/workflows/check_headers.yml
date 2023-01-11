@@ -21,7 +21,7 @@ jobs:
         $diff = git diff --name-only HEAD^ HEAD
         $SourceDiff = $diff | Where-Object  { $_ -match '^Classes/AppsFlyer/libAppsFlyer'}
         $HasDiff = $SourceDiff.Length -gt 0
-        Write-Host "name=docs_changed::$HasDiff" >>$GITHUB_OUTPUT
+        echo "docs_changed=$HasDiff" >> $env:GITHUB_OUTPUT
   # Run the job only with "docs_changed" equals "True"
   conditional_job:
     runs-on: 'ubuntu-20.04'
