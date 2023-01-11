@@ -13,28 +13,25 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 2
+        fetch-depth: 5
     - shell: pwsh
       id: check_file_changed
       run: |
         # Diff HEAD with the previous commit
         $diff = git diff --name-only HEAD^ HEAD
-        $SourceDiff = $diff | Where-Object  { $_ -match '^Classes/AppsFlyer/libAppsFlyer'}
+        $SourceDiff = $diff | Where-Object {$_ -match '.sh$' }
         $HasDiff = $SourceDiff.Length -gt 0
-        echo "docs_changed=$HasDiff" >> $env:GITHUB_OUTPUT
+        Write-Host "name=docs_changed::$HasDiff" >>$GITHUB_OUTPUT
   # Run the job only with "docs_changed" equals "True"
   conditional_job:
     runs-on: 'ubuntu-20.04'
     needs: [ conditional_job_check_files ]
     if: needs.conditional_job_check_files.outputs.docs_changed == 'True'
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-        
       - name: setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7.8'
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.7.8'
       - name: execute py script
         run:
           python .github/workflows/Scripts/checkImport.py
