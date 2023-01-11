@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AppsFlyerLib/AppsFlyerCrossPromotionHelper.h>
-#import <AppsFlyerLib/AppsFlyerShareInviteHelper.h>
-#import <AppsFlyerLib/AppsFlyerDeepLinkResult.h>
-#import <AppsFlyerLib/AppsFlyerDeepLink.h>
+#import "AppsFlyerCrossPromotionHelper.h"
+#import "AppsFlyerShareInviteHelper.h"
+#import "AppsFlyerDeepLinkResult.h"
+#import "AppsFlyerDeepLink.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
