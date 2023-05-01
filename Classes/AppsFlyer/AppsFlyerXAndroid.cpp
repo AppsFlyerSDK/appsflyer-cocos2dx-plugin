@@ -12,6 +12,8 @@ std::string afDevKey;
 bool isConveriosnListenerInitialized = false;
 bool isSubscribedForDeepLink = false;
 
+const char *pluginVersion = "6.10.3";
+
 // Headers
 void initConvertionCallback();
 void subscribeForDeepLink();
@@ -20,6 +22,8 @@ std::string callStringMethod(const char *method_name, const char *descriptor);
 
 void callVoidMethodWithStringParam(const std::string &param, const char *method_name,
                                    const char *descriptor);
+
+void callSetPluginInfo(jobject extensionObject);
 
 void callVoidMethodWithBoolParam(bool param, const char *method_name, const char *descriptor);
 
@@ -277,6 +281,22 @@ void AppsFlyerXAndroid::start() {
 
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
 
+        jclass clsExtension = jniGetInstance.env->FindClass("com/appsflyer/internal/platform_extension/PluginInfo");
+
+
+
+        jmethodID extensionConstructor = jniGetInstance.env->GetMethodID(clsExtension,
+                                                                         "<init>","(Lcom/appsflyer/internal/platform_extension/Plugin;Ljava/lang/String;)V");
+
+        jclass enumClass = jniGetInstance.env->FindClass("com/appsflyer/internal/platform_extension/Plugin");
+        jfieldID fid = jniGetInstance.env->GetStaticFieldID(enumClass, "COCOS_2DX","Lcom/appsflyer/internal/platform_extension/Plugin;");
+        jobject plugin = jniGetInstance.env->GetStaticObjectField(enumClass, fid);
+        jstring version = jniGetInstance.env->NewStringUTF(pluginVersion);
+        jobject extensionObject = jniGetInstance.env->NewObject(clsExtension, extensionConstructor, plugin, version);
+
+        callSetPluginInfo(extensionObject);
+
+
         cocos2d::JniMethodInfo jniGetContext;
 
         if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
@@ -310,6 +330,27 @@ void AppsFlyerXAndroid::start() {
         // This is what we actually do: afLib.startTracking((Application) context.getApplicationContext())
         jniGetInstance.env->CallVoidMethod(afInstance, startTrackingMethodId, jContext,
                                            jAppsFlyerDevKey);
+
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
+void callSetPluginInfo(jobject extensionObject) {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setPluginInfo", "(Lcom/appsflyer/internal/platform_extension/PluginInfo;)V");
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, extensionObject);
 
         jniGetInstance.env->DeleteLocalRef(afInstance);
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
