@@ -296,6 +296,11 @@ void AppsFlyerXAndroid::start() {
 
         callSetPluginInfo(extensionObject);
 
+        jniGetInstance.env->DeleteLocalRef(extensionObject);
+        jniGetInstance.env->DeleteLocalRef(extensionObject.classID);
+
+        jniGetInstance.env->DeleteLocalRef(plugin);
+        jniGetInstance.env->DeleteLocalRef(plugin.classID);
 
         cocos2d::JniMethodInfo jniGetContext;
 
