@@ -15,11 +15,18 @@
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXMacro.h"
 #include "AppsFlyerXDeepLinkResult.h"
+#include "AppsFlyerXConsent.cpp"
 
 
 class AppsFlyerX {
 public:
-
+    static bool manual;
+    static void setManual(bool isManual);
+    
+    static void enableTCFDataCollection(bool shouldCollectConsentData);
+    
+    static void setConsentData(const AppsFlyerXConsent& consentData);
+    
     static void setCustomerUserID(const std::string& customerUserID);
     static std::string customerUserID();
     

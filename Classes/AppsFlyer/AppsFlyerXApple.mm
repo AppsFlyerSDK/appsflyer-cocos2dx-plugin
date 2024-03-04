@@ -7,12 +7,14 @@
 //
 
 
-
+#include "AppsFlyerX.h"
 #include "AppsFlyerXApple.h"
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
 #include "AppsFlyerXAppleDeepLinkDelegate.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
+#import <UIKit/UIKit.h>
+
 
 /* Null, because instance will be initialized on demand. */
 AppsFlyerXApple* AppsFlyerXApple::instance = 0;
@@ -36,6 +38,19 @@ AppsFlyerXApple* AppsFlyerXApple::getInstance() {
 //}
 
 AppsFlyerXApple::AppsFlyerXApple() {}
+
+void AppsFlyerXApple::enableTCFDataCollection(bool shouldCollectConsentData){
+    [[AppsFlyerLib shared] enableTCFDataCollection:shouldCollectConsentData];
+}
+
+void AppsFlyerXApple::setConsentData(const AppsFlyerXConsent& consentData){
+    if (consentData.IsUserSubjectToGDPR()){
+        [[AppsFlyerLib shared] setConsentData:[[AppsFlyerConsent alloc] initForGDPRUserWithHasConsentForDataUsage:consentData.HasConsentForDataUsage() hasConsentForAdsPersonalization:consentData.HasConsentForAdsPersonalization()]];
+    }
+    else{
+        [[AppsFlyerLib shared] setConsentData:[[AppsFlyerConsent alloc] initNonGDPRUser]];
+    }
+}
 
 void AppsFlyerXApple::setCustomerUserID(const std::string& customerUserID) {
     [[AppsFlyerLib shared] setCustomerUserID: [NSString stringWithUTF8String:customerUserID.c_str()]];
@@ -71,7 +86,9 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
          object: nil
          queue: nil
          usingBlock: ^ (NSNotification * note) {
-             [[AppsFlyerLib shared] start];
+            if (AppsFlyerX::manual == false) {
+                [[AppsFlyerLib shared] start];
+            }
          }];
     });
 

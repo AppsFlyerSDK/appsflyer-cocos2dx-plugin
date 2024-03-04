@@ -34,6 +34,10 @@ public:
     
     static AppsFlyerXApple* getInstance();
     
+    static void enableTCFDataCollection(bool shouldCollectConsentData);
+    
+    static void setConsentData(const AppsFlyerXConsent& consentData);
+    
     static void setCustomerUserID(const std::string& customerUserID);
     static std::string customerUserID();
 

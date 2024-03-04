@@ -16,6 +16,28 @@
 #include "AppsFlyerXApple.h"
 #endif
 
+bool AppsFlyerX::manual = false;
+
+void AppsFlyerX::setManual(bool isManual) {
+    manual = isManual;
+}
+
+//static void enableTCFDataCollection(bool shouldCollectConsentData);
+void AppsFlyerX::enableTCFDataCollection(bool shouldCollectConsentData) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::enableTCFDataCollection(shouldCollectConsentData);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::enableTCFDataCollection(shouldCollectConsentData);
+#endif
+}
+
+void AppsFlyerX::setConsentData(const AppsFlyerXConsent& consentData){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setConsentData(consentData);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::setConsentData(consentData);
+#endif
+}
 
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
