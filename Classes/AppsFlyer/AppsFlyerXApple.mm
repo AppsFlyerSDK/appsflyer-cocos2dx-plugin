@@ -74,7 +74,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
     [[AppsFlyerLib shared] setPluginInfoWith: AFSDKPluginCocos2dx
-                            pluginVersion:@"6.13.1"
+                            pluginVersion:@"6.13.0"
                             additionalParams:nil];
     dispatch_once(&onceToken, ^{
         
