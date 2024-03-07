@@ -1,8 +1,7 @@
-<img src="https://www.appsflyer.com/wp-content/uploads/2016/11/logo-1.svg"  width="200">
+<img src="https://massets.appsflyer.com/wp-content/uploads/2018/06/20092440/static-ziv_1TP.png"  width="400" > 
 
 # Cocos2dX AppsFlyer plugin for Android and iOS.
 
-[![GitHub tag](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)
 ----------
 
 
@@ -16,6 +15,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 
 - [integration](#integration)
 - [Usage](#usage)
+- [Manual start mode](#manual-start)
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
  - [stop](#stopTracking) 
@@ -116,9 +116,43 @@ void AppDelegate::applicationDidEnterBackground() {
 
 ```
 
+## <a id="manual-start"> Manual mode:
+Starting version 6.13.0, we support a manual mode to seperate the initialization of the AppsFlyer SDK and the start of the SDK. In this case, the AppsFlyer SDK won't start automatically, giving the developer more freedom when to start the AppsFlyer SDK. Please note that in manual mode, the developer is required to implement the API start() in order to start the SDK.
+<br>If you are using CMP to collect consent data this feature is needed. See explanation [here](#dma_support).
+### Examples:
+ 
+```cpp
+bool AppDelegate::applicationDidFinishLaunching() {
+...
+    AppsFlyerX::setAppsFlyerDevKey("devkey");
 
-##<a id="api-methods"> API Methods
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    // In case you want to use manual mode. 
+    AppsFlyerX::setManualStart(true);
+    // 
+    AppsFlyerX::setAppleAppID("appleAppId");
+...
+}
+```
+- See that we aren't calling any AppsFlyerX::start() in any case. 
+The init function is called in the background in order to catch any deeplinking.
 
+
+And to start the AppsFlyer SDK:
+
+### Example:
+
+```cpp
+//In case you use manual mode
+ #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+     AppsFlyerX::setManualStart(false);
+ #endif
+ AppsFlyerX::start();
+ // 
+ ```
+
+
+## <a id="api-methods"> API Methods
 
 ---
 
