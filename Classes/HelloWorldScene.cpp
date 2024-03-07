@@ -1,5 +1,5 @@
 #include "HelloWorldScene.h"
-#include "SimpleAudioEngine.h"
+//#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -53,7 +53,12 @@ bool HelloWorld::init()
             case Widget::TouchEventType::ENDED: {
                 std::cout << "Log event raised" << std::endl;
 
-
+                //In case you use manual mode
+                // #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                //     AppsFlyerX::setManualStart(false);
+                // #endif
+                // AppsFlyerX::start();
+                // // 
                 ValueMap map;
                 map["key1"] = "value1";
                 map["key2"] = 1;

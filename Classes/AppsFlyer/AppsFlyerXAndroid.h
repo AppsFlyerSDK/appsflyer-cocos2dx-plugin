@@ -10,6 +10,8 @@
 
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXDeepLinkResult.h"
+#include "AppsFlyerX.h"
+
 
 class AppsFlyerXAndroid {
 private:
@@ -23,6 +25,10 @@ private:
 public:
 
     static AppsFlyerXAndroid* getInstance();
+
+    static void enableTCFDataCollection(bool shouldCollectConsentData);
+
+    static void setConsentData(const AppsFlyerXConsent& consentData);
 
     static void didEnterBackground();
 

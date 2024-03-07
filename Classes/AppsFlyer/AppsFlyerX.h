@@ -20,8 +20,8 @@
 
 class AppsFlyerX {
 public:
-    static bool manual;
-    static void setManual(bool isManual);
+    static bool manualStart;
+    static void setManualStart(bool isManualStart);
     
     static void enableTCFDataCollection(bool shouldCollectConsentData);
     

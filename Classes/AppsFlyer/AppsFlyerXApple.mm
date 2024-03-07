@@ -74,7 +74,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
     [[AppsFlyerLib shared] setPluginInfoWith: AFSDKPluginCocos2dx
-                            pluginVersion:@"6.10.3"
+                            pluginVersion:@"6.13.1"
                             additionalParams:nil];
     dispatch_once(&onceToken, ^{
         
@@ -86,7 +86,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
          object: nil
          queue: nil
          usingBlock: ^ (NSNotification * note) {
-            if (AppsFlyerX::manual == false) {
+            if (AppsFlyerX::manualStart == false) {
                 [[AppsFlyerLib shared] start];
             }
          }];

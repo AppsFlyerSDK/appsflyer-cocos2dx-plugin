@@ -16,10 +16,10 @@
 #include "AppsFlyerXApple.h"
 #endif
 
-bool AppsFlyerX::manual = false;
+bool AppsFlyerX::manualStart = false;
 
-void AppsFlyerX::setManual(bool isManual) {
-    manual = isManual;
+void AppsFlyerX::setManualStart(bool isManualStart) {
+    manualStart = isManualStart;
 }
 
 //static void enableTCFDataCollection(bool shouldCollectConsentData);
