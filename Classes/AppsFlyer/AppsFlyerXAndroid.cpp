@@ -108,6 +108,9 @@ void AppsFlyerXAndroid::setConsentData(const AppsFlyerXConsent& consentData){
 
         jniGetInstance.env->CallVoidMethod(afInstance, methodId, resultConsent);
 
+        jniGetInstance.env->DeleteLocalRef(resultConsent);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
     } else {
         CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
     }
