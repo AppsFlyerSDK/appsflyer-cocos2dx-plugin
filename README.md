@@ -1,8 +1,7 @@
-<img src="https://www.appsflyer.com/wp-content/uploads/2016/11/logo-1.svg"  width="200">
+<img src="https://massets.appsflyer.com/wp-content/uploads/2018/06/20092440/static-ziv_1TP.png"  width="400" > 
 
 # Cocos2dX AppsFlyer plugin for Android and iOS.
 
-[![GitHub tag](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)](https://img.shields.io/github/v/release/AppsFlyerSDK/appsflyer-unity-plugin)
 ----------
 
 
@@ -16,6 +15,7 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 
 - [integration](#integration)
 - [Usage](#usage)
+- [Manual start mode](#manual-start)
 - [API methods](#api-methods)
  - [setIsDebug](#setIsDebug)
  - [stop](#stopTracking) 
@@ -54,12 +54,13 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 - [setCurrentDeviceLanguage](#currentLang) *(ios only)*
 - [setSharingFilterForPartners](#SharingFilterForPartners) 
 - [setDisableNetworkData](#disableNetworkID)  *(android only)*
+- [Send consent for DMA compliance](#dma_support) 
 
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.10.3** 
-- iOS AppsFlyer SDK **v6.10.1**
+- Android AppsFlyer SDK **v6.13.0** 
+- iOS AppsFlyer SDK **v6.13.1**
 
 
 ### <a id="integration"> Integration:
@@ -116,9 +117,43 @@ void AppDelegate::applicationDidEnterBackground() {
 
 ```
 
+## <a id="manual-start"> Manual mode:
+Starting version 6.13.0, we support a manual mode to seperate the initialization of the AppsFlyer SDK and the start of the SDK. In this case, the AppsFlyer SDK won't start automatically, giving the developer more freedom when to start the AppsFlyer SDK. Please note that in manual mode, the developer is required to implement the API start() in order to start the SDK.
+<br>If you are using CMP to collect consent data this feature is needed. See explanation [here](#dma_support).
+### Examples:
+ 
+```cpp
+bool AppDelegate::applicationDidFinishLaunching() {
+...
+    AppsFlyerX::setAppsFlyerDevKey("devkey");
 
-##<a id="api-methods"> API Methods
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    // In case you want to use manual mode. 
+    AppsFlyerX::setManualStart(true);
+    // 
+    AppsFlyerX::setAppleAppID("appleAppId");
+...
+}
+```
+- See that we aren't calling any AppsFlyerX::start() in any case. 
+The init function is called in the background in order to catch any deeplinking.
 
+
+And to start the AppsFlyer SDK:
+
+### Example:
+
+```cpp
+//In case you use manual mode
+ #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+     AppsFlyerX::setManualStart(false);
+ #endif
+ AppsFlyerX::start();
+ // 
+ ```
+
+
+## <a id="api-methods"> API Methods
 
 ---
 
@@ -770,3 +805,91 @@ In v6 of AppsFlyer SDK there are some api breaking changes:
 
 ### iOS
 on iOS you need to implement IDFA request pop up and add AppTrackTransparency framework in order for the plugin to work
+
+
+## <a id="dma_support"> Send consent for DMA compliance 
+For a general introduction to DMA consent data, see [here](https://dev.appsflyer.com/hc/docs/send-consent-for-dma-compliance).<be> 
+The SDK offers two alternative methods for gathering consent data:<br> 
+- **Through a Consent Management Platform (CMP)**: If the app uses a CMP that complies with the [Transparency and Consent Framework (TCF) v2.2 protocol](https://iabeurope.eu/tcf-supporting-resources/), the SDK can automatically retrieve the consent details.<br> 
+<br>OR<br><br> 
+- **Through a dedicated SDK API**: Developers can pass Google's required consent data directly to the SDK using a specific API designed for this purpose. 
+### Use CMP to collect consent data 
+A CMP compatible with TCF v2.2 collects DMA consent data and stores it in <code>SharedPreferences</code>(Android) or <code>NSUserDefaults</code>(iOS). To enable the SDK to access this data and include it with every event, follow these steps:<br> 
+<ol> 
+  <li> Call <code>AppsFlyerX::enableTCFDataCollection(true)</code> to instruct the SDK to collect the TCF data from the device. 
+  <li> Set the the adapter to be manual(see (#manual-start)[manual mode]). <br> This will allow us to delay the Conversion call to provide the SDK with the user consent. 
+  <li> Use the CMP to decide if you need the consent dialog in the current session.
+  <li> If needed, show the consent dialog, using the CMP, to capture the user consent decision. Otherwise, go to step 6. 
+  <li> Get confirmation from the CMP that the user has made their consent decision, and the data is available in <code>SharedPreferences</code> or <code>NSUserDefaults</code>.
+  <li> Call start the following way:
+   
+```
+ #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+     AppsFlyerX::setManualStart(false);
+ #endif
+ AppsFlyerX::start();
+```
+</ol> 
+ 
+ #### AppDelegate
+``` cpp
+bool AppDelegate::applicationDidFinishLaunching() {
+
+    AppsFlyerX::stop(false);
+    AppsFlyerX::enableTCFDataCollection(true);
+    AppsFlyerX::setIsDebug(true);
+    AppsFlyerX::setAppsFlyerDevKey("devkey");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    // In case you want to use manual mode. 
+    AppsFlyerX::setManualStart(true);
+    // 
+    AppsFlyerX::setAppleAppID("appleAppId");
+``` 
+#### Scene class
+- after getting CMP results
+```cpp
+ #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+     AppsFlyerX::setManualStart(false);
+ #endif
+ AppsFlyerX::start();
+```
+
+ 
+### Manually collect consent data 
+If your app does not use a CMP compatible with TCF v2.2, use the SDK API detailed below to provide the consent data directly to the SDK. 
+<ol> 
+  <li> Initialize <code>AppsFlyerX</code> using manual mode. This will allow us to delay the Conversion call in order to provide the SDK with the user consent. 
+  <li> Determine whether the GDPR applies or not to the user.<br> 
+  - If GDPR applies to the user, perform the following:  
+      <ol> 
+        <li> Given that GDPR is applicable to the user, determine whether the consent data is already stored for this session. 
+            <ol> 
+              <li> If there is no consent data stored, show the consent dialog to capture the user consent decision. 
+              <li> If there is consent data stored continue to the next step. 
+            </ol> 
+        <li> To transfer the consent data to the SDK create an object called <code>AppsFlyerXConsent</code> using the <code>forGDPRUser()</code> method with the following parameters:<br> 
+          - <code>hasConsentForDataUsage</code> - Indicates whether the user has consented to use their data for advertising purposes.<br>
+          - <code>hasConsentForAdsPersonalization</code> - Indicates whether the user has consented to use their data for personalized advertising purposes.
+        <li> Call <code>AppsFlyerX::setConsentData()</code> with the <code>AppsFlyerXConsent</code> object.    
+        <li> Call start:
+<code>
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+  AppsFlyerX::setManualStart(false);
+#endif
+AppsFlyerX::start();
+</code>
+      </ol><br> 
+    - If GDPR doesn’t apply to the user perform the following: 
+      <ol> 
+        <li> Create an <code>AppsFlyerXConsent</code> object using the <code>forNonGDPRUser()</code> method. This method doesn’t accept any parameters.
+        <li> Call <code>AppsFlyerX::setConsentData()</code> with the <code>AppsFlyerXConsent</code> object.  
+        <li> Call start:
+<code>
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+  AppsFlyerX::setManualStart(false);
+#endif
+AppsFlyerX::start();
+</code>
+      </ol> 
+</ol> 

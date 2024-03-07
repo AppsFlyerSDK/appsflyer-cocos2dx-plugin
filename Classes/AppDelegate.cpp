@@ -140,13 +140,18 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
 bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::stop(false);
-
+//    AppsFlyerX::enableTCFDataCollection(true);
     AppsFlyerX::setIsDebug(true);
+//    AppsFlyerX::setConsentData(AppsFlyerXConsent::initNonGDPRUser());
+    // AppsFlyerX::setConsentData(AppsFlyerXConsent::initForGDPRUser(true,true));
     //AppsFlyerX::setMinTimeBetweenSessions(9);
     AppsFlyerX::setAppsFlyerDevKey("devkey");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("appid");
+    // // In case you want to use manual mode. 
+    // AppsFlyerX::setManualStart(true);
+    // // 
+    AppsFlyerX::setAppleAppID("appleAppId");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif
@@ -166,10 +171,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     data["isLegacy"] = false;
     AppsFlyerX::setPartnerData("partnerID", data);
 
-    AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
-                                             { "key2", cocos2d::Value("value2")}});
+//    AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
+//                                             { "key2", cocos2d::Value("value2")}});
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::start();
+// remove this to use manual mode.
+  AppsFlyerX::start();
+//
 #endif
 
     // initialize director
@@ -241,7 +248,9 @@ void AppDelegate::applicationWillEnterForeground() {
     //CCLOG("%s", "~+~+~+~+~   applicationWillEnterForeground ~+~+~+~+~");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerX::start();
+// remove this to use manual mode.
+  AppsFlyerX::start();
+//
 #endif
 
 #if USE_AUDIO_ENGINE

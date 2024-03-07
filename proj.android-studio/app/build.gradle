@@ -131,7 +131,7 @@ android.applicationVariants.all { variant ->
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libcocos2dx')
-    implementation 'com.appsflyer:af-android-sdk:6.10.3'
+    implementation 'com.appsflyer:af-android-sdk:6.13.0'
     implementation 'com.android.installreferrer:installreferrer:2.1'
     implementation 'com.google.firebase:firebase-messaging:10.0.1'
 }
