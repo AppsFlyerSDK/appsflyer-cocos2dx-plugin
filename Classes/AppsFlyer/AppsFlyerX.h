@@ -16,6 +16,7 @@
 #include "AppsFlyerXMacro.h"
 #include "AppsFlyerXDeepLinkResult.h"
 #include "AppsFlyerXConsent.cpp"
+#include "AFSDKXPurchaseDetails.h"
 
 
 class AppsFlyerX {
@@ -88,6 +89,9 @@ public:
                                                      const std::string& price,
                                                      const std::string& currency,
                                                      cocos2d::ValueMap additionalParameters);
+    
+
+    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
 
     static void logLocation(double longitude, double latitude);
     

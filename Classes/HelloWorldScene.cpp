@@ -111,15 +111,19 @@ bool HelloWorld::init()
                 std::cout << "Log event raised" << std::endl;
                 
                 ValueMap params;
-                AppsFlyerX::validateAndLogInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
-                    for (auto& t : result)
-                        std::cout << t.first << " "
-                                  << t.second.asString() << "\n";
-                }, [&](cocos2d::ValueMap error) {
-                    for (auto& t : error)
-                        std::cout << t.first << " "
-                                  << t.second.asString() << "\n";
+                AFSDKXPurchaseDetails details = AFSDKXPurchaseDetails("customId", "6.99", "USD", "transactionId");
+                AppsFlyerX::validateAndLogInAppPurchase(details, params, [](const AFSDKXValidateAndLogResult& result) {
+                    std::cout << "Result Status: " << static_cast<int>(result.getStatus()) << std::endl;
                 });
+//                AppsFlyerX::validateAndLogInAppPurchase("1", "2", "USD", "3", params, [&](cocos2d::ValueMap result) {
+//                    for (auto& t : result)
+//                        std::cout << t.first << " "
+//                                  << t.second.asString() << "\n";
+//                }, [&](cocos2d::ValueMap error) {
+//                    for (auto& t : error)
+//                        std::cout << t.first << " "
+//                                  << t.second.asString() << "\n";
+//                });
                 break;
             }
             default:

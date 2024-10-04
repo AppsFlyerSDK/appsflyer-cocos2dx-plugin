@@ -12,7 +12,10 @@
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
 #include "AppsFlyerXAppleDeepLinkDelegate.h"
+#include "AFSDKXPurchaseDetails.h"
+#include "AFSDKXValidateAndLogResult.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
+#import "libAppsFlyer/AFSDKPurchaseDetails.h"
 #import <UIKit/UIKit.h>
 
 
@@ -74,7 +77,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
     [[AppsFlyerLib shared] setPluginInfoWith: AFSDKPluginCocos2dx
-                            pluginVersion:@"6.13.0"
+                            pluginVersion:@"6.15.3"
                             additionalParams:nil];
     dispatch_once(&onceToken, ^{
         
@@ -246,6 +249,27 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIden
             errorDictionary[@"errorDescription"] = response;
         }
         failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
+    }];
+}
+
+
+void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
+                                                  cocos2d::ValueMap params,
+                                                  std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+    
+    NSString *productId = [NSString stringWithUTF8String:details.getProductId().c_str()];
+    NSString *price = [NSString stringWithUTF8String:details.getPrice().c_str()];
+    NSString *transactionId = [NSString stringWithUTF8String:details.getTransactionId().c_str()];
+    NSString *currency = [NSString stringWithUTF8String:details.getCurrency().c_str()];
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
+    
+    AFSDKPurchaseDetails *afPurchaseDetails = [[AFSDKPurchaseDetails alloc] initWithProductId:productId
+                                                                              price:price
+                                                                           currency:currency
+                                                                      transactionId:transactionId];
+    
+    [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
+        NSLog(@"[ValidateAndLog] Result: %@", result);
     }];
 }
 

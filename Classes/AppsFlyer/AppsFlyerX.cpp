@@ -332,6 +332,14 @@ void AppsFlyerX::validateAndLogInAppPurchase(const std::string& publicKey,
 #endif
 }
 
+void AppsFlyerX::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    // Android implementation
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::validateAndLogInAppPurchase(details, params, completionHandler);
+#endif
+}
+
 
 std::string AppsFlyerX::getAppsFlyerUID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

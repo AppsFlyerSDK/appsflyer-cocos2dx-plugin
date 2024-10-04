@@ -16,6 +16,8 @@
 //#include "AppsFlyerXAppleDelegate.h"
 //#include "EmailCryptTypeX.h"
 #include "AppsFlyerXDeepLinkResult.h"
+#include "AFSDKXPurchaseDetails.h"
+#include "AFSDKXValidateAndLogResult.h"
 
 class AppsFlyerXApple {
 private:
@@ -90,6 +92,10 @@ public:
                                               cocos2d::ValueMap params,
                                               std::function<void(cocos2d::ValueMap)> successBlock,
                                               std::function<void(cocos2d::ValueMap)> failureBlock);
+    
+    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
+                                            cocos2d::ValueMap params,
+                                            std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
     
     static void logLocation(double longitude, double latitude);
     
