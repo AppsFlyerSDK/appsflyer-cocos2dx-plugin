@@ -10,6 +10,8 @@
 
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXDeepLinkResult.h"
+#include "AppsFlyerX.h"
+
 
 class AppsFlyerXAndroid {
 private:
@@ -23,6 +25,10 @@ private:
 public:
 
     static AppsFlyerXAndroid* getInstance();
+
+    static void enableTCFDataCollection(bool shouldCollectConsentData);
+
+    static void setConsentData(const AppsFlyerXConsent& consentData);
 
     static void didEnterBackground();
 
@@ -136,6 +142,8 @@ public:
 
     static void generateInviteUrl(cocos2d::ValueMap parameter, void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
     static void logInvite(const std::string& channel,cocos2d::ValueMap parameters);
+
+    static void setDisableNetworkData(bool disable);
 };
 
 
