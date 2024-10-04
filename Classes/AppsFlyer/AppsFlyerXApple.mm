@@ -269,8 +269,23 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details
                                                                       transactionId:transactionId];
     
     [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
+        // TODO: - add result to completionHandler
         NSLog(@"[ValidateAndLog] Result: %@", result);
     }];
+}
+
+void AppsFlyerXApple::logAdRevenue(AFXAdRevenueData adRevenueData,
+                                   cocos2d::ValueMap additionalParameters) {
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(additionalParameters);
+    
+    NSString * monetizationNetwork = [NSString stringWithUTF8String:adRevenueData.getMonetizationNetwork().c_str()];
+    AppsFlyerAdRevenueMediationNetworkType mediationNetwork = static_cast<AppsFlyerAdRevenueMediationNetworkType>(adRevenueData.getMediationNetwork());
+    NSString * currencyIso4217Code = [NSString stringWithUTF8String:adRevenueData.getCurrencyIso4217Code().c_str()];
+    NSNumber *eventRevenue = [NSNumber numberWithDouble:adRevenueData.getEventRevenue()];
+    
+    AFAdRevenueData *appsflyerAdRevenueData = [[AFAdRevenueData alloc] initWithMonetizationNetwork:monetizationNetwork mediationNetwork:mediationNetwork currencyIso4217Code:currencyIso4217Code eventRevenue:eventRevenue];
+    
+    [[AppsFlyerLib shared] logAdRevenue:appsflyerAdRevenueData additionalParameters:lParams];
 }
 
 void AppsFlyerXApple::logLocation(double longitude, double latitude) {

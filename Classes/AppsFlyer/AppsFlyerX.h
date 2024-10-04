@@ -17,6 +17,7 @@
 #include "AppsFlyerXDeepLinkResult.h"
 #include "AppsFlyerXConsent.cpp"
 #include "AFSDKXPurchaseDetails.h"
+#include "AFXAdRevenueData.h"
 
 
 class AppsFlyerX {
@@ -74,6 +75,8 @@ public:
     static void start();
         
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
+    
+    static void logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters);
     
     static void validateAndLogInAppPurchase(const std::string& productIdentifier,
                                               const std::string& price,

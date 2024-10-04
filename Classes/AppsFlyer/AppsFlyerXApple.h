@@ -97,10 +97,11 @@ public:
                                             cocos2d::ValueMap params,
                                             std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
     
+    static void logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters);
+    
     static void logLocation(double longitude, double latitude);
     
     static std::string getAppsFlyerUID();
-    
     
     static void handleOpenURL(const std::string& url, const std::string& sourceApplication);
     
@@ -108,16 +109,9 @@ public:
     
     static void handleOpenURL(std::string url, cocos2d::ValueMap options);
     
-    /*
-     - (BOOL) continueUserActivity:(NSUserActivity *) userActivity restorationHandler:(void (^)(NSArray *))restorationHandler NS_AVAILABLE_IOS(9_0);
-     - (void) didUpdateUserActivity:(NSUserActivity *)userActivity NS_AVAILABLE_IOS(9_0);
-     */
-    
     static void handlePushNotification(cocos2d::ValueMap pushPayload);
     
     static void registerUninstall(void* deviceToken, unsigned long length);
-    
-    // static std::string getSDKVersion();
     
     static void remoteDebuggingCallWithData(const std::string& data);
     
@@ -130,7 +124,7 @@ public:
     static void stop(bool stop);
     
     
-    // Delegates methods proxy    
+    // MARK: - AppsFlyerLib delegate proxy methods
     static void setOnConversionDataReceived(void(*callback)(cocos2d::ValueMap installData));
     static void setOnConversionDataRequestFailure(void(*callback)(cocos2d::ValueMap error));
     static void setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData));
