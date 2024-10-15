@@ -33,20 +33,22 @@ public:
     AFSDKXValidateAndLogResult(AFSDKXValidateAndLogStatus status,
                               const cocos2d::ValueMap& result,
                               const cocos2d::ValueMap& errorData,
-                              const std::shared_ptr<Error>& error);
+                              const cocos2d::ValueMap& error);
 
     // Getter methods
     AFSDKXValidateAndLogStatus getStatus() const;
+    static AFSDKXValidateAndLogStatus objcEnumToCppEnum(int objcStatus);
     cocos2d::ValueMap getResult() const;
     cocos2d::ValueMap getErrorData() const;
-    std::shared_ptr<Error> getError() const;
+    cocos2d::ValueMap getError() const;
+    
 
 private:
     // Member variables.
     AFSDKXValidateAndLogStatus status_;
     cocos2d::ValueMap result_;
     cocos2d::ValueMap errorData_;
-    std::shared_ptr<Error> error_;
+    cocos2d::ValueMap error_;
 };
 
 #endif /* AFSDKXValidateAndLogResult_h */

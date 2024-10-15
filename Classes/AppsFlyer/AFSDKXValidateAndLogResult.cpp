@@ -13,7 +13,7 @@ AFSDKXValidateAndLogResult::AFSDKXValidateAndLogResult(
     AFSDKXValidateAndLogStatus status,
     const cocos2d::ValueMap& result,
     const cocos2d::ValueMap& errorData,
-    const std::shared_ptr<Error>& error)
+    const cocos2d::ValueMap& error)
     : status_(status), result_(result), errorData_(errorData), error_(error) {
 }
 
@@ -30,6 +30,21 @@ cocos2d::ValueMap AFSDKXValidateAndLogResult::getErrorData() const {
     return errorData_;
 }
 
-std::shared_ptr<Error> AFSDKXValidateAndLogResult::getError() const {
+cocos2d::ValueMap AFSDKXValidateAndLogResult::getError() const {
     return error_;
+}
+
+// Function to map Objective-C enum to C++ enum
+AFSDKXValidateAndLogStatus AFSDKXValidateAndLogResult::objcEnumToCppEnum(int objcStatus) {
+    switch (objcStatus) {
+        case 0:
+            return AFSDKXValidateAndLogStatus::Success;
+        case 1:
+            return AFSDKXValidateAndLogStatus::Failure;
+        case 2:
+            return AFSDKXValidateAndLogStatus::Error;
+        default:
+            // Handle unknown cases, or return a default value
+            return AFSDKXValidateAndLogStatus::Error;
+    }
 }

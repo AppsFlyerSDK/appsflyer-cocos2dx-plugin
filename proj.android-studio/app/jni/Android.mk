@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := MyGame_shared
+LOCAL_MODULE := MyGame
 
 LOCAL_MODULE_FILENAME := libMyGame
 
@@ -11,8 +11,12 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerProxyX.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerX.cpp   \
-                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerX.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFXAdRevenueData.cpp
+
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

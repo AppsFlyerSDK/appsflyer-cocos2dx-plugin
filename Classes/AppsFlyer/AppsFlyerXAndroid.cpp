@@ -5,6 +5,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 #include <jni.h>
+#include "stdlib.h"
 #include "AppsFlyerXAndroid.h"
 #include "AppsFlyerProxyX.h"
 
@@ -396,10 +397,6 @@ void callSetPluginInfo(jobject extensionObject) {
     }
 }
 
-void AppsFlyerXAndroid::logEvent(const std::string &eventName, const std::string &value) {
-
-}
-
 void AppsFlyerXAndroid::logEvent(const std::string &eventName, cocos2d::ValueMap values) {
 
     cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
@@ -440,6 +437,98 @@ void AppsFlyerXAndroid::logEvent(const std::string &eventName, cocos2d::ValueMap
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
     } else {
         CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
+
+void AppsFlyerXAndroid::logAdRevenue(const AFXAdRevenueData &adRevenueData, cocos2d::ValueMap params) {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    std::string appsFlyerUid;
+
+    cocos2d::JniMethodInfo miGetContext;
+
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity",
+                                                 "getContext", "()Landroid/content/Context;")) {
+        return;
+    }
+    jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
+                                                                          miGetContext.methodID);
+
+    jobject hashMapObj = valueMapToHashMap(jniGetInstance, params);
+
+    if (NULL != afInstance) {
+        // CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        jclass afAdRevenueDataClass = jniGetInstance.env->FindClass(
+                "com/appsflyer/AFAdRevenueData");
+        jmethodID afAdRevenueDataMethodId = jniGetInstance.env->GetMethodID(afAdRevenueDataClass,
+                                                                    "<init>",
+                                                                    "(Ljava/lang/String;Lcom/appsflyer/MediationNetwork;Ljava/lang/String;D)V");
+
+        jclass mediationNetworkClass = jniGetInstance.env->FindClass("com/appsflyer/MediationNetwork");
+
+        // Get the enum value by name (e.g., "IRONSOURCE", "APPLOVIN_MAX")
+        jmethodID valueOfMethod = jniGetInstance.env->GetStaticMethodID(mediationNetworkClass, "valueOf", "(Ljava/lang/String;)Lcom/appsflyer/MediationNetwork;");
+
+        // Check if the valueOf method was found
+        if (valueOfMethod == nullptr) {
+            // Handle error, method not found
+            return;
+        }
+
+        // Create a Java string from the enumName
+        jstring enumNameString = jniGetInstance.env->NewStringUTF(adRevenueData.meditationNetworkString().c_str());
+
+        // Call the valueOf method to get the enum constant
+        jobject jMediationNetworkEnumObject = jniGetInstance.env->CallStaticObjectMethod(mediationNetworkClass, valueOfMethod, enumNameString);
+        jobject jMonetizationNetwork = jniGetInstance.env->NewStringUTF(adRevenueData.getMonetizationNetwork().c_str());
+        jobject jCurrencyCode = jniGetInstance.env->NewStringUTF(adRevenueData.getCurrencyIso4217Code().c_str());
+
+//        jclass doubleClass = jniGetInstance.env->FindClass("java/lang/Double");
+//
+//        // Check if the class was found
+//        if (doubleClass == nullptr) {
+//            // Handle error
+//            return nullptr;
+//        }
+//
+//        // Get the Double class constructor that takes a double (D) as a parameter
+//        jmethodID doubleConstructor = jniGetInstance.env->GetMethodID(doubleClass, "<init>", "(D)V");
+//
+//        // Check if the constructor was found
+//        if (doubleConstructor == nullptr) {
+//            // Handle error
+//            return;
+//        }
+
+//        jobject jRevenue = jniGetInstance.env->NewObject(doubleClass, doubleConstructor,);
+
+        jobject afAdRevenueDataObject = jniGetInstance.env->NewObject(afAdRevenueDataClass, afAdRevenueDataMethodId,
+                                                                      jMonetizationNetwork,
+                                                                      jMediationNetworkEnumObject,
+                                                                      jCurrencyCode,
+                                                                      adRevenueData.getEventRevenue());
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "logAdRevenue",
+                                                             "(Lcom/appsflyer/AFAdRevenueData;"
+                                                             "Ljava/util/Map;)V");
+
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, afAdRevenueDataObject, hashMapObj);
+
+        // cleanup
+        jniGetInstance.env->DeleteLocalRef(enumNameString);
+        jniGetInstance.env->DeleteLocalRef(afAdRevenueDataObject);
+        jniGetInstance.env->DeleteLocalRef(jMediationNetworkEnumObject);
+        jniGetInstance.env->DeleteLocalRef(jMonetizationNetwork);
+        jniGetInstance.env->DeleteLocalRef(jCurrencyCode);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+    } else {
+        CCLOGWARN("com/appsflyer/AppsFlyerLib is not loaded");
     }
 }
 
@@ -629,6 +718,129 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(const std::string &publicKey
         jniGetInstance.env->DeleteLocalRef(hashMapObj);
         jniGetInstance.env->DeleteLocalRef(afInstance);
         jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+}
+
+void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    cocos2d::JniMethodInfo miGetContext;
+
+    if (!cocos2d::JniHelper::getStaticMethodInfo(miGetContext, "org/cocos2dx/lib/Cocos2dxActivity",
+                                                 "getContext", "()Landroid/content/Context;")) {
+        return;
+    }
+    jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
+                                                                          miGetContext.methodID);
+
+
+    // Convert string params to jstring
+    std::string jPurchaseTypeString = details.getPurchaseType();
+    jstring jPurchaseToken = jniGetInstance.env->NewStringUTF(details.getPurchaseToken().c_str());
+    jstring jProductId = jniGetInstance.env->NewStringUTF(details.getProductId().c_str());
+    jstring jPrice = jniGetInstance.env->NewStringUTF(details.getPrice().c_str());
+    jstring jCurrency = jniGetInstance.env->NewStringUTF(details.getCurrency().c_str());
+
+    jobject hashMapObj = valueMapToHashMap(jniGetInstance, params);
+
+
+    if (NULL != afInstance) {
+        // CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+        jclass afPurchaseDetailsClass = jniGetInstance.env->FindClass("com/appsflyer/AFPurchaseDetails");
+        jmethodID purchaseDetails = jniGetInstance.env->GetMethodID(afPurchaseDetailsClass, "<init>",
+                                                 "(Lcom/appsflyer/AFPurchaseType;"
+                                                 "Ljava/lang/String;"
+                                                 "Ljava/lang/String;"
+                                                 "Ljava/lang/String;"
+                                                 "Ljava/lang/String;)V");
+
+        jclass afPurchaseTypeClass = jniGetInstance.env->FindClass("com/appsflyer/AFPurchaseType");
+
+// Get the valueOf method for AFPurchaseType
+        jmethodID afPurchaseTypeMethodId = jniGetInstance.env->GetStaticMethodID(afPurchaseTypeClass, "values", "()[Lcom/appsflyer/AFPurchaseType;");
+        jobjectArray afPurchaseTypeArray = (jobjectArray) jniGetInstance.env->CallStaticObjectMethod(afPurchaseTypeClass, afPurchaseTypeMethodId);
+        if (afPurchaseTypeArray == nullptr) {
+            CCLOG("Error: Call to values() returned null.");
+            return;
+        }
+
+// Get the length of the array
+        jsize arrayLength = jniGetInstance.env->GetArrayLength(afPurchaseTypeArray);
+        CCLOG("AFPurchaseType array length: %d", arrayLength);
+
+// Access the first constant (SUBSCRIPTION)
+        jobject selectedPurchaseType;
+        if (jPurchaseTypeString.compare("subscription") == 0) {
+            CCLOG("Purchase type is 'subscription'.");
+            selectedPurchaseType = jniGetInstance.env->GetObjectArrayElement(afPurchaseTypeArray, 0);
+            CCLOG("First enum constant (SUBSCRIPTION): %p", selectedPurchaseType);
+        } else if (jPurchaseTypeString.compare("one_time_purchase") == 0) {
+            CCLOG("Purchase type is 'one_time_purchase'.");
+            selectedPurchaseType = jniGetInstance.env->GetObjectArrayElement(afPurchaseTypeArray, 1);
+            CCLOG("Second enum constant (ONE_TIME_PURCHASE): %p", selectedPurchaseType);
+        } else {
+            CCLOG("Error: Unknown purchase type.");
+            return;
+        }
+
+        CCLOG("afPurchaseTypeClass: %p", afPurchaseTypeClass);
+        jobject jPurchaseDetails = jniGetInstance.env->NewObject(afPurchaseDetailsClass,
+                                                                 purchaseDetails,
+                                                                 selectedPurchaseType,
+                                                                 jPurchaseToken,
+                                                                 jProductId,
+                                                                 jPrice,
+                                                                 jCurrency);
+
+        CCLOG("Purchase details: %p", jPurchaseDetails);
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+        jmethodID methodId = jniGetInstance.env->GetMethodID(
+                cls,
+                "validateAndLogInAppPurchase",
+                "(Lcom/appsflyer/AFPurchaseDetails;"
+                "Ljava/util/Map;"
+                "Lcom/appsflyer/AppsFlyerInAppPurchaseValidationCallback;)V"
+        );
+
+
+//        CCLOG("Success, will proceed to get vallback class");
+//        jclass callbackClass = jniGetInstance.env->FindClass("com/appsflyer/AppsFlyerInAppPurchaseValidationCallback");
+//        if (callbackClass == nullptr) {
+//            CCLOG("Error: Cannot find class 'InAppPurchaseValidationCallback'.");
+//            return;
+//        }
+//        CCLOG("Success, will proceed to get callback constructor");
+//// Get the constructor for InAppPurchaseValidationCallback, which takes a long (native pointer)
+//        jmethodID constructor = jniGetInstance.env->GetMethodID(callbackClass, "<init>", "()V");
+//        if (constructor == nullptr) {
+//            CCLOG("Error: Cannot find constructor for 'InAppPurchaseValidationCallback'.");
+//            return;
+//        }
+//        CCLOG("Success, will proceed to create an instance of callback constructor");
+//// Create an instance of InAppPurchaseValidationCallback with the native pointer
+//        jobject jValidationCallback = jniGetInstance.env->NewObject(callbackClass, constructor);
+//        if (jValidationCallback == nullptr) {
+//            CCLOG("Error: Failed to create InAppPurchaseValidationCallback instance.");
+//            return;
+//        }
+
+        CCLOG("Calling the API");
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, jPurchaseDetails, hashMapObj,
+                                           nullptr);
+
+        jniGetInstance.env->DeleteLocalRef(hashMapObj);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+
+        jniGetInstance.env->DeleteLocalRef(jPurchaseToken);
+        jniGetInstance.env->DeleteLocalRef(jProductId);
+        jniGetInstance.env->DeleteLocalRef(jPrice);
+        jniGetInstance.env->DeleteLocalRef(jCurrency);
     } else {
         CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
     }

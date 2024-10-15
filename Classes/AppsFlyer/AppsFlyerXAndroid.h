@@ -75,11 +75,13 @@ public:
 
     static void start();
 
-    static void logEvent(const std::string& eventName, const std::string& value);
-
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
 
+    static void logAdRevenue(const AFXAdRevenueData& adRevenueData, cocos2d::ValueMap params);
+
     static void validateAndLogInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
+
+    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
 
     static void logLocation(double longitude, double latitude);
 

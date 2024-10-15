@@ -28,6 +28,41 @@ AppsFlyerXAdRevenueMediationNetworkType AFXAdRevenueData::getMediationNetwork() 
     return mediationNetwork;
 }
 
+std::string AFXAdRevenueData::meditationNetworkString() const  {
+    switch (mediationNetwork) {
+    case AppsFlyerXAdRevenueMediationNetworkType::GoogleAdMob:
+        return "GOOGLE_ADMOB";
+    case AppsFlyerXAdRevenueMediationNetworkType::IronSource:
+        return "IRONSOURCE";
+    case AppsFlyerXAdRevenueMediationNetworkType::ApplovinMax:
+        return "APPLOVIN_MAX";
+    case AppsFlyerXAdRevenueMediationNetworkType::Fyber:
+        return "FYBER";
+    case AppsFlyerXAdRevenueMediationNetworkType::Appodeal:
+        return "APPODEAL";
+    case AppsFlyerXAdRevenueMediationNetworkType::Admost:
+        return "ADMOST";
+    case AppsFlyerXAdRevenueMediationNetworkType::Topon:
+        return "TOPON";
+    case AppsFlyerXAdRevenueMediationNetworkType::Tradplus:
+        return "TRADPLUS";
+    case AppsFlyerXAdRevenueMediationNetworkType::Yandex:
+        return "YANDEX";
+    case AppsFlyerXAdRevenueMediationNetworkType::ChartBoost:
+        return "CHARTBOOST";
+    case AppsFlyerXAdRevenueMediationNetworkType::Unity:
+        return "UNITY";
+    case AppsFlyerXAdRevenueMediationNetworkType::ToponPte:
+        return "TOPON_PTE";
+    case AppsFlyerXAdRevenueMediationNetworkType::Custom:
+        return "CUSTOM_MEDIATION";
+    case AppsFlyerXAdRevenueMediationNetworkType::DirectMonetization:
+        return "DIRECT_MONETIZATION_NETWORK";
+    default:
+        return "unknown";
+    }
+};
+
 std::string AFXAdRevenueData::getCurrencyIso4217Code() const {
     return currencyIso4217Code;
 }

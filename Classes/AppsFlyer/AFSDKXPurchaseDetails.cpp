@@ -8,14 +8,18 @@
 #include <stdio.h>
 #include "AFSDKXPurchaseDetails.h"
 
-AFSDKXPurchaseDetails::AFSDKXPurchaseDetails(const std::string &productId,
-                                           const std::string &price,
-                                           const std::string &currency,
-                                           const std::string &transactionId)
-    : productId_(productId),
-      price_(price),
-      currency_(currency),
-      transactionId_(transactionId) {
+AFSDKXPurchaseDetails::AFSDKXPurchaseDetails(const AFXPurchaseType &purchaseType,
+                                             const std::string &purchaseToken,
+                                             const std::string &productId,
+                                             const std::string &price,
+                                             const std::string &currency,
+                                             const std::string &transactionId)
+    :purchaseType_(purchaseType),
+    purchaseToken_(purchaseToken),
+    productId_(productId),
+    price_(price),
+    currency_(currency),
+    transactionId_(transactionId) {
 }
 
 std::string AFSDKXPurchaseDetails::getProductId() const {
@@ -48,4 +52,35 @@ std::string AFSDKXPurchaseDetails::getTransactionId() const {
 
 void AFSDKXPurchaseDetails::setTransactionId(const std::string &transactionId) {
     transactionId_ = transactionId;
+}
+
+std::string AFSDKXPurchaseDetails::getPurchaseToken() const {
+    return purchaseToken_;
+}
+
+void AFSDKXPurchaseDetails::setPurchaseToken(const std::string &purchaseToken) {
+    purchaseToken_ = purchaseToken;
+}
+
+std::string AFSDKXPurchaseDetails::getPurchaseType() const {
+    std::string purchaseTypeStr = purchaseTypeToString();
+    return purchaseTypeStr;
+}
+
+void AFSDKXPurchaseDetails::setPurchaseType(AFXPurchaseType &purchaseType) {
+    purchaseType_ = purchaseType;
+}
+
+// Function to get the string value of the enum
+std::string AFSDKXPurchaseDetails::purchaseTypeToString() const{
+    switch (purchaseType_) {
+        case AFXPurchaseType::SUBSCRIPTION:
+            return "subscription";
+        case AFXPurchaseType::ONE_TIME_PURCHASE:
+            return "one_time_purchase";
+        case AFXPurchaseType::APPLE:
+            return "";
+        default:
+            return "";
+    }
 }

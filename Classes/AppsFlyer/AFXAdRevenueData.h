@@ -63,6 +63,7 @@ public:
     std::string getCurrencyIso4217Code() const;
     double getEventRevenue() const;
     int convertMeditationType(AppsFlyerXAdRevenueMediationNetworkType a);
+    std::string meditationNetworkString() const;
 
 private:
     // Private member variables

@@ -271,6 +271,18 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details
     [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
         // TODO: - add result to completionHandler
         NSLog(@"[ValidateAndLog] Result: %@", result);
+        AFSDKXValidateAndLogStatus status = AFSDKXValidateAndLogResult::objcEnumToCppEnum(result.status);
+        cocos2d::ValueMap resultX = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.result);
+        cocos2d::ValueMap errorData = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.errorData);
+        
+        NSMutableDictionary *errorDictionary = [NSMutableDictionary dictionary];
+        if (result.error) {
+            errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:result.error.code];
+            errorDictionary[@"errorDescription"] = result.error.localizedDescription;
+        }
+        AFSDKXValidateAndLogResult validateResult = AFSDKXValidateAndLogResult(status, resultX, errorData, AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
+        
+        completionHandler(validateResult);
     }];
 }
 
