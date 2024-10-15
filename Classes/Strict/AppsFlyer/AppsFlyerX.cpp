@@ -16,6 +16,28 @@
 #include "AppsFlyerXApple.h"
 #endif
 
+bool AppsFlyerX::manualStart = false;
+
+void AppsFlyerX::setManualStart(bool isManualStart) {
+    manualStart = isManualStart;
+}
+
+//static void enableTCFDataCollection(bool shouldCollectConsentData);
+void AppsFlyerX::enableTCFDataCollection(bool shouldCollectConsentData) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::enableTCFDataCollection(shouldCollectConsentData);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::enableTCFDataCollection(shouldCollectConsentData);
+#endif
+}
+
+void AppsFlyerX::setConsentData(const AppsFlyerXConsent& consentData){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setConsentData(consentData);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::setConsentData(consentData);
+#endif
+}
 
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -310,6 +332,22 @@ void AppsFlyerX::validateAndLogInAppPurchase(const std::string& publicKey,
 #endif
 }
 
+void AppsFlyerX::logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    // Android implementation
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::logAdRevenue(adRevenueData, additionalParameters);
+#endif
+}
+
+void AppsFlyerX::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    // Android implementation
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    AppsFlyerXApple::validateAndLogInAppPurchase(details, params, completionHandler);
+#endif
+}
+
 
 std::string AppsFlyerX::getAppsFlyerUID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -593,5 +631,14 @@ void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, std::funct
     CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url) for Android");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     AppsFlyerXApple::generateUserInviteLink(parameters, callback);
+#endif
+}
+
+void AppsFlyerX::setDisableNetworkData(bool disable){
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerXAndroid::setDisableNetworkData(disable);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //not supported for iOS
+    CCLOGWARN("%s", "setDisableNetworkData is not supported for iOS");
 #endif
 }

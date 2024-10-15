@@ -1,0 +1,27 @@
+import com.appsflyer.AppsFlyerInAppPurchaseValidationCallback
+
+
+public class CocosInAppPurchaseValidationCallback implements AppsFlyerInAppPurchaseValidationCallback {
+
+    private long nativePointer; // Store a pointer to the native (C++) code
+
+    public InAppPurchaseValidationCallback(long nativePointer) {
+        this.nativePointer = nativePointer;
+    }
+
+    @Override
+    public void onInAppPurchaseValidationFinished(Map<String, Object> validationResult) {
+        // Call native method
+        nativeOnPurchaseValidationFinished(nativePointer, validationResult);
+    }
+
+    @Override
+    public void onInAppPurchaseValidationError(Map<String, Object> validationError) {
+        // Call native method
+        nativeOnPurchaseValidationError(nativePointer, validationError);
+    }
+
+    // Declare native methods to call back into C++
+    private native void nativeOnPurchaseValidationFinished(long nativePointer, Map<String, Object> validationResult);
+    private native void nativeOnPurchaseValidationError(long nativePointer, Map<String, Object> validationError);
+}

@@ -7,7 +7,7 @@
 #ifndef AppsFlyerXAppleDelegate_h
 #define AppsFlyerXAppleDelegate_h
 
-#import "AppsFlyerLib.h"
+#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
 
 
 @interface AppsFlyerXAppleDelegate: NSObject<AppsFlyerLibDelegate>

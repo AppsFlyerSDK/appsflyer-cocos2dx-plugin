@@ -7,12 +7,17 @@
 //
 
 
-
+#include "AppsFlyerX.h"
 #include "AppsFlyerXApple.h"
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
 #include "AppsFlyerXAppleDeepLinkDelegate.h"
+#include "AFSDKXPurchaseDetails.h"
+#include "AFSDKXValidateAndLogResult.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
+#import "libAppsFlyer/AFSDKPurchaseDetails.h"
+#import <UIKit/UIKit.h>
+
 
 /* Null, because instance will be initialized on demand. */
 AppsFlyerXApple* AppsFlyerXApple::instance = 0;
@@ -37,6 +42,19 @@ AppsFlyerXApple* AppsFlyerXApple::getInstance() {
 
 AppsFlyerXApple::AppsFlyerXApple() {}
 
+void AppsFlyerXApple::enableTCFDataCollection(bool shouldCollectConsentData){
+    [[AppsFlyerLib shared] enableTCFDataCollection:shouldCollectConsentData];
+}
+
+void AppsFlyerXApple::setConsentData(const AppsFlyerXConsent& consentData){
+    if (consentData.IsUserSubjectToGDPR()){
+        [[AppsFlyerLib shared] setConsentData:[[AppsFlyerConsent alloc] initForGDPRUserWithHasConsentForDataUsage:consentData.HasConsentForDataUsage() hasConsentForAdsPersonalization:consentData.HasConsentForAdsPersonalization()]];
+    }
+    else{
+        [[AppsFlyerLib shared] setConsentData:[[AppsFlyerConsent alloc] initNonGDPRUser]];
+    }
+}
+
 void AppsFlyerXApple::setCustomerUserID(const std::string& customerUserID) {
     [[AppsFlyerLib shared] setCustomerUserID: [NSString stringWithUTF8String:customerUserID.c_str()]];
 }
@@ -58,7 +76,9 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static dispatch_once_t onceToken;
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
-    
+    [[AppsFlyerLib shared] setPluginInfoWith: AFSDKPluginCocos2dx
+                            pluginVersion:@"6.15.3"
+                            additionalParams:nil];
     dispatch_once(&onceToken, ^{
         
         xApple = AppsFlyerXApple::getInstance();
@@ -69,7 +89,9 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
          object: nil
          queue: nil
          usingBlock: ^ (NSNotification * note) {
-             [[AppsFlyerLib shared] start];
+            if (AppsFlyerX::manualStart == false) {
+                [[AppsFlyerLib shared] start];
+            }
          }];
     });
 
@@ -228,6 +250,42 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIden
         }
         failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
     }];
+}
+
+
+void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
+                                                  cocos2d::ValueMap params,
+                                                  std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+    
+    NSString *productId = [NSString stringWithUTF8String:details.getProductId().c_str()];
+    NSString *price = [NSString stringWithUTF8String:details.getPrice().c_str()];
+    NSString *transactionId = [NSString stringWithUTF8String:details.getTransactionId().c_str()];
+    NSString *currency = [NSString stringWithUTF8String:details.getCurrency().c_str()];
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
+    
+    AFSDKPurchaseDetails *afPurchaseDetails = [[AFSDKPurchaseDetails alloc] initWithProductId:productId
+                                                                              price:price
+                                                                           currency:currency
+                                                                      transactionId:transactionId];
+    
+    [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
+        // TODO: - add result to completionHandler
+        NSLog(@"[ValidateAndLog] Result: %@", result);
+    }];
+}
+
+void AppsFlyerXApple::logAdRevenue(AFXAdRevenueData adRevenueData,
+                                   cocos2d::ValueMap additionalParameters) {
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(additionalParameters);
+    
+    NSString * monetizationNetwork = [NSString stringWithUTF8String:adRevenueData.getMonetizationNetwork().c_str()];
+    AppsFlyerAdRevenueMediationNetworkType mediationNetwork = static_cast<AppsFlyerAdRevenueMediationNetworkType>(adRevenueData.getMediationNetwork());
+    NSString * currencyIso4217Code = [NSString stringWithUTF8String:adRevenueData.getCurrencyIso4217Code().c_str()];
+    NSNumber *eventRevenue = [NSNumber numberWithDouble:adRevenueData.getEventRevenue()];
+    
+    AFAdRevenueData *appsflyerAdRevenueData = [[AFAdRevenueData alloc] initWithMonetizationNetwork:monetizationNetwork mediationNetwork:mediationNetwork currencyIso4217Code:currencyIso4217Code eventRevenue:eventRevenue];
+    
+    [[AppsFlyerLib shared] logAdRevenue:appsflyerAdRevenueData additionalParameters:lParams];
 }
 
 void AppsFlyerXApple::logLocation(double longitude, double latitude) {

@@ -32,6 +32,13 @@ project(${APP_NAME})
 set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
 set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
+# Print the values
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "COCOS2DX_ROOT_PATH: ${COCOS2DX_ROOT_PATH}")
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+message(STATUS "COCOS2DX_ROOT_PATH: ${COCOS2DX_ROOT_PATH}")
+message(STATUS "Is ANDROID?: ${ANDROID}")
+
 include(CocosBuildSet)
 add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
 
@@ -49,22 +56,28 @@ endif()
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppsFlyer/AppsFlyerXAndroid.cpp
-     Classes/AppsFlyer/AppsFlyerProxyX.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXAndroid.h
-     Classes/AppsFlyer/AppsFlyerProxyX.h
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
      )
 
 if(ANDROID)
+    list(APPEND GAME_SOURCE
+    Classes/AppsFlyer/AppsFlyerXAndroid.cpp
+    Classes/AppsFlyer/AppsFlyerProxyX.cpp
+    )
+    
+    list(APPEND GAME_HEADER
+    Classes/AppsFlyer/AppsFlyerXAndroid.h
+    Classes/AppsFlyer/AppsFlyerProxyX.h
+    )
+
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
     set(APP_NAME MyGame)
     list(APPEND GAME_SOURCE
@@ -145,7 +158,7 @@ if(APPLE)
                               )
     elseif(IOS)
         cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
-        set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
+        # set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "iPhone Developer")
     endif()

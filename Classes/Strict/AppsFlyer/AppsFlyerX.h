@@ -15,11 +15,20 @@
 #include "EmailCryptTypeX.h"
 #include "AppsFlyerXMacro.h"
 #include "AppsFlyerXDeepLinkResult.h"
+#include "AppsFlyerXConsent.cpp"
+#include "AFSDKXPurchaseDetails.h"
+#include "AFXAdRevenueData.h"
 
 
 class AppsFlyerX {
 public:
-
+    static bool manualStart;
+    static void setManualStart(bool isManualStart);
+    
+    static void enableTCFDataCollection(bool shouldCollectConsentData);
+    
+    static void setConsentData(const AppsFlyerXConsent& consentData);
+    
     static void setCustomerUserID(const std::string& customerUserID);
     static std::string customerUserID();
     
@@ -67,6 +76,8 @@ public:
         
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
     
+    static void logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters);
+    
     static void validateAndLogInAppPurchase(const std::string& productIdentifier,
                                               const std::string& price,
                                               const std::string& currency,
@@ -81,6 +92,9 @@ public:
                                                      const std::string& price,
                                                      const std::string& currency,
                                                      cocos2d::ValueMap additionalParameters);
+    
+
+    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
 
     static void logLocation(double longitude, double latitude);
     
@@ -152,6 +166,7 @@ public:
     static void generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url));
     static void generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback);
 
+    static void setDisableNetworkData(bool disable);
 };
 #endif /* A;ppsFlyerX_h */
 

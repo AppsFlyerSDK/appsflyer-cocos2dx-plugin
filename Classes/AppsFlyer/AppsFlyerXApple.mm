@@ -12,7 +12,10 @@
 #include "AppsFlyerXAppleHelper.h"
 #include "AppsFlyerXAppleDelegate.h"
 #include "AppsFlyerXAppleDeepLinkDelegate.h"
+#include "AFSDKXPurchaseDetails.h"
+#include "AFSDKXValidateAndLogResult.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
+#import "libAppsFlyer/AFSDKPurchaseDetails.h"
 #import <UIKit/UIKit.h>
 
 
@@ -74,7 +77,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
     static AppsFlyerXApple *xApple = nil;
     static AppsFlyerXAppleDelegate *delegate = nil;
     [[AppsFlyerLib shared] setPluginInfoWith: AFSDKPluginCocos2dx
-                            pluginVersion:@"6.13.0"
+                            pluginVersion:@"6.15.3"
                             additionalParams:nil];
     dispatch_once(&onceToken, ^{
         
@@ -247,6 +250,54 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIden
         }
         failureBlock(AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
     }];
+}
+
+
+void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
+                                                  cocos2d::ValueMap params,
+                                                  std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+    
+    NSString *productId = [NSString stringWithUTF8String:details.getProductId().c_str()];
+    NSString *price = [NSString stringWithUTF8String:details.getPrice().c_str()];
+    NSString *transactionId = [NSString stringWithUTF8String:details.getTransactionId().c_str()];
+    NSString *currency = [NSString stringWithUTF8String:details.getCurrency().c_str()];
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
+    
+    AFSDKPurchaseDetails *afPurchaseDetails = [[AFSDKPurchaseDetails alloc] initWithProductId:productId
+                                                                              price:price
+                                                                           currency:currency
+                                                                      transactionId:transactionId];
+    
+    [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
+        // TODO: - add result to completionHandler
+        NSLog(@"[ValidateAndLog] Result: %@", result);
+        AFSDKXValidateAndLogStatus status = AFSDKXValidateAndLogResult::objcEnumToCppEnum(result.status);
+        cocos2d::ValueMap resultX = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.result);
+        cocos2d::ValueMap errorData = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.errorData);
+        
+        NSMutableDictionary *errorDictionary = [NSMutableDictionary dictionary];
+        if (result.error) {
+            errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:result.error.code];
+            errorDictionary[@"errorDescription"] = result.error.localizedDescription;
+        }
+        AFSDKXValidateAndLogResult validateResult = AFSDKXValidateAndLogResult(status, resultX, errorData, AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
+        
+        completionHandler(validateResult);
+    }];
+}
+
+void AppsFlyerXApple::logAdRevenue(AFXAdRevenueData adRevenueData,
+                                   cocos2d::ValueMap additionalParameters) {
+    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(additionalParameters);
+    
+    NSString * monetizationNetwork = [NSString stringWithUTF8String:adRevenueData.getMonetizationNetwork().c_str()];
+    AppsFlyerAdRevenueMediationNetworkType mediationNetwork = static_cast<AppsFlyerAdRevenueMediationNetworkType>(adRevenueData.getMediationNetwork());
+    NSString * currencyIso4217Code = [NSString stringWithUTF8String:adRevenueData.getCurrencyIso4217Code().c_str()];
+    NSNumber *eventRevenue = [NSNumber numberWithDouble:adRevenueData.getEventRevenue()];
+    
+    AFAdRevenueData *appsflyerAdRevenueData = [[AFAdRevenueData alloc] initWithMonetizationNetwork:monetizationNetwork mediationNetwork:mediationNetwork currencyIso4217Code:currencyIso4217Code eventRevenue:eventRevenue];
+    
+    [[AppsFlyerLib shared] logAdRevenue:appsflyerAdRevenueData additionalParameters:lParams];
 }
 
 void AppsFlyerXApple::logLocation(double longitude, double latitude) {
