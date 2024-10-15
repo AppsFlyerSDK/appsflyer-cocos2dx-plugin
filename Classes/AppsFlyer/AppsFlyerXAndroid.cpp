@@ -479,32 +479,11 @@ void AppsFlyerXAndroid::logAdRevenue(const AFXAdRevenueData &adRevenueData, coco
             return;
         }
 
-        // Create a Java string from the enumName
         jstring enumNameString = jniGetInstance.env->NewStringUTF(adRevenueData.meditationNetworkString().c_str());
 
-        // Call the valueOf method to get the enum constant
         jobject jMediationNetworkEnumObject = jniGetInstance.env->CallStaticObjectMethod(mediationNetworkClass, valueOfMethod, enumNameString);
         jobject jMonetizationNetwork = jniGetInstance.env->NewStringUTF(adRevenueData.getMonetizationNetwork().c_str());
         jobject jCurrencyCode = jniGetInstance.env->NewStringUTF(adRevenueData.getCurrencyIso4217Code().c_str());
-
-//        jclass doubleClass = jniGetInstance.env->FindClass("java/lang/Double");
-//
-//        // Check if the class was found
-//        if (doubleClass == nullptr) {
-//            // Handle error
-//            return nullptr;
-//        }
-//
-//        // Get the Double class constructor that takes a double (D) as a parameter
-//        jmethodID doubleConstructor = jniGetInstance.env->GetMethodID(doubleClass, "<init>", "(D)V");
-//
-//        // Check if the constructor was found
-//        if (doubleConstructor == nullptr) {
-//            // Handle error
-//            return;
-//        }
-
-//        jobject jRevenue = jniGetInstance.env->NewObject(doubleClass, doubleConstructor,);
 
         jobject afAdRevenueDataObject = jniGetInstance.env->NewObject(afAdRevenueDataClass, afAdRevenueDataMethodId,
                                                                       jMonetizationNetwork,
@@ -738,8 +717,6 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &detai
     jobject jContext = (jobject) miGetContext.env->CallStaticObjectMethod(miGetContext.classID,
                                                                           miGetContext.methodID);
 
-
-    // Convert string params to jstring
     std::string jPurchaseTypeString = details.getPurchaseType();
     jstring jPurchaseToken = jniGetInstance.env->NewStringUTF(details.getPurchaseToken().c_str());
     jstring jProductId = jniGetInstance.env->NewStringUTF(details.getProductId().c_str());
@@ -750,7 +727,6 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &detai
 
 
     if (NULL != afInstance) {
-        // CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
         jclass afPurchaseDetailsClass = jniGetInstance.env->FindClass("com/appsflyer/AFPurchaseDetails");
         jmethodID purchaseDetails = jniGetInstance.env->GetMethodID(afPurchaseDetailsClass, "<init>",
                                                  "(Lcom/appsflyer/AFPurchaseType;"
@@ -761,7 +737,6 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &detai
 
         jclass afPurchaseTypeClass = jniGetInstance.env->FindClass("com/appsflyer/AFPurchaseType");
 
-// Get the valueOf method for AFPurchaseType
         jmethodID afPurchaseTypeMethodId = jniGetInstance.env->GetStaticMethodID(afPurchaseTypeClass, "values", "()[Lcom/appsflyer/AFPurchaseType;");
         jobjectArray afPurchaseTypeArray = (jobjectArray) jniGetInstance.env->CallStaticObjectMethod(afPurchaseTypeClass, afPurchaseTypeMethodId);
         if (afPurchaseTypeArray == nullptr) {
@@ -769,11 +744,8 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &detai
             return;
         }
 
-// Get the length of the array
         jsize arrayLength = jniGetInstance.env->GetArrayLength(afPurchaseTypeArray);
-        CCLOG("AFPurchaseType array length: %d", arrayLength);
 
-// Access the first constant (SUBSCRIPTION)
         jobject selectedPurchaseType;
         if (jPurchaseTypeString.compare("subscription") == 0) {
             CCLOG("Purchase type is 'subscription'.");
@@ -807,29 +779,6 @@ void AppsFlyerXAndroid::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &detai
                 "Lcom/appsflyer/AppsFlyerInAppPurchaseValidationCallback;)V"
         );
 
-
-//        CCLOG("Success, will proceed to get vallback class");
-//        jclass callbackClass = jniGetInstance.env->FindClass("com/appsflyer/AppsFlyerInAppPurchaseValidationCallback");
-//        if (callbackClass == nullptr) {
-//            CCLOG("Error: Cannot find class 'InAppPurchaseValidationCallback'.");
-//            return;
-//        }
-//        CCLOG("Success, will proceed to get callback constructor");
-//// Get the constructor for InAppPurchaseValidationCallback, which takes a long (native pointer)
-//        jmethodID constructor = jniGetInstance.env->GetMethodID(callbackClass, "<init>", "()V");
-//        if (constructor == nullptr) {
-//            CCLOG("Error: Cannot find constructor for 'InAppPurchaseValidationCallback'.");
-//            return;
-//        }
-//        CCLOG("Success, will proceed to create an instance of callback constructor");
-//// Create an instance of InAppPurchaseValidationCallback with the native pointer
-//        jobject jValidationCallback = jniGetInstance.env->NewObject(callbackClass, constructor);
-//        if (jValidationCallback == nullptr) {
-//            CCLOG("Error: Failed to create InAppPurchaseValidationCallback instance.");
-//            return;
-//        }
-
-        CCLOG("Calling the API");
         jniGetInstance.env->CallVoidMethod(afInstance, methodId, jPurchaseDetails, hashMapObj,
                                            nullptr);
 
