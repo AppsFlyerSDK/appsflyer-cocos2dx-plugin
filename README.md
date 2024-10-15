@@ -200,6 +200,14 @@ AppsFlyerX::stop(false); // or false
   AppsFlyerX::sharingFilter(partners);
 ```
 ---
+##### <a id="sharingFilterForAllPartners"> **`sharingFilterForAllPartners();`**
+
+Use to prevent sharing data with all networks/integrated partners.
+
+```cpp
+AppsFlyerX::sharingFilterForAllPartners();
+```
+___
 
 ##### <a id="validate_and_log_2.0"> **`Validate and log 2.0 API`**
 
