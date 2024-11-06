@@ -103,11 +103,13 @@ elseif(APPLE)
              proj.ios_mac/ios/AppController.h
              proj.ios_mac/ios/RootViewController.h
              )
+
         set(APP_UI_RES
             proj.ios_mac/ios/LaunchScreen.storyboard
             proj.ios_mac/ios/LaunchScreenBackground.png
             proj.ios_mac/ios/Images.xcassets
             )
+            
         list(APPEND GAME_SOURCE
              proj.ios_mac/ios/main.m
              proj.ios_mac/ios/AppController.mm

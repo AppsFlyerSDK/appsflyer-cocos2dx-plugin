@@ -111,9 +111,7 @@ bool HelloWorld::init()
                 std::cout << "Log event raised" << std::endl;
                 
                 ValueMap params;
-//                AFXAdRevenueData data = AFXAdRevenueData("someVal", AppsFlyerXAdRevenueMediationNetworkType::ApplovinMax, "USD", 7.99);
-//                AppsFlyerX::logAdRevenue(data, params);
-                AFSDKXPurchaseDetails details = AFSDKXPurchaseDetails(AFXPurchaseType::SUBSCRIPTION, "", "customId", "6.99", "USD", "transactionId");
+                AFSDKXPurchaseDetails details = AFSDKXPurchaseDetails(AFXPurchaseType::SUBSCRIPTION, "public", "customId", "price", "curr", "transactionId");
                 AppsFlyerX::validateAndLogInAppPurchase(details, params, [](const AFSDKXValidateAndLogResult& result) {
                     std::cout << "Result Status: " << static_cast<int>(result.getStatus()) << std::endl;
                     

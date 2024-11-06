@@ -13,7 +13,7 @@ std::string afDevKey;
 bool isConveriosnListenerInitialized = false;
 bool isSubscribedForDeepLink = false;
 
-const char *pluginVersion = "6.13.0";
+const char *pluginVersion = "6.15.1";
 
 // Headers
 void initConvertionCallback();
