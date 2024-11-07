@@ -580,6 +580,10 @@ void AppsFlyerXAndroid::setAppsFlyerDevKey(const std::string &appsFlyerDevKey) {
                                                  jContext);
 
             jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(plugin);
+            jniGetInstance.env->DeleteLocalRef(version);
+            jniGetInstance.env->DeleteLocalRef(extensionObject);
+            jniGetInstance.env->DeleteLocalRef(jContext);
             jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
         }
     }
