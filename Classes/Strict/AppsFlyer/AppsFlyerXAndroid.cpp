@@ -12,7 +12,7 @@ std::string afDevKey;
 bool isConveriosnListenerInitialized = false;
 bool isSubscribedForDeepLink = false;
 
-const char *pluginVersion = "6.10.3";
+const char *pluginVersion = "6.15.1";
 
 // Headers
 void initConvertionCallback();
@@ -50,6 +50,72 @@ cocos2d::JniMethodInfo getAppsFlyerInstance() {
     return jniGetInstance;
 }
 
+/*
+ * AppsFlyerLib.getInstance().enableTCFDataCollection(true);
+ */
+
+void AppsFlyerXAndroid::enableTCFDataCollection(bool shouldCollectConsentData) {
+    callVoidMethodWithBoolParam(shouldCollectConsentData, "enableTCFDataCollection", "(Z)V");
+}
+
+void AppsFlyerXAndroid::setConsentData(const AppsFlyerXConsent& consentData){
+    cocos2d::JniMethodInfo jniGetConsentInstance;
+    jobject resultConsent;
+
+    if (consentData.IsUserSubjectToGDPR()) {
+        bool hasConsentForDataUsage = consentData.HasConsentForDataUsage();
+        bool hasConsentForAdsPersonalization = consentData.HasConsentForAdsPersonalization();
+        jboolean jHasConsentForDataUsage = (jboolean)hasConsentForDataUsage;
+        jboolean jHasConsentForAdsPersonalization = (jboolean)hasConsentForAdsPersonalization;
+        if (cocos2d::JniHelper::getStaticMethodInfo(jniGetConsentInstance,
+                                                     "com/appsflyer/AppsFlyerConsent",
+                                                     "forGDPRUser",
+                                                     "(ZZ)Lcom/appsflyer/AppsFlyerConsent;")) {
+
+            resultConsent = (jobject) jniGetConsentInstance.
+                    env->CallStaticObjectMethod(jniGetConsentInstance.classID, jniGetConsentInstance.methodID,
+                                                jHasConsentForDataUsage,
+                                                jHasConsentForAdsPersonalization);
+        }
+        else{
+            CCLOG("%s", "'AppsFlyerConsent' is not loaded");
+            return;
+        }
+    }
+    else{
+        if (cocos2d::JniHelper::getStaticMethodInfo(jniGetConsentInstance,
+                                                     "com/appsflyer/AppsFlyerConsent",
+                                                     "forNonGDPRUser",
+                                                     "()Lcom/appsflyer/AppsFlyerConsent;")) {
+            resultConsent = (jobject) jniGetConsentInstance.
+                    env->CallStaticObjectMethod(jniGetConsentInstance.classID, jniGetConsentInstance.methodID);
+        }
+        else{
+            CCLOG("%s", "'AppsFlyerConsent' is not loaded");
+            return;
+        }
+    }
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jmethodID methodId = jniGetInstance.env->GetMethodID(cls, "setConsentData", "(Lcom/appsflyer/AppsFlyerConsent;)V");
+
+        jniGetInstance.env->CallVoidMethod(afInstance, methodId, resultConsent);
+
+        jniGetInstance.env->DeleteLocalRef(resultConsent);
+        jniGetInstance.env->DeleteLocalRef(afInstance);
+        jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+    } else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
+
+}
 
 void AppsFlyerXAndroid::stop(bool shouldStop) {
 
@@ -277,25 +343,7 @@ void AppsFlyerXAndroid::start() {
             jniGetInstance.classID, jniGetInstance.methodID);
 
     if (NULL != afInstance) {
-        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
-
         jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
-
-        jclass clsExtension = jniGetInstance.env->FindClass("com/appsflyer/internal/platform_extension/PluginInfo");
-
-
-
-        jmethodID extensionConstructor = jniGetInstance.env->GetMethodID(clsExtension,
-                                                                         "<init>","(Lcom/appsflyer/internal/platform_extension/Plugin;Ljava/lang/String;)V");
-
-        jclass enumClass = jniGetInstance.env->FindClass("com/appsflyer/internal/platform_extension/Plugin");
-        jfieldID fid = jniGetInstance.env->GetStaticFieldID(enumClass, "COCOS_2DX","Lcom/appsflyer/internal/platform_extension/Plugin;");
-        jobject plugin = jniGetInstance.env->GetStaticObjectField(enumClass, fid);
-        jstring version = jniGetInstance.env->NewStringUTF(pluginVersion);
-        jobject extensionObject = jniGetInstance.env->NewObject(clsExtension, extensionConstructor, plugin, version);
-
-        callSetPluginInfo(extensionObject);
-
 
         cocos2d::JniMethodInfo jniGetContext;
 
@@ -312,17 +360,6 @@ void AppsFlyerXAndroid::start() {
 
         jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
 
-        // call Init if no GCD registered
-        if (!isConveriosnListenerInitialized) {
-            jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
-                                                                 "init",
-                                                                 "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;Landroid/content/Context;)Lcom/appsflyer/AppsFlyerLib;");
-
-            // This is what we actually do: afLib.init(appsFlyerDevKey, null)
-            jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, jAppsFlyerDevKey, NULL, jContext);
-        }
-
-        //public void trackAppLaunch(Context ctx, String devKey)
         jmethodID startTrackingMethodId = jniGetInstance.env->GetMethodID(cls,
                                                                           "start",
                                                                           "(Landroid/content/Context;Ljava/lang/String;)V");
@@ -412,6 +449,75 @@ void AppsFlyerXAndroid::setUserEmails(std::vector<std::string> userEmails, Email
 
 void AppsFlyerXAndroid::setAppsFlyerDevKey(const std::string &appsFlyerDevKey) {
     afDevKey = appsFlyerDevKey;
+
+    if (afDevKey.empty()) {
+        CCLOGWARN("%s", "AppsFlyer Dev Key is not provided");
+        return;
+    }
+
+    cocos2d::JniMethodInfo jniGetInstance = getAppsFlyerInstance();
+
+    //AppsFlyerLib afLib instance
+    jobject afInstance = (jobject) jniGetInstance.env->CallStaticObjectMethod(
+            jniGetInstance.classID, jniGetInstance.methodID);
+
+    if (NULL != afInstance) {
+        //CCLOG("%s", "com/appsflyer/AppsFlyerLib is loaded");
+
+        jclass cls = jniGetInstance.env->GetObjectClass(afInstance);
+
+        jclass clsExtension = jniGetInstance.env->FindClass(
+                "com/appsflyer/internal/platform_extension/PluginInfo");
+
+
+        jmethodID extensionConstructor = jniGetInstance.env->GetMethodID(clsExtension,
+                                                                         "<init>",
+                                                                         "(Lcom/appsflyer/internal/platform_extension/Plugin;Ljava/lang/String;)V");
+
+        jclass enumClass = jniGetInstance.env->FindClass(
+                "com/appsflyer/internal/platform_extension/Plugin");
+        jfieldID fid = jniGetInstance.env->GetStaticFieldID(enumClass, "COCOS_2DX",
+                                                            "Lcom/appsflyer/internal/platform_extension/Plugin;");
+        jobject plugin = jniGetInstance.env->GetStaticObjectField(enumClass, fid);
+        jstring version = jniGetInstance.env->NewStringUTF(pluginVersion);
+        jobject extensionObject = jniGetInstance.env->NewObject(clsExtension, extensionConstructor,
+                                                                plugin, version);
+
+        callSetPluginInfo(extensionObject);
+
+
+        cocos2d::JniMethodInfo jniGetContext;
+
+        if (!cocos2d::JniHelper::getStaticMethodInfo(jniGetContext,
+                                                     "org/cocos2dx/lib/Cocos2dxActivity",
+                                                     "getContext",
+                                                     "()Landroid/content/Context;")) {
+            return;
+        }
+
+        jobject jContext = (jobject) jniGetContext.env->CallStaticObjectMethod(
+                jniGetContext.classID, jniGetContext.methodID);
+
+
+        jstring jAppsFlyerDevKey = jniGetInstance.env->NewStringUTF(afDevKey.c_str());
+
+        // call Init if no GCD registered
+        if (!isConveriosnListenerInitialized) {
+            jmethodID initMethodId = jniGetInstance.env->GetMethodID(cls,
+                                                                     "init",
+                                                                     "(Ljava/lang/String;Lcom/appsflyer/AppsFlyerConversionListener;Landroid/content/Context;)Lcom/appsflyer/AppsFlyerLib;");
+
+            // This is what we actually do: afLib.init(appsFlyerDevKey, null)
+            jniGetInstance.env->CallObjectMethod(afInstance, initMethodId, jAppsFlyerDevKey, NULL,
+                                                 jContext);
+
+            jniGetInstance.env->DeleteLocalRef(afInstance);
+            jniGetInstance.env->DeleteLocalRef(jniGetInstance.classID);
+        }
+    }
+    else {
+        CCLOGERROR("%s", "'AppsFlyerLib' is not loaded");
+    }
 }
 
 std::string AppsFlyerXAndroid::appsFlyerDevKey() {
@@ -1312,5 +1418,9 @@ void AppsFlyerXAndroid::logInvite(const std::string& channel, cocos2d::ValueMap 
        }
 
     }
+}
+
+void AppsFlyerXAndroid::setDisableNetworkData(bool disable) {
+    callVoidMethodWithBoolParam(disable, "setDisableNetworkData", "(Z)V");
 }
 #endif

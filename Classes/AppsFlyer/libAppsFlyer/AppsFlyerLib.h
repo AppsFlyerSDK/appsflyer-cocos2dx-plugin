@@ -2,7 +2,7 @@
 //  AppsFlyerLib.h
 //  AppsFlyerLib
 //
-//  AppsFlyer iOS SDK 6.13.1 (150)
+//  AppsFlyer iOS SDK 6.15.3 (217)
 //  Copyright (c) 2012-2023 AppsFlyer Ltd. All rights reserved.
 //
 
@@ -13,6 +13,9 @@
 #import "AppsFlyerDeepLinkResult.h"
 #import "AppsFlyerDeepLink.h"
 #import "AppsFlyerConsent.h"
+#import "AFSDKPurchaseDetails.h"
+#import "AFSDKValidateAndLogResult.h"
+#import "AFAdRevenueData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -489,6 +492,28 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
                additionalParameters:(NSDictionary * _Nullable)params
                             success:(void (^ _Nullable)(NSDictionary * response))successBlock
                             failure:(void (^ _Nullable)(NSError * _Nullable error, id _Nullable reponse))failedBlock NS_AVAILABLE(10_7, 7_0);
+
+typedef void (^AFSDKValidateAndLogCompletion)(AFSDKValidateAndLogResult * _Nullable result);
+
+/**
+ To log and validate in app purchases you can call this method from the completeTransaction: method on
+ your `SKPaymentTransactionObserver`.
+ 
+ @param details The product details
+ @param extraEventValues The additional param, which you want to receive it in the raw reports
+ @param completionHandler The callback
+ */
+- (void)validateAndLogInAppPurchase:(AFSDKPurchaseDetails *)details
+                   extraEventValues:(NSDictionary * _Nullable)extraEventValues
+                  completionHandler:(AFSDKValidateAndLogCompletion)completionHandler NS_AVAILABLE(10_7, 7_0);
+
+/**
+ An API to provide the data from the impression payload to AdRevenue.
+ 
+ @param adRevenueData object used to hold all mandatory parameters of AdRevenue event.
+ @param additionalParameters non-mandatory dictionary which can include pre-defined keys (kAppsFlyerAdRevenueCountry, etc)
+ */
+- (void)logAdRevenue:(AFAdRevenueData *)adRevenueData additionalParameters:(NSDictionary * _Nullable)additionalParameters;
 
 /**
  To log location for geo-fencing. Does the same as code below.

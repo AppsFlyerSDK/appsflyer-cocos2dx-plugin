@@ -2,16 +2,22 @@
 //  AppsFlyerLib.h
 //  AppsFlyerLib
 //
-//  AppsFlyer iOS SDK 6.9.1 (92)
-//  Copyright (c) 2012-2020 AppsFlyer Ltd. All rights reserved.
+//  AppsFlyer iOS SDK 6.15.3 (217)
+//  Copyright (c) 2012-2023 AppsFlyer Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-#import <AppsFlyerLib/AppsFlyerCrossPromotionHelper.h>
-#import <AppsFlyerLib/AppsFlyerShareInviteHelper.h>
-#import <AppsFlyerLib/AppsFlyerDeepLinkResult.h>
-#import <AppsFlyerLib/AppsFlyerDeepLink.h>
+
+#import "AppsFlyerCrossPromotionHelper.h"
+#import "AppsFlyerShareInviteHelper.h"
+#import "AppsFlyerDeepLinkResult.h"
+#import "AppsFlyerDeepLink.h"
+#import "AppsFlyerConsent.h"
+#import "AFSDKPurchaseDetails.h"
+#import "AFSDKValidateAndLogResult.h"
+#import "AFAdRevenueData.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -131,7 +137,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define AFEventParamAdRevenueAdSize              @"af_adrev_ad_size"
 #define AFEventParamAdRevenueMediatedNetworkName @"af_adrev_mediated_network_name"
 
-
 /// Mail hashing type
 typedef enum  {
     /// None
@@ -139,6 +144,26 @@ typedef enum  {
     /// SHA256
     EmailCryptTypeSHA256 = 3
 } EmailCryptType;
+
+typedef NS_CLOSED_ENUM(NSInteger, AFSDKPlugin) {
+    AFSDKPluginIOSNative,
+    AFSDKPluginUnity,
+    AFSDKPluginFlutter,
+    AFSDKPluginReactNative,
+    AFSDKPluginAdobeAir,
+    AFSDKPluginAdobeMobile,
+    AFSDKPluginCocos2dx,
+    AFSDKPluginCordova,
+    AFSDKPluginMparticle,
+    AFSDKPluginNativeScript,
+    AFSDKPluginExpo,
+    AFSDKPluginUnreal,
+    AFSDKPluginXamarin,
+    AFSDKPluginCapacitor,
+    AFSDKPluginSegment,
+    AFSDKPluginAdobeSwiftAEP
+} NS_SWIFT_NAME(Plugin);
+
 
 NS_SWIFT_NAME(DeepLinkDelegate)
 @protocol AppsFlyerDeepLinkDelegate <NSObject>
@@ -298,6 +323,9 @@ NS_SWIFT_NAME(waitForATTUserAuthorization(timeoutInterval:));
  */
 @property(atomic) BOOL disableCollectASA;
 
+/**
+ Disable Apple Ads Attribution API +[AAAtribution attributionTokenWithError:]
+ */
 @property(nonatomic) BOOL disableAppleAdsAttribution;
 
 /**
@@ -327,7 +355,7 @@ NS_SWIFT_NAME(waitForATTUserAuthorization(timeoutInterval:));
  [[AppsFlyerLib shared] setResolveDeepLinkURLs:@[@"domain.com", @"subdomain.domain.com"]];
  </pre>
  */
-@property(nonatomic, nullable) NSArray<NSString *> *resolveDeepLinkURLs;
+@property(nonatomic, nullable, copy) NSArray<NSString *> *resolveDeepLinkURLs;
 
 /**
  For advertisers who use vanity OneLinks.
@@ -338,12 +366,12 @@ NS_SWIFT_NAME(waitForATTUserAuthorization(timeoutInterval:));
  [[AppsFlyerLib shared] oneLinkCustomDomains:@[@"domain.com", @"subdomain.domain.com"]];
  </pre>
  */
-@property(nonatomic, nullable) NSArray<NSString *> *oneLinkCustomDomains;
+@property(nonatomic, nullable, copy) NSArray<NSString *> *oneLinkCustomDomains;
 
 /*
  * Set phone number for each `start` event. `phoneNumber` will be sent as SHA256 string
  */
-@property(nonatomic, nullable) NSString *phoneNumber;
+@property(nonatomic, nullable, copy) NSString *phoneNumber;
 
 - (NSString *)phoneNumber UNAVAILABLE_ATTRIBUTE;
 
@@ -366,7 +394,15 @@ NS_SWIFT_NAME(waitForATTUserAuthorization(timeoutInterval:));
  AppsFlyerLib.shared().currentDeviceLanguage("EN")
  </pre>
  */
-@property(nonatomic, nullable) NSString *currentDeviceLanguage;
+@property(nonatomic, nullable, copy) NSString *currentDeviceLanguage;
+
+/**
+ Internal API. Please don't use.
+ */
+- (void)setPluginInfoWith:(AFSDKPlugin)plugin
+            pluginVersion:(NSString *)version
+         additionalParams:(NSDictionary * _Nullable)additionalParams
+NS_SWIFT_NAME(setPluginInfo(plugin:version:additionalParams:));
 
 /**
  Enable the collection of Facebook Deferred AppLinks
@@ -457,6 +493,28 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
                additionalParameters:(NSDictionary * _Nullable)params
                             success:(void (^ _Nullable)(NSDictionary * response))successBlock
                             failure:(void (^ _Nullable)(NSError * _Nullable error, id _Nullable reponse))failedBlock NS_AVAILABLE(10_7, 7_0);
+
+typedef void (^AFSDKValidateAndLogCompletion)(AFSDKValidateAndLogResult * _Nullable result);
+
+/**
+ To log and validate in app purchases you can call this method from the completeTransaction: method on
+ your `SKPaymentTransactionObserver`.
+ 
+ @param details The product details
+ @param extraEventValues The additional param, which you want to receive it in the raw reports
+ @param completionHandler The callback
+ */
+- (void)validateAndLogInAppPurchase:(AFSDKPurchaseDetails *)details
+                   extraEventValues:(NSDictionary * _Nullable)extraEventValues
+                  completionHandler:(AFSDKValidateAndLogCompletion)completionHandler NS_AVAILABLE(10_7, 7_0);
+
+/**
+ An API to provide the data from the impression payload to AdRevenue.
+ 
+ @param adRevenueData object used to hold all mandatory parameters of AdRevenue event.
+ @param additionalParameters non-mandatory dictionary which can include pre-defined keys (kAppsFlyerAdRevenueCountry, etc)
+ */
+- (void)logAdRevenue:(AFAdRevenueData *)adRevenueData additionalParameters:(NSDictionary * _Nullable)additionalParameters;
 
 /**
  To log location for geo-fencing. Does the same as code below.
@@ -550,6 +608,11 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
 - (void)remoteDebuggingCallWithData:(NSString *)data;
 
 /**
+ This is for internal use.
+ */
+- (void)remoteDebuggingCallV2WithData:(NSString *)dataAsString;
+
+/**
  Used to force the trigger `onAppOpenAttribution` delegate.
  Notice, re-engagement, session and launch won't be counted.
  Only for OneLink/UniversalLink/Deeplink resolving.
@@ -605,13 +668,13 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
 /**
  API to set manually Facebook deferred app link
  */
-@property(nonatomic, nullable) NSURL *facebookDeferredAppLink;
+@property(nonatomic, nullable, copy) NSURL *facebookDeferredAppLink;
 
 /**
  Block an events from being shared with ad networks and other 3rd party integrations
  Must only include letters/digits or underscore, maximum length: 45
  */
-@property(nonatomic, nullable) NSArray<NSString *> *sharingFilter DEPRECATED_MSG_ATTRIBUTE("starting SDK version 6.4.0, please use `setSharingFilterForPartners:`");
+@property(nonatomic, nullable, copy) NSArray<NSString *> *sharingFilter DEPRECATED_MSG_ATTRIBUTE("starting SDK version 6.4.0, please use `setSharingFilterForPartners:`");
 
 @property(nonatomic) NSUInteger deepLinkTimeout;
 
@@ -631,6 +694,27 @@ NS_SWIFT_NAME(logEvent(name:values:completionHandler:));
  the sharing filter will be set for ALL partners.
  */
 - (void)setSharingFilterForPartners:(NSArray<NSString *> * _Nullable)sharingFilter;
+
+
+/**
+    Sets or updates the user consent data related to GDPR and DMA regulations for advertising and data usage
+    purposes within the application. This method must be invoked with the user's current consent status each
+    time the app starts or whenever there is a change in the user's consent preferences.
+    
+    Note that this method does not persist the consent data across app sessions; it only applies for the
+    duration of the current app session. If you wish to stop providing the consent data, you should
+    cease calling this method.
+     
+    @param consent an instance of AppsFlyerConsent that encapsulates the user's consent information.
+    */
+- (void)setConsentData:(AppsFlyerConsent *)consent;
+
+/**
+    Enable the SDK to collect and send TCF data
+     
+    @param shouldCollectConsentData indicates if the TCF data collection is enabled.
+ */
+- (void)enableTCFDataCollection:(BOOL)shouldCollectConsentData;
 
 /**
  Validate if URL contains certain string and append quiery

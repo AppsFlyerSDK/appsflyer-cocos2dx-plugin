@@ -5,7 +5,7 @@ APP_LDFLAGS := -latomic
 
 APP_ABI := armeabi-v7a
 APP_SHORT_COMMANDS := true
-
+APP_PLATFORM := android-30
 
 ifeq ($(NDK_DEBUG),1)
   APP_CPPFLAGS += -DCOCOS2D_DEBUG=1

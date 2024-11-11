@@ -7,7 +7,7 @@
 
 #import "AppsFlyerX+AppController.h"
 #import <objc/runtime.h>
-#import "AppsFlyerLib.h"
+#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
 
 @implementation AppController (AppsFlyerX)
 

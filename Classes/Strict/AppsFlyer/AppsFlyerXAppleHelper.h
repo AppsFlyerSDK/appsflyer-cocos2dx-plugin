@@ -12,6 +12,7 @@
 #include <iostream>
 #include "AppsFlyerXDeepLinkResult.h"
 #import "libAppsFlyer/AppsFlyerLib.h"
+#import <UIKit/UIKit.h>
 
 //#import <UIKit/UIKit.h>
 

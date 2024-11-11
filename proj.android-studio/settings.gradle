@@ -1,3 +1,6 @@
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
 include ':libcocos2dx'
 project(':libcocos2dx').projectDir = new File(settingsDir, '../cocos2d/cocos/platform/android/libcocos2dx')
 include ':AppsFlyerCocos2dX'
