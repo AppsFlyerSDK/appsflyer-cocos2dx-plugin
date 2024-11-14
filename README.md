@@ -61,8 +61,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.13.0** 
-- iOS AppsFlyer SDK **v6.13.1**
+- Android AppsFlyer SDK **v6.15.1** 
+- iOS AppsFlyer SDK **v6.15.3**
 
 
 ### <a id="integration"> Integration:
@@ -244,7 +244,7 @@ AppsFlyerX::validateAndLogInAppPurchase(details, params, [](const AFSDKXValidate
 ---
 
 
-##### <a id="logAdRevenue"> **`Log AdRevenue API`**
+##### <a id="logAdrevenue"> **`Log AdRevenue API`**
 
 *Description:*
 
