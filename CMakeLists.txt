@@ -55,17 +55,31 @@ endif()
 
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
+     Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp
+     Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
+     Classes/AppsFlyer/AFXAdRevenueData.cpp
      Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
+     Classes/AppsFlyer/AppsFlyerXApple.mm
+     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
+     Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
+     Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
+     Classes/AppsFlyer/AppsFlyerXConsent.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
-     )
+)
+
 list(APPEND GAME_HEADER
+     Classes/AppsFlyer/AFSDKXPurchaseDetails.h
+     Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
+     Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
+     Classes/AppsFlyer/AppsFlyerXApple.h
+     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
+     Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
+     Classes/AppsFlyer/AppsFlyerXAppleHelper.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
-     )
+     Classes/AppsFlyer/AppsFlyerXMacro.h
+     Classes/AppsFlyer/EmailCryptTypeX.h
+)
 
 if(ANDROID)
     list(APPEND GAME_SOURCE
@@ -102,6 +116,8 @@ elseif(APPLE)
         list(APPEND GAME_HEADER
              proj.ios_mac/ios/AppController.h
              proj.ios_mac/ios/RootViewController.h
+             proj.ios_mac/ios/HelloWorldScene.h
+             proj.ios_mac/ios/AppDelegate.h
              )
 
         set(APP_UI_RES
@@ -115,6 +131,8 @@ elseif(APPLE)
              proj.ios_mac/ios/AppController.mm
              proj.ios_mac/ios/RootViewController.mm
              proj.ios_mac/ios/Prefix.pch
+             proj.ios_mac/ios/HelloWorldScene.cpp
+             proj.ios_mac/ios/AppDelegate.cpp
              ${APP_UI_RES}
              )
     elseif(MACOSX)
@@ -159,7 +177,7 @@ if(APPLE)
                               MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist"
                               )
     elseif(IOS)
-        cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
+        #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
         # set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "iPhone Developer")
