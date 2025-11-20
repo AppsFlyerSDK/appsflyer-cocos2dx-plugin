@@ -9,12 +9,12 @@
 typedef NS_CLOSED_ENUM(NSUInteger, AFSDKValidateAndLogStatus) {
     AFSDKValidateAndLogStatusSuccess,
     AFSDKValidateAndLogStatusFailure,
-    AFSDKValidateAndLogStatusError
+        AFSDKValidateAndLogStatusError
 } NS_SWIFT_NAME(ValidateAndLogStatus);
 
 NS_SWIFT_NAME(ValidateAndLogResult)
-@interface AFSDKValidateAndLogResult: NSObject
-       
+@interface AFSDKValidateAndLogResult : NSObject
+
 - (nonnull instancetype)init NS_UNAVAILABLE;
 + (nonnull instancetype)new NS_UNAVAILABLE;
 

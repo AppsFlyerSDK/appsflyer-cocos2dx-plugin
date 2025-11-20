@@ -25,9 +25,10 @@
 
 cmake_minimum_required(VERSION 3.6)
 
-set(APP_NAME MyGame)
+set(APP_NAME AppsFlyerCocos2dX)
 
 project(${APP_NAME})
+set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
 
 set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
 set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
@@ -55,17 +56,35 @@ endif()
 
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
-     Classes/AppsFlyer/AppsFlyerX.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
+     Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp
+     Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
+     Classes/AppsFlyer/AFXAdRevenueData.cpp
+     Classes/AppsFlyer/AppsFlyerX.cpp
+     Classes/AppsFlyer/AppsFlyerXApple.mm
+     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
+     Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
+     Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
+     Classes/AppsFlyer/AppsFlyerXConsent.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
-     )
+)
+
 list(APPEND GAME_HEADER
-     Classes/AppsFlyer/AppsFlyerX.h
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
+     Classes/AppsFlyer/AFSDKXPurchaseDetails.h
+     Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
+     Classes/AppsFlyer/AFXAdRevenueData.h
+     Classes/AppsFlyer/AppsFlyerX.h
+     Classes/AppsFlyer/AppsFlyerXApple.h
+     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
+     Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
+     Classes/AppsFlyer/AppsFlyerXAppleHelper.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
-     )
+     Classes/AppsFlyer/AppsFlyerXMacro.h
+     Classes/AppsFlyer/EmailCryptTypeX.h
+)
 
 if(ANDROID)
     list(APPEND GAME_SOURCE
@@ -79,7 +98,7 @@ if(ANDROID)
     )
 
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
-    set(APP_NAME MyGame)
+    set(APP_NAME AppsFlyerCocos2dX)
     list(APPEND GAME_SOURCE
          proj.android-studio/app/jni/hellocpp/main.cpp
          )
@@ -149,20 +168,49 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
+if(APPLE AND IOS)
+    string(FIND "${CMAKE_OSX_SYSROOT}" "iPhoneSimulator" _is_simulator_sysroot)
+    if(_is_simulator_sysroot GREATER -1)
+        set(_swift_platform_folder "iphonesimulator")
+    else()
+        set(_swift_platform_folder "iphoneos")
+    endif()
+
+    if(NOT DEFINED APPLE_DEVELOPER_ROOT)
+        execute_process(COMMAND xcode-select -p OUTPUT_VARIABLE APPLE_DEVELOPER_ROOT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    endif()
+    set(_swift_lib_root "${APPLE_DEVELOPER_ROOT}/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/${_swift_platform_folder}")
+
+    foreach(_swift_lib swiftCompatibility50 swiftCompatibility51 swiftCompatibilityConcurrency swiftCompatibilityDynamicReplacements)
+        string(TOUPPER "${_swift_lib}" _swift_lib_upper)
+        set(_swift_var "SWIFT_LIB_${_swift_lib_upper}")
+        find_library(${_swift_var} ${_swift_lib} HINTS "${_swift_lib_root}" NO_DEFAULT_PATH)
+        if(${_swift_var})
+            target_link_libraries(${APP_NAME} "${${_swift_var}}")
+        else()
+            message(WARNING "Could not locate ${_swift_lib} inside ${_swift_lib_root}")
+        endif()
+    endforeach()
+endif()
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})
 if(APPLE)
+    if(IOS)
+        # Force DerivedData into the build tree so sandboxed environments can write to it
+        set(CMAKE_XCODE_ATTRIBUTE_DERIVED_DATA_PATH "${PROJECT_BINARY_DIR}/DerivedData")
+    endif()
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
     if(MACOSX)
         set_target_properties(${APP_NAME} PROPERTIES
                               MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist"
                               )
     elseif(IOS)
-        cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
+        #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
         # set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "iPhone Developer")
+        set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
     endif()
 elseif(WINDOWS)
     cocos_copy_target_dll(${APP_NAME})
