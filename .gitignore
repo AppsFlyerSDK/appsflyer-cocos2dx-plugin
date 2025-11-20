@@ -112,5 +112,7 @@ cocos2d
 Build-ios
 
 .vscode/
+.lsp/
+.clj-kondo/
 
 proj.android-studio/.idea/
