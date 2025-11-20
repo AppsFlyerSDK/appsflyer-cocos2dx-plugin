@@ -114,5 +114,6 @@ Build-ios
 .vscode/
 .lsp/
 .clj-kondo/
+.idea/
 
 proj.android-studio/.idea/
