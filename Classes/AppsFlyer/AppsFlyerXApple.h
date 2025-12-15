@@ -85,6 +85,7 @@ public:
     
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
     
+    [[deprecated("Use `validateAndLogInAppPurchase(AFSDKXPurchaseDetails&, ValueMap, std::function)` instead")]]
     static void validateAndLogInAppPurchase(const std::string& productIdentifier,
                                               const std::string& price,
                                               const std::string& currency,
