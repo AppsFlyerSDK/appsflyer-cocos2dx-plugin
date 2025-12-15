@@ -61,8 +61,8 @@ In order for us to provide optimal support, we would kindly ask you to submit an
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.15.1** 
-- iOS AppsFlyer SDK **v6.15.3**
+- Android AppsFlyer SDK **v6.17.5** 
+- iOS AppsFlyer SDK **v6.17.8**
 
 
 ### <a id="integration"> Integration:

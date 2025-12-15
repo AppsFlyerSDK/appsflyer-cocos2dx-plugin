@@ -5,7 +5,7 @@
 //  Created by Moris Gateno on 13/03/2024.
 //
 
-#import "AFSDKPurchaseType.h"
+#import <AppsFlyerLib/AFSDKPurchaseType.h>
 
 @interface AFSDKPurchaseDetails : NSObject
 
