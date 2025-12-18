@@ -87,6 +87,11 @@ proj.ios_mac/*.xcodeproj/project.xcworkspace
 proj.ios_mac/*.xcodeproj/xcuserdata/
 !*.pch
 
+# Sample Apps folder 
+build/*
+engine/*
+CMakeFiles/*
+
 # proj.linux
 
 # proj.win32

@@ -41,8 +41,22 @@ void AppsFlyerXAppleHelper::nsDictionary2ValueMap(NSDictionary *dic, cocos2d::Va
         } else if ([obj isKindOfClass:[NSNull class]]) {
             //Null
             vm[key] = cocos2d::Value::Null;
+        } else if ([obj isKindOfClass:[NSError class]]) {
+            //NSError - convert to dictionary representation
+            NSError *error = (NSError *)obj;
+            cocos2d::ValueMap errorMap;
+            errorMap["code"] = cocos2d::Value(static_cast<int>(error.code));
+            errorMap["domain"] = cocos2d::Value(std::string([error.domain UTF8String] ?: ""));
+            errorMap["description"] = cocos2d::Value(std::string([error.localizedDescription UTF8String] ?: ""));
+            vm[key] = errorMap;
         } else {
-            NSLog(@"%s - Non supported type %@", __FUNCTION__, [obj class]);
+            // For unsupported types, try to get description as string
+            NSString *description = [obj description];
+            if (description) {
+                vm[key] = [description cStringUsingEncoding:NSUTF8StringEncoding];
+            } else {
+                NSLog(@"%s - Non supported type %@", __FUNCTION__, [obj class]);
+            }
         }
     }
 }

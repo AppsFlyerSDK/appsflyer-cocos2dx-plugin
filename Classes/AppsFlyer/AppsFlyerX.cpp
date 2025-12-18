@@ -342,7 +342,7 @@ void AppsFlyerX::logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap 
 #endif
 }
 
-void AppsFlyerX::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+void AppsFlyerX::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void (cocos2d::ValueMap, cocos2d::ValueMap)> completionHandler) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // Android implementation
     AppsFlyerXAndroid::validateAndLogInAppPurchase(details, std::move(params), std::move(completionHandler));

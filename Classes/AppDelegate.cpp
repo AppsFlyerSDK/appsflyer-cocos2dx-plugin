@@ -145,13 +145,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //    AppsFlyerX::setConsentData(AppsFlyerXConsent::initNonGDPRUser());
     // AppsFlyerX::setConsentData(AppsFlyerXConsent::initForGDPRUser(true,true));
     //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("devkey");
+    AppsFlyerX::setAppsFlyerDevKey("YOUR_DEV_KEY");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // // In case you want to use manual mode. 
     // AppsFlyerX::setManualStart(true);
     // // 
-    AppsFlyerX::setAppleAppID("appleAppId");
+    AppsFlyerX::setAppleAppID("YOUR_APP_ID");
    // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
 
 #endif

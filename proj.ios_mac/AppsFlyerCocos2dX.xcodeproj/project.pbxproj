@@ -82,8 +82,6 @@
 		ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7B1B68A1F400C3958E /* libiconv.dylib */; };
 		ED545A7E1B68A1FA00C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7D1B68A1FA00C3958E /* libiconv.dylib */; };
 		FC0E4ECE2CAD51B1005246D2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC0E4ECD2CAD51B1005246D2 /* Images.xcassets */; };
-		FCA21C702CAC1ED10049B63C /* libcocos2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA21C6F2CAC1ED10049B63C /* libcocos2d.a */; };
-		FCA21C712CAC1ED10049B63C /* libcocos2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA21C6F2CAC1ED10049B63C /* libcocos2d.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -173,8 +171,6 @@
 		ED545A7B1B68A1F400C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		ED545A7D1B68A1FA00C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		FC0E4ECD2CAD51B1005246D2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		FCA21C6E2CAC1EC10049B63C /* libcocos2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocos2d.a; path = "../test-project/lib/libcocos2d.a"; sourceTree = "<group>"; };
-		FCA21C6F2CAC1ED10049B63C /* libcocos2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocos2d.a; path = "../test-project/lib/libcocos2d.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,7 +193,6 @@
 				D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */,
 				D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */,
 				D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */,
-				FCA21C702CAC1ED10049B63C /* libcocos2d.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,7 +203,6 @@
 				ED545A7E1B68A1FA00C3958E /* libiconv.dylib in Frameworks */,
 				5087E76717EB910900C73F5D /* libz.dylib in Frameworks */,
 				8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */,
-				FCA21C712CAC1ED10049B63C /* libcocos2d.a in Frameworks */,
 				503AE11B17EB9C5A00D1A890 /* IOKit.framework in Frameworks */,
 				5087E78B17EB975400C73F5D /* OpenGL.framework in Frameworks */,
 				86224DB325B7464C008982C8 /* libAppsFlyerLib.a in Frameworks */,
@@ -277,7 +271,6 @@
 			isa = PBXGroup;
 			children = (
 				55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */,
-				FCA21C6F2CAC1ED10049B63C /* libcocos2d.a */,
 				46880B8319C43A87006E1F66 /* Classes */,
 				46880B7519C43A67006E1F66 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -291,7 +284,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FCA21C6E2CAC1EC10049B63C /* libcocos2d.a */,
 				94953C7E22D38A580096F048 /* CFNetwork.framework */,
 				294D0D631D0D56D500F7F5D4 /* CoreText.framework */,
 				ED545A7D1B68A1FA00C3958E /* libiconv.dylib */,
@@ -598,11 +590,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Classes/AppsFlyer/libAppsFlyer/,
+					"$(PROJECT_DIR)/../build/ios/lib/$(CONFIGURATION)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"$(_COCOS_LIB_IOS_BEGIN)",
+					"-lcocos2d",
 					"$(_COCOS_LIB_IOS_END)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sokoloff06.sdktest1;
@@ -642,11 +636,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Classes/AppsFlyer/libAppsFlyer/,
+					"$(PROJECT_DIR)/../build/ios/lib/$(CONFIGURATION)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"$(_COCOS_LIB_IOS_BEGIN)",
+					"-lcocos2d",
 					"$(_COCOS_LIB_IOS_END)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sokoloff06.sdktest1;
@@ -682,9 +678,13 @@
 					"$(SRCROOT)/../cocos2d/external/glfw3/include/mac",
 				);
 				INFOPLIST_FILE = mac/Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../build/mac/lib/$(CONFIGURATION)",
+				);
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_MAC_BEGIN)",
+					"-lcocos2d",
 					"$(_COCOS_LIB_MAC_END)",
 				);
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_MAC_BEGIN) $(_COCOS_HEADER_MAC_END)";
@@ -713,9 +713,13 @@
 					"$(SRCROOT)/../cocos2d/external/glfw3/include/mac",
 				);
 				INFOPLIST_FILE = mac/Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../build/mac/lib/$(CONFIGURATION)",
+				);
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_MAC_BEGIN)",
+					"-lcocos2d",
 					"$(_COCOS_LIB_MAC_END)",
 				);
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_MAC_BEGIN) $(_COCOS_HEADER_MAC_END)";

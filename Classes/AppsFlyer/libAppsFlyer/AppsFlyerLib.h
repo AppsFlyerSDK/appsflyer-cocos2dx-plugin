@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AppsFlyerLib/AppsFlyerCrossPromotionHelper.h>
-#import <AppsFlyerLib/AppsFlyerShareInviteHelper.h>
-#import <AppsFlyerLib/AppsFlyerDeepLinkResult.h>
-#import <AppsFlyerLib/AppsFlyerDeepLink.h>
-#import <AppsFlyerLib/AFSDKPurchaseDetails.h>
-#import <AppsFlyerLib/AFSDKPurchaseType.h>
-#import <AppsFlyerLib/AFSDKValidateAndLogResult.h>
-#import <AppsFlyerLib/AFAdRevenueData.h>
+#import "AppsFlyerCrossPromotionHelper.h"
+#import "AppsFlyerShareInviteHelper.h"
+#import "AppsFlyerDeepLinkResult.h"
+#import "AppsFlyerDeepLink.h"
+#import "AFSDKPurchaseDetails.h"
+#import "AFSDKPurchaseType.h"
+#import "AFSDKValidateAndLogResult.h"
+#import "AFAdRevenueData.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

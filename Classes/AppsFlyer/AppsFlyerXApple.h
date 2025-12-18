@@ -90,13 +90,13 @@ public:
                                               const std::string& price,
                                               const std::string& currency,
                                               const std::string& tranactionId,
-                                              cocos2d::ValueMap params,
+                                              cocos2d::ValueMap params, 
                                               std::function<void(cocos2d::ValueMap)> successBlock,
                                               std::function<void(cocos2d::ValueMap)> failureBlock);
     
     static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
                                             cocos2d::ValueMap params,
-                                            std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
+                                            std::function<void(cocos2d::ValueMap response, cocos2d::ValueMap error)> completionHandler);
     
     static void logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters);
     

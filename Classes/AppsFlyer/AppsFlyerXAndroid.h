@@ -87,7 +87,6 @@ public:
 
     static void logLocation(double longitude, double latitude);
 
-    static std::string getAppsFlyerUID();
 
     static void validateAndLogInAppPurchase(const std::string& publicKey,
                                                           const std::string& signature,

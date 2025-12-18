@@ -112,10 +112,25 @@ bool HelloWorld::init()
                 
                 ValueMap params;
                 AFSDKXPurchaseDetails details = AFSDKXPurchaseDetails(AFXPurchaseType::SUBSCRIPTION, "public", "customId", "price", "curr", "transactionId");
-                AppsFlyerX::validateAndLogInAppPurchase(details, params, [](const AFSDKXValidateAndLogResult& result) {
-                    std::cout << "Result Status: " << static_cast<int>(result.getStatus()) << std::endl;
-                    
-                });
+                AppsFlyerX::validateAndLogInAppPurchase(
+                        details,
+                        params,
+                        [](ValueMap validationResult, ValueMap error) {
+                            if (!error.empty()) {
+                                std::cout << "Validation failed\n";
+
+                                for (const auto &it : error) {
+                                    std::cout << "Error key: " << it.first << std::endl;
+                                }
+                            } else {
+                                std::cout << "Validation success\n";
+
+                                for (const auto &it : validationResult) {
+                                    std::cout << "Result key: " << it.first << std::endl;
+                                }
+                            }
+                        }
+                    );
                 break;
             }
             default:

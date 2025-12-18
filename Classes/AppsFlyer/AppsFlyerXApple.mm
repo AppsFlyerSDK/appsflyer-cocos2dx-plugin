@@ -255,35 +255,62 @@ void AppsFlyerXApple::validateAndLogInAppPurchase(const std::string& productIden
 
 void AppsFlyerXApple::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, 
                                                   cocos2d::ValueMap params,
-                                                  std::function<void(AFSDKXValidateAndLogResult)> completionHandler) {
+                                                  std::function<void(cocos2d::ValueMap response, cocos2d::ValueMap error)> completionHandler) {
     
     NSString *productId = [NSString stringWithUTF8String:details.getProductId().c_str()];
-    NSString *price = [NSString stringWithUTF8String:details.getPrice().c_str()];
     NSString *transactionId = [NSString stringWithUTF8String:details.getTransactionId().c_str()];
+    NSString *price = [NSString stringWithUTF8String:details.getPrice().c_str()];
     NSString *currency = [NSString stringWithUTF8String:details.getCurrency().c_str()];
-    NSDictionary *lParams = AppsFlyerXAppleHelper::valueMap2nsDictionary(params);
     
+    // Convert C++ purchase type to Objective-C enum
+    AFSDKPurchaseType purchaseType = AFSDKPurchaseTypeOneTimePurchase;
+    std::string purchaseTypeStr = details.getPurchaseType();
+    if (purchaseTypeStr == "subs") {
+        purchaseType = AFSDKPurchaseTypeSubscription;
+    }
+    
+    // Create purchase details with new API
     AFSDKPurchaseDetails *afPurchaseDetails = [[AFSDKPurchaseDetails alloc] initWithProductId:productId
-                                                                              price:price
-                                                                           currency:currency
-                                                                      transactionId:transactionId];
+                                                                               transactionId:transactionId
+                                                                                purchaseType:purchaseType];
     
-    [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails extraEventValues:lParams completionHandler:^(AFSDKValidateAndLogResult * _Nullable result) {
-        // TODO: - add result to completionHandler
-        NSLog(@"[ValidateAndLog] Result: %@", result.error);
-        NSLog(@"[ValidateAndLog] Result: %@", result.errorData);
-        AFSDKXValidateAndLogStatus status = AFSDKXValidateAndLogResult::objcEnumToCppEnum(result.status);
-        cocos2d::ValueMap resultX = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.result);
-        cocos2d::ValueMap errorData = AppsFlyerXAppleHelper::nsDictionary2ValueMap(result.errorData);
+    // Add price and currency to additional details
+    NSMutableDictionary *additionalDetails = [AppsFlyerXAppleHelper::valueMap2nsDictionary(params) mutableCopy] ?: [NSMutableDictionary dictionary];
+    if (price.length > 0) {
+        additionalDetails[@"af_price"] = price;
+    }
+    if (currency.length > 0) {
+        additionalDetails[@"af_currency"] = currency;
+    }
+    
+    [[AppsFlyerLib shared] validateAndLogInAppPurchase:afPurchaseDetails 
+                             purchaseAdditionalDetails:additionalDetails 
+                                            completion:^(NSDictionary * _Nullable response, NSError * _Nullable error) {
+        cocos2d::ValueMap responseMap;
+        cocos2d::ValueMap errorMap;
         
-        NSMutableDictionary *errorDictionary = [NSMutableDictionary dictionary];
-        if (result.error) {
-            errorDictionary[@"errorCode"] = [NSNumber numberWithInteger:result.error.code];
-            errorDictionary[@"errorDescription"] = result.error.localizedDescription;
+        if (error) {
+            if (error.userInfo) {
+                errorMap = AppsFlyerXAppleHelper::nsDictionary2ValueMap(error.userInfo);
+            }
+
+            if (errorMap.find("error_code") == errorMap.end()) {
+                errorMap["error_code"] = cocos2d::Value(static_cast<int>(error.code));
+            }
+            if (errorMap.find("error_message") == errorMap.end()) {
+                errorMap["error_message"] = cocos2d::Value(std::string([error.localizedDescription UTF8String] ?: ""));
+            }
+            NSLog(@"[ValidateAndLog] Error: %@", error);
+            completionHandler(responseMap, errorMap);
+            return;
         }
-        AFSDKXValidateAndLogResult validateResult = AFSDKXValidateAndLogResult(status, resultX, errorData, AppsFlyerXAppleHelper::nsDictionary2ValueMap(errorDictionary));
         
-        completionHandler(validateResult);
+        if (response) {
+            responseMap = AppsFlyerXAppleHelper::nsDictionary2ValueMap(response);
+            NSLog(@"[ValidateAndLog] Response: %@", response);
+        }
+        
+        completionHandler(responseMap, errorMap);
     }];
 }
 
