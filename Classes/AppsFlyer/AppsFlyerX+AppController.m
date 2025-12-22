@@ -7,7 +7,7 @@
 
 #import "AppsFlyerX+AppController.h"
 #import <objc/runtime.h>
-//#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
+#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
 
 @implementation AppController (AppsFlyerX)
 
@@ -46,7 +46,7 @@ static BOOL isOriginalImpementationExist;
 #pragma mark - Method Swizzling
 
 - (BOOL)x_application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
-//    [[AppsFlyerLib shared] continueUserActivity:userActivity restorationHandler:restorationHandler];
+    [[AppsFlyerLib shared] continueUserActivity:userActivity restorationHandler:restorationHandler];
     
     if (isOriginalImpementationExist) {
         [self x_application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
