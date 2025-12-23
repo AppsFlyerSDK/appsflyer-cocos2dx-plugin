@@ -134,6 +134,8 @@ elseif(APPLE)
              proj.ios_mac/ios/AppController.mm
              proj.ios_mac/ios/RootViewController.mm
              proj.ios_mac/ios/Prefix.pch
+             proj.ios_mac/ios/SwiftBridge.swift
+             proj.ios_mac/ios/SwiftCompatibilityStubs.m
              ${APP_UI_RES}
              )
     elseif(MACOSX)
@@ -166,31 +168,37 @@ endif()
 target_link_libraries(${APP_NAME} cocos2d)
 target_include_directories(${APP_NAME}
         PRIVATE Classes
+        PRIVATE Classes/AppsFlyer/libAppsFlyer
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
+
+# Link AppsFlyer SDK for iOS
 if(APPLE AND IOS)
-    string(FIND "${CMAKE_OSX_SYSROOT}" "iPhoneSimulator" _is_simulator_sysroot)
-    if(_is_simulator_sysroot GREATER -1)
-        set(_swift_platform_folder "iphonesimulator")
+    find_library(APPSFLYER_LIB AppsFlyerLib HINTS "${CMAKE_CURRENT_SOURCE_DIR}/Classes/AppsFlyer/libAppsFlyer" NO_DEFAULT_PATH)
+    if(APPSFLYER_LIB)
+        target_link_libraries(${APP_NAME} "${APPSFLYER_LIB}")
     else()
-        set(_swift_platform_folder "iphoneos")
+        # Fallback to direct path if find_library doesn't work
+        target_link_libraries(${APP_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/Classes/AppsFlyer/libAppsFlyer/libAppsFlyerLib.a")
     endif()
-
-    if(NOT DEFINED APPLE_DEVELOPER_ROOT)
-        execute_process(COMMAND xcode-select -p OUTPUT_VARIABLE APPLE_DEVELOPER_ROOT OUTPUT_STRIP_TRAILING_WHITESPACE)
-    endif()
-    set(_swift_lib_root "${APPLE_DEVELOPER_ROOT}/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/${_swift_platform_folder}")
-
-    foreach(_swift_lib swiftCompatibility50 swiftCompatibility51 swiftCompatibilityConcurrency swiftCompatibilityDynamicReplacements)
-        string(TOUPPER "${_swift_lib}" _swift_lib_upper)
-        set(_swift_var "SWIFT_LIB_${_swift_lib_upper}")
-        find_library(${_swift_var} ${_swift_lib} HINTS "${_swift_lib_root}" NO_DEFAULT_PATH)
-        if(${_swift_var})
-            target_link_libraries(${APP_NAME} "${${_swift_var}}")
-        else()
-            message(WARNING "Could not locate ${_swift_lib} inside ${_swift_lib_root}")
-        endif()
-    endforeach()
+    
+    # Required frameworks for AppsFlyer SDK
+    target_link_libraries(${APP_NAME}
+        "-framework AdSupport"
+        "-framework iAd"
+        "-framework AdServices"
+        "-framework StoreKit"
+    )
+    
+    # AppsFlyer SDK requires Swift runtime
+    set_target_properties(${APP_NAME} PROPERTIES
+        XCODE_ATTRIBUTE_ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "YES"
+        XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited) @executable_path/Frameworks"
+        XCODE_ATTRIBUTE_SWIFT_VERSION "5.0"
+    )
+    
+    # Force link Swift runtime libraries
+    target_link_libraries(${APP_NAME} "-lswiftCore")
 endif()
 
 # mark app resources
@@ -208,9 +216,18 @@ if(APPLE)
     elseif(IOS)
         #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
         # set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
+        # Set signing configuration
+        set_xcode_property(${APP_NAME} CODE_SIGN_STYLE "Automatic")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
-        set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "iPhone Developer")
+        set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "Apple Development")
         set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
+        
+        # Info.plist fields
+        set_target_properties(${APP_NAME} PROPERTIES
+            MACOSX_BUNDLE_BUNDLE_NAME "AppsFlyerCocos2dX"
+            MACOSX_BUNDLE_GUI_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX"
+        )
+        set_xcode_property(${APP_NAME} INFOPLIST_KEY_CFBundleDisplayName "AppsFlyer Cocos2dX")
     endif()
 elseif(WINDOWS)
     cocos_copy_target_dll(${APP_NAME})

@@ -27,6 +27,7 @@
 #import "cocos2d.h"
 #import "AppDelegate.h"
 #import "RootViewController.h"
+#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
 
 @implementation AppController
 
@@ -149,7 +150,7 @@ static AppDelegate s_sharedApplication;
 }
 
 - (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[AppsFlyerLib shared] registerUninstall:deviceToken];
+//    [[AppsFlyerLib shared] registerUninstall:deviceToken];
 }
 
 

@@ -94,7 +94,7 @@ public:
                                                      cocos2d::ValueMap additionalParameters);
     
 
-    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
+    static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void (cocos2d::ValueMap, cocos2d::ValueMap)> completionHandler);
 
     static void logLocation(double longitude, double latitude);
     

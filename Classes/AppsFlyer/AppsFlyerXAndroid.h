@@ -79,13 +79,14 @@ public:
 
     static void logAdRevenue(const AFXAdRevenueData& adRevenueData, cocos2d::ValueMap params);
 
+    
+    [[deprecated("Use `validateAndLogInAppPurchase(AFSDKXPurchaseDetails&, ValueMap, std::function)` or `validateAndLogInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters)` instead")]]
     static void validateAndLogInAppPurchase(std::string productIdentifier, std::string price, std::string currency, std::string tranactionId, cocos2d::ValueMap params, void (*successBlock)(cocos2d::ValueMap response), void (*failedBlock)(void* error, void* responce));
 
     static void validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void(AFSDKXValidateAndLogResult)> completionHandler);
 
     static void logLocation(double longitude, double latitude);
 
-    static std::string getAppsFlyerUID();
 
     static void validateAndLogInAppPurchase(const std::string& publicKey,
                                                           const std::string& signature,
