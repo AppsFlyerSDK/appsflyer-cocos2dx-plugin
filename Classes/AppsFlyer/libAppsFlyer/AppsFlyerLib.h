@@ -101,6 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define AFEventParam9                      @"af_param_9"
 #define AFEventParam10                     @"af_param_10"
 #define AFEventParamTouch                  @"af_touch_obj"
+#define AFEventParamNetworkToken           @"net_token"
 
 #define AFEventParamDepartingDepartureDate  @"af_departing_departure_date"
 #define AFEventParamReturningDepartureDate  @"af_returning_departure_date"
