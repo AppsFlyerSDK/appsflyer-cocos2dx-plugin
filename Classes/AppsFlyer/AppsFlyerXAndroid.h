@@ -113,6 +113,8 @@ public:
     static void setHost(const std::string& host);
     static std::string getHost();
 
+    static std::string getAppsFlyerUID();
+
     static void setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions);
     static unsigned long getMinTimeBetweenSessions();
 

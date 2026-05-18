@@ -54,7 +54,7 @@ if(APPLE OR WINDOWS)
     cocos_mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
 endif()
 
-# add cross-platforms source files and header files 
+# add cross-platforms source files and header files
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
@@ -62,10 +62,6 @@ list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
      Classes/AppsFlyer/AFXAdRevenueData.cpp
      Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppsFlyer/AppsFlyerXApple.mm
-     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
-     Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
-     Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
      Classes/AppsFlyer/AppsFlyerXConsent.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
 )
@@ -77,10 +73,6 @@ list(APPEND GAME_HEADER
      Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
      Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXApple.h
-     Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
-     Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
-     Classes/AppsFlyer/AppsFlyerXAppleHelper.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
      Classes/AppsFlyer/AppsFlyerXMacro.h
      Classes/AppsFlyer/EmailCryptTypeX.h
@@ -117,6 +109,18 @@ elseif(WINDOWS)
          ${common_res_files}
          )
 elseif(APPLE)
+    list(APPEND GAME_SOURCE
+         Classes/AppsFlyer/AppsFlyerXApple.mm
+         Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
+         Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
+         Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
+         )
+    list(APPEND GAME_HEADER
+         Classes/AppsFlyer/AppsFlyerXApple.h
+         Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
+         Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
+         Classes/AppsFlyer/AppsFlyerXAppleHelper.h
+         )
     if(IOS)
         list(APPEND GAME_HEADER
              proj.ios_mac/ios/AppController.h
