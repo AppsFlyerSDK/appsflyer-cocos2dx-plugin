@@ -81,6 +81,9 @@ public:
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
+    static void initSdk();
+    static void registerSessionReadyListener(void (*callback)());
+
     static void start();
     
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);

@@ -1,6 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace 'com.appsflyer.cocos2dX'
@@ -9,6 +10,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
     }
 
     defaultConfig {
@@ -54,10 +59,13 @@ android {
     }
 
     sourceSets.main {
-        java.srcDir "src"
+        java.srcDirs = ["src/org/cocos2dx/cpp", "src/main/kotlin"]
         res.srcDir "res"
         manifest.srcFile "AndroidManifest.xml"
         assets.srcDir "../../Resources"
+    }
+    sourceSets.test {
+        java.srcDirs = ["src/test/kotlin"]
     }
 
     externalNativeBuild {
@@ -135,11 +143,21 @@ android.applicationVariants.all { variant ->
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libcocos2dx')
-    implementation 'com.appsflyer:af-android-sdk:6.18.0'
-    implementation 'com.android.installreferrer:installreferrer:2.1'
+
+    // SDK 7 (POC): bridge owns native SDK version — do not pin af-android-sdk separately.
+    implementation platform('com.appsflyer:af-android-sdk-bom:7.0.4')
+    def bridgeDep = 'com.appsflyer:af-android-plugin-bridge:7.0.13'
+    implementation(bridgeDep) {
+        version { strictly bridgeDep.tokenize(':').last() }
+    }
+
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 
     implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-messaging'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 }
 
 apply plugin: 'com.google.gms.google-services' // ADD THIS LINE AT THE BOTTOM OF THIS FILE

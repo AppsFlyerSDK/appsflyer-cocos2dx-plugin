@@ -7,14 +7,9 @@
 //
 
 #include "AppsFlyerX.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-#include "AppsFlyerXAndroid.h"
 
-#define COCOS2D_DEBUG 1
-
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-#include "AppsFlyerXApple.h"
-#endif
+#include "AFSDKXValidateAndLogResult.h"
+#include "AppsFlyerXCore.h"
 
 bool AppsFlyerX::manualStart = false;
 
@@ -22,112 +17,79 @@ void AppsFlyerX::setManualStart(bool isManualStart) {
     manualStart = isManualStart;
 }
 
-//static void enableTCFDataCollection(bool shouldCollectConsentData);
 void AppsFlyerX::enableTCFDataCollection(bool shouldCollectConsentData) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::enableTCFDataCollection(shouldCollectConsentData);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::enableTCFDataCollection(shouldCollectConsentData);
-#endif
+    appsflyer::enableTCFDataCollection(shouldCollectConsentData);
 }
 
-void AppsFlyerX::setConsentData(const AppsFlyerXConsent& consentData){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setConsentData(consentData);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setConsentData(consentData);
-#endif
+void AppsFlyerX::setConsentData(const AppsFlyerXConsent& consentData) {
+    appsflyer::setConsentData(consentData);
 }
 
 void AppsFlyerX::setCustomerUserID(const std::string& customerUserID) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setCustomerUserID(customerUserID);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setCustomerUserID(customerUserID);
-#endif
+    appsflyer::setCustomerUserID(customerUserID);
 }
+
 std::string AppsFlyerX::customerUserID() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::customerUserID();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::customerUserID();
-#endif
+    return appsflyer::customerUserID();
 }
 
 void AppsFlyerX::setAdditionalData(cocos2d::ValueMap customData) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setAdditionalData(customData);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setAdditionalData(customData);
-#endif
+    appsflyer::setAdditionalData(customData);
 }
 
 cocos2d::ValueMap AppsFlyerX::customData() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "customData is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::customData();
+    return {};
+#else
+    return appsflyer::customData();
 #endif
 }
 
 void AppsFlyerX::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setAppsFlyerDevKey(appsFlyerDevKey);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setAppsFlyerDevKey(appsFlyerDevKey);
-#endif
+    appsflyer::setDevKey(appsFlyerDevKey);
 }
 
 std::string AppsFlyerX::appsFlyerDevKey() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::appsFlyerDevKey();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::appsFlyerDevKey();
-#endif
+    return appsflyer::devKey();
 }
 
 void AppsFlyerX::setAppleAppID(const std::string& appleAppID) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "setAppleAppID is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setAppleAppID(appleAppID);
+#else
+    appsflyer::setAppleAppId(appleAppID);
 #endif
 }
 
 std::string AppsFlyerX::appleAppID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "appleAppID is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::appleAppID();
+    return {};
+#else
+    return appsflyer::appleAppId();
 #endif
 }
 
 void AppsFlyerX::setCurrencyCode(const std::string& currencyCode) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setCurrencyCode(currencyCode);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setCurrencyCode(currencyCode);
-#endif
+    appsflyer::setCurrencyCode(currencyCode);
 }
 
 std::string AppsFlyerX::currencyCode() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "currencyCode is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::currencyCode();
+    return {};
+#else
+    return appsflyer::currencyCode();
 #endif
 }
 
-#ifndef AFSDK_NO_IDFA 
+#ifndef AFSDK_NO_IDFA
 void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setDisableAdvertisingIdentifiers(shouldDisable);
+    appsflyer::setDisableAdvertisingIdentifiers(shouldDisable);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::disableAdvertisingIdentifier(shouldDisable);
+    appsflyer::disableAdvertisingIdentifier(shouldDisable);
 #endif
 }
 #endif
@@ -135,515 +97,395 @@ void AppsFlyerX::disableAdvertisingIdentifier(bool shouldDisable) {
 #ifndef AFSDK_NO_IDFA
 bool AppsFlyerX::isDisabledAdvertisingIdentifier() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isDisabledAdvertiserIdentifier is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDisabledAdvertisingIdentifier();
+    return false;
+#else
+    return appsflyer::isDisabledAdvertisingIdentifier();
 #endif
 }
 #endif
 
- void AppsFlyerX::didEnterBackground(){
+void AppsFlyerX::didEnterBackground() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-     AppsFlyerXAndroid::didEnterBackground();
+    appsflyer::didEnterBackground();
 #endif
- }
+}
 
 void AppsFlyerX::setIsDebug(bool isDebug) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setIsDebug(isDebug);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-     AppsFlyerXApple::setIsDebug(isDebug);
-#endif
+    appsflyer::setPendingIsDebug(isDebug);
 }
 
 bool AppsFlyerX::isDebug() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isDebug is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDebug();
+    return false;
+#else
+    return appsflyer::pendingIsDebug();
 #endif
 }
 
 void AppsFlyerX::setShouldCollectDeviceName(bool isShouldCollectDeviceName) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "setShouldCollectDeviceName is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setShouldCollectDeviceName(isShouldCollectDeviceName);
+#else
+    appsflyer::setShouldCollectDeviceName(isShouldCollectDeviceName);
 #endif
 }
 
 bool AppsFlyerX::isShouldCollectDeviceName() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isShouldCollectDeviceName is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isShouldCollectDeviceName();
+    return false;
+#else
+    return appsflyer::isShouldCollectDeviceName();
 #endif
 }
 
 void AppsFlyerX::setAppInviteOneLink(const std::string& appInviteOneLinkID) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-   AppsFlyerXAndroid::setAppInviteOneLink(appInviteOneLinkID);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setAppInviteOneLink(appInviteOneLinkID);
-#endif
+    appsflyer::setAppInviteOneLink(appInviteOneLinkID);
 }
 
 std::string AppsFlyerX::appInviteOneLinkID() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "appInviteOneLinkID is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::appInviteOneLinkID();
+    return {};
+#else
+    return appsflyer::appInviteOneLinkID();
 #endif
 }
 
 void AppsFlyerX::anonymizeUser(bool shouldAnonymize) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::anonymizeUser(shouldAnonymize);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::anonymizeUser(shouldAnonymize);
-#endif
+    appsflyer::anonymizeUser(shouldAnonymize);
 }
 
 bool AppsFlyerX::isAnonymizedUser() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isAnonymizedUser is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isAnonymizedUser();
+    return false;
+#else
+    return appsflyer::isAnonymizedUser();
 #endif
 }
 
 void AppsFlyerX::disableCollectASA(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "disableCollectASA is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setDisableCollectASA(shouldDisable);
+#else
+    appsflyer::setDisableCollectASA(shouldDisable);
 #endif
 }
 
 bool AppsFlyerX::isDisabledCollectASA() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isDisabledCollectASA is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDisabledCollectASA();
+    return false;
+#else
+    return appsflyer::isDisabledCollectASA();
 #endif
 }
 
 void AppsFlyerX::setUseReceiptValidationSandbox(bool useReceiptValidationSandbox) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "setUseReceiptValidationSandbox is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setUseReceiptValidationSandbox(useReceiptValidationSandbox);
+#else
+    appsflyer::setUseReceiptValidationSandbox(useReceiptValidationSandbox);
 #endif
 }
 
 bool AppsFlyerX::isUseReceiptValidationSandbox() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isUseReceiptValidationSandbox is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isUseReceiptValidationSandbox();
+    return false;
+#else
+    return appsflyer::isUseReceiptValidationSandbox();
 #endif
 }
 
-void AppsFlyerX::setUseUninstallSandbox(bool setUseUninstallSandbox) {
+void AppsFlyerX::setUseUninstallSandbox(bool useUninstallSandbox) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "setUseUninstallSandbox is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setUseUninstallSandbox(setUseUninstallSandbox);
+#else
+    appsflyer::setUseUninstallSandbox(useUninstallSandbox);
 #endif
 }
 
 bool AppsFlyerX::isUseUninstallSandbox() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "isUseUninstallSandbox is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isUseUninstallSandbox();
+    return false;
+#else
+    return appsflyer::isUseUninstallSandbox();
 #endif
 }
 
-
 void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "setUserEmails is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setUserEmails(userEmails, type);
+#else
+    appsflyer::setUserEmails(userEmails, type);
 #endif
 }
 
 void AppsFlyerX::start() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::start();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::start();
-#endif
+    appsflyer::start();
+}
+
+void AppsFlyerX::initSdk() {
+    appsflyer::initSdk();
+}
+
+void AppsFlyerX::registerSessionReadyListener(void (*callback)()) {
+    appsflyer::registerSessionReadyListener(callback);
 }
 
 void AppsFlyerX::logEvent(const std::string& eventName, cocos2d::ValueMap values) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::logEvent(eventName, values);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::logEvent(eventName, values);
-#endif
+    appsflyer::logEvent(eventName, values);
 }
 
 void AppsFlyerX::validateAndLogInAppPurchase(const std::string& productIdentifier,
-                                               const std::string& price,
-                                               const std::string& currency,
-                                               const std::string& tranactionId,
-                                               cocos2d::ValueMap params,
-                                               std::function<void(cocos2d::ValueMap)> successBlock,
-                                               std::function<void(cocos2d::ValueMap)> failureBlock) {
+                                             const std::string& price,
+                                             const std::string& currency,
+                                             const std::string& tranactionId,
+                                             cocos2d::ValueMap params,
+                                             std::function<void(cocos2d::ValueMap)> successBlock,
+                                             std::function<void(cocos2d::ValueMap)> failureBlock) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "validateAndLogInAppPurchase is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-
-    AppsFlyerXApple::validateAndLogInAppPurchase(productIdentifier, price, currency, tranactionId, params, [&](cocos2d::ValueMap result) {
-        successBlock(result);
-    }, [&] (cocos2d::ValueMap error) {
-        failureBlock(error);
-    });
+#else
+    appsflyer::validateAndLogInAppPurchase(productIdentifier, price, currency, tranactionId,
+                                           params, successBlock, failureBlock);
 #endif
 }
 
 void AppsFlyerX::validateAndLogInAppPurchase(const std::string& publicKey,
-                                               const std::string& signature,
-                                               const std::string& purchaseData,
-                                               const std::string& price,
-                                               const std::string& currency,
-                                               cocos2d::ValueMap additionalParameters){
+                                             const std::string& signature,
+                                             const std::string& purchaseData,
+                                             const std::string& price,
+                                             const std::string& currency,
+                                             cocos2d::ValueMap additionalParameters) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::validateAndLogInAppPurchase(publicKey, signature, purchaseData, price, currency, additionalParameters);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    // Not supported for iOS
-    CCLOGWARN("%s", "validateAndLogInAppPurchase(const std::string& publicKey, const std::string& signature, const std::string& purchaseData, const std::string& price, const std::string& currency, cocos2d::ValueMap additionalParameters) is not supported for Android.");
+    appsflyer::validateAndLogInAppPurchase(publicKey, signature, purchaseData, price, currency,
+                                           additionalParameters);
+#else
+    CCLOGWARN("%s",
+              "validateAndLogInAppPurchase(publicKey, ...) is not supported for iOS.");
 #endif
 }
 
 void AppsFlyerX::logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Android implementation
-    CCLOGWARN("Log AdRevenue Android");
-    AppsFlyerXAndroid::logAdRevenue(adRevenueData, additionalParameters);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::logAdRevenue(adRevenueData, additionalParameters);
-#endif
+    appsflyer::logAdRevenue(adRevenueData, additionalParameters);
 }
 
-void AppsFlyerX::validateAndLogInAppPurchase(AFSDKXPurchaseDetails &details, cocos2d::ValueMap params, std::function<void (cocos2d::ValueMap, cocos2d::ValueMap)> completionHandler) {
+void AppsFlyerX::validateAndLogInAppPurchase(
+    AFSDKXPurchaseDetails& details, cocos2d::ValueMap params,
+    std::function<void(cocos2d::ValueMap, cocos2d::ValueMap)> completionHandler) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     auto adaptedHandler = [completionHandler](AFSDKXValidateAndLogResult result) {
         completionHandler(result.getResult(), result.getError());
     };
-    AppsFlyerXAndroid::validateAndLogInAppPurchase(details, std::move(params), std::move(adaptedHandler));
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::validateAndLogInAppPurchase(details, params, completionHandler);
+    appsflyer::validateAndLogInAppPurchase(details, std::move(params), std::move(adaptedHandler));
+#else
+    appsflyer::validateAndLogInAppPurchase(details, params, completionHandler);
 #endif
 }
-
 
 std::string AppsFlyerX::getAppsFlyerUID() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-   return AppsFlyerXAndroid::getAppsFlyerUID();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::getAppsFlyerUID();
-#endif
+    return appsflyer::getAppsFlyerUID();
 }
-
 
 void AppsFlyerX::handleOpenURL(const std::string& url, const std::string& sourceApplication) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "handleOpenURL is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::handleOpenURL(url, sourceApplication);
+#else
+    appsflyer::handleOpenURL(url, sourceApplication);
 #endif
 }
 
 void AppsFlyerX::handleOpenURL(std::string url, std::string sourceApplication, void* annotation) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "handleOpenURL is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::handleOpenURL(url, sourceApplication, annotation);
+#else
+    appsflyer::handleOpenURL(url, sourceApplication, annotation);
 #endif
 }
 
 void AppsFlyerX::handleOpenURL(std::string url, cocos2d::ValueMap options) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "handleOpenURL is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::handleOpenURL(url, options);
+#else
+    appsflyer::handleOpenURL(url, options);
 #endif
 }
 
-/*
- - (BOOL) continueUserActivity:(NSUserActivity *) userActivity restorationHandler:(void (^)(NSArray *))restorationHandler NS_AVAILABLE_IOS(9_0);
- - (void) didUpdateUserActivity:(NSUserActivity *)userActivity NS_AVAILABLE_IOS(9_0);
- */
-
 void AppsFlyerX::handlePushNotification(cocos2d::ValueMap pushPayload) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
     CCLOGWARN("%s", "handlePushNotification is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::handlePushNotification(pushPayload);
+#else
+    appsflyer::handlePushNotification(pushPayload);
 #endif
 }
 
 void AppsFlyerX::registerUninstall(void* deviceToken, unsigned long length) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // Not supported for Android
-    CCLOGWARN("%s", "registerUninstall(void* deviceToken, unsigned long length) is not supported for IOS.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::registerUninstall(deviceToken, length);
+    CCLOGWARN("%s",
+              "registerUninstall(void* deviceToken, unsigned long length) is not supported for "
+              "Android.");
+#else
+    appsflyer::registerUninstall(deviceToken, length);
 #endif
 }
 
 void AppsFlyerX::registerUninstall(const std::string& token) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::registerUninstall(token);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    // Not supported for IOS
-    CCLOGWARN("%s", "handlePushNotification is not supported for IOS.");
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    CCLOGWARN("%s", "registerUninstall(token) is not supported for iOS.");
+#else
+    appsflyer::registerUninstall(token);
 #endif
 }
-
-// std::string AppsFlyerX::getSDKVersion() {
-// #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//     return AppsFlyerXAndroid::getSDKVersion();
-// #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//     return AppsFlyerXApple::getSDKVersion();
-// #endif
-// }
-
 
 void AppsFlyerX::setHost(const std::string& host) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setHost(host);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setHost(host);
-#endif
+    appsflyer::setHost(host);
 }
+
 std::string AppsFlyerX::getHost() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    return AppsFlyerXAndroid::getHost();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::getHost();
-#endif
+    return appsflyer::getHost();
 }
 
 void AppsFlyerX::setMinTimeBetweenSessions(unsigned long minTimeBetweenSessions) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-   AppsFlyerXAndroid::setMinTimeBetweenSessions(minTimeBetweenSessions);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setMinTimeBetweenSessions(minTimeBetweenSessions);
-#endif
+    appsflyer::setMinTimeBetweenSessions(minTimeBetweenSessions);
 }
 
-// TODO: remove
 unsigned long AppsFlyerX::getMinTimeBetweenSessions() {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    // FIXME: Android is not support this API
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::getMinTimeBetweenSessions();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    return appsflyer::getMinTimeBetweenSessions();
+#else
+    return 0;
 #endif
 }
 
-// Delegates methods proxy
-void AppsFlyerX::setOnConversionDataSuccess(void(*callback)(cocos2d::ValueMap installData)) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataSuccess(callback);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setOnConversionDataReceived(callback);
-#endif
+void AppsFlyerX::setOnConversionDataSuccess(void (*callback)(cocos2d::ValueMap installData)) {
+    appsflyer::setOnConversionSuccess(callback);
 }
 
-void AppsFlyerX::setOnConversionDataFail(void(*callback)(cocos2d::ValueMap error)) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnConversionDataFail(callback);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setOnConversionDataRequestFailure(callback);
-#endif
+void AppsFlyerX::setOnConversionDataFail(void (*callback)(cocos2d::ValueMap error)) {
+    appsflyer::setOnConversionFail(callback);
 }
 
-void AppsFlyerX::setOnAppOpenAttribution(void(*callback)(cocos2d::ValueMap attributionData)) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnAppOpenAttribution(callback);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setOnAppOpenAttribution(callback);
-#endif
+void AppsFlyerX::setOnAppOpenAttribution(void (*callback)(cocos2d::ValueMap attributionData)) {
+    appsflyer::setOnAppOpenAttribution(callback);
 }
 
-void AppsFlyerX::setOnAppOpenAttributionFailure(void(*callback)(cocos2d::ValueMap error)) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnAppOpenAttributionFailure(callback);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setOnAppOpenAttributionFailure(callback);
-#endif
+void AppsFlyerX::setOnAppOpenAttributionFailure(void (*callback)(cocos2d::ValueMap error)) {
+    appsflyer::setOnAppOpenAttributionFailure(callback);
 }
-
 
 void AppsFlyerX::stop(bool shouldStop) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::stop(shouldStop);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::stop(shouldStop);
-#endif
+    appsflyer::stop(shouldStop);
 }
 
 [[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
-void AppsFlyerX::sharingFilter(std::vector<std::string> partners){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::sharingFilter(partners);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::sharingFilter(partners);
-#endif
+void AppsFlyerX::sharingFilter(std::vector<std::string> partners) {
+    appsflyer::sharingFilter(partners);
 }
 
 [[deprecated("This method is deprecated, please replace by setSharingFilterForPartners API")]]
-void AppsFlyerX::sharingFilterForAllPartners(){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::sharingFilterForAllPartners();
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::sharingFilterForAllPartners();
-#endif
+void AppsFlyerX::sharingFilterForAllPartners() {
+    appsflyer::sharingFilterForAllPartners();
 }
 
-void AppsFlyerX::logLocation(double longitude, double latitude){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::logLocation(longitude, latitude);
-#endif
+void AppsFlyerX::logLocation(double longitude, double latitude) {
+    appsflyer::logLocation(longitude, latitude);
 }
 
-void AppsFlyerX::disableSKAdNetwork(bool shouldDisable){
+void AppsFlyerX::disableSKAdNetwork(bool shouldDisable) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
     CCLOGWARN("%s", "disableSKAdNetwork is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::disableSKAdNetwork(shouldDisable);
+#else
+    appsflyer::disableSKAdNetwork(shouldDisable);
 #endif
 }
 
-bool AppsFlyerX::isDisabledSKAdNetwork(){
+bool AppsFlyerX::isDisabledSKAdNetwork() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
     CCLOGWARN("%s", "isDisabledSKAdNetwork is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::isDisabledSKAdNetwork();
+    return false;
+#else
+    return appsflyer::isDisabledSKAdNetwork();
 #endif
 }
 
 #ifndef AFSDK_NO_IDFA
-void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval){
+void AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(double timeoutInterval) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
     CCLOGWARN("%s", "waitForATTUserAuthorizationWithTimeoutInterval is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::waitForATTUserAuthorizationWithTimeoutInterval(timeoutInterval);
+#else
+    appsflyer::waitForATTUserAuthorizationWithTimeoutInterval(timeoutInterval);
 #endif
 }
 #endif
 
-
-void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber){
+void AppsFlyerX::setPhoneNumber(const std::string& phoneNumber) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
     CCLOGWARN("%s", "setPhoneNumber is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setPhoneNumber(phoneNumber);
+#else
+    appsflyer::setPhoneNumber(phoneNumber);
 #endif
 }
-    
-void AppsFlyerX::setDidResolveDeepLink(void(*callback)(AppsFlyerXDeepLinkResult result)){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOnDeepLinking(callback);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setDidResolveDeepLink(callback);
-#endif
+
+void AppsFlyerX::setDidResolveDeepLink(void (*callback)(AppsFlyerXDeepLinkResult result)) {
+    appsflyer::setOnDeepLinking(callback);
 }
 
 void AppsFlyerX::setPartnerData(std::string partnerId, cocos2d::ValueMap data) {
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setPartnerData(partnerId, data);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setPartnerData(partnerId, data);
-#endif
+    appsflyer::setPartnerData(partnerId, data);
 }
 
 void AppsFlyerX::setOneLinkCustomDomains(std::vector<std::string> domains) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setOneLinkCustomDomains(domains);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setOneLinkCustomDomains(domains);
-#endif
+    appsflyer::setOneLinkCustomDomains(domains);
 }
-
 
 void AppsFlyerX::setCurrentDeviceLanguage(const std::string& language) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
     CCLOGWARN("%s", "setCurrentDeviceLanguage is not supported for Android.");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    return AppsFlyerXApple::setCurrentDeviceLanguage(language);
+#else
+    appsflyer::setCurrentDeviceLanguage(language);
 #endif
 }
 
 void AppsFlyerX::setSharingFilterForPartners(std::vector<std::string> partners) {
+    appsflyer::setSharingFilterForPartners(partners);
+}
+
+void AppsFlyerX::logInvite(const std::string& channel, cocos2d::ValueMap parameters) {
+    appsflyer::logInvite(channel, parameters);
+}
+
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, void (*onResponse)(std::string url),
+                                        void (*onResponseError)(std::string url)) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setSharingFilterForPartners(partners);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::setSharingFilterForPartners(partners);
+    appsflyer::generateInviteUrl(parameters, onResponse, onResponseError);
+#else
+    CCLOGWARN("%s",
+              "Please use generateUserInviteLink(cocos2d::ValueMap parameters, "
+              "std::function<void(std::string url)> callback) for iOS");
 #endif
 }
 
-void AppsFlyerX::logInvite(const std::string& channel, cocos2d::ValueMap parameters){
+void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters,
+                                        std::function<void(std::string url)> callback) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::logInvite(channel, parameters);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::logInvite(channel, parameters);
+    CCLOGWARN("%s",
+              "Please use generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)"
+              "(std::string url), void(*onResponseError)(std::string url)) for Android");
+#else
+    appsflyer::generateUserInviteLink(parameters, callback);
 #endif
 }
 
-
-void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url)){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::generateInviteUrl(parameters, onResponse, onResponseError);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    //not supported for iOS
-    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback) for iOS");
-#endif
-}
-
-void AppsFlyerX::generateUserInviteLink(cocos2d::ValueMap parameters, std::function<void(std::string url)> callback){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //not supported for Android
-    CCLOGWARN("%s", "Please use generateUserInviteLink(cocos2d::ValueMap parameters,void(*onResponse)(std::string url), void(*onResponseError)(std::string url) for Android");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerXApple::generateUserInviteLink(parameters, callback);
-#endif
-}
-
-void AppsFlyerX::setDisableNetworkData(bool disable){
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    AppsFlyerXAndroid::setDisableNetworkData(disable);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    //not supported for iOS
+void AppsFlyerX::setDisableNetworkData(bool disable) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     CCLOGWARN("%s", "setDisableNetworkData is not supported for iOS");
+#else
+    appsflyer::setDisableNetworkData(disable);
 #endif
 }

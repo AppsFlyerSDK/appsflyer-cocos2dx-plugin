@@ -73,6 +73,12 @@ public:
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
     static void start();
+
+    /** Android SDK 7: RPC init after dev key and listeners are configured. No-op on iOS. */
+    static void initSdk();
+
+    /** Android SDK 7: call [start] from the callback when the session is ready. No-op on iOS. */
+    static void registerSessionReadyListener(void (*callback)());
         
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
     
