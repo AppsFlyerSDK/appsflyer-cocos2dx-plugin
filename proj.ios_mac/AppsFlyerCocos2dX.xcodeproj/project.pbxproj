@@ -60,7 +60,6 @@
 		551900D91F8BBE7300150B9D /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 551900D71F8BBE7300150B9D /* logo.png */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
 		8611713225DD9BC400ACD63A /* AppsFlyerXApple.h in Sources */ = {isa = PBXBuildFile; fileRef = 551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */; };
-		8611716625DDA24800ACD63A /* AppsFlyerX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */; };
 		8611716925DDA25400ACD63A /* AppsFlyerX.h in Sources */ = {isa = PBXBuildFile; fileRef = 8611715725DD9FF300ACD63A /* AppsFlyerX.h */; };
 		86224DAA25B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86224DA825B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp */; };
 		86224DB325B7464C008982C8 /* libAppsFlyerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86224DB125B7464C008982C8 /* libAppsFlyerLib.a */; };
@@ -151,7 +150,6 @@
 		55F53F3A1F94E88700C48777 /* AppsFlyerCocos2dX-mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppsFlyerCocos2dX-mobile.entitlements"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		8611715725DD9FF300ACD63A /* AppsFlyerX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppsFlyerX.h; sourceTree = "<group>"; };
-		8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppsFlyerX.cpp; sourceTree = "<group>"; };
 		86224DA825B7384B008982C8 /* AppsFlyerXDeepLinkResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppsFlyerXDeepLinkResult.cpp; path = AppsFlyer/AppsFlyerXDeepLinkResult.cpp; sourceTree = "<group>"; };
 		86224DA925B7384B008982C8 /* AppsFlyerXDeepLinkResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppsFlyerXDeepLinkResult.h; path = AppsFlyer/AppsFlyerXDeepLinkResult.h; sourceTree = "<group>"; };
 		86224DB125B7464C008982C8 /* libAppsFlyerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppsFlyerLib.a; sourceTree = "<group>"; };
@@ -361,7 +359,6 @@
 		551900DA1F8CCFF400150B9D /* AppsFlyer */ = {
 			isa = PBXGroup;
 			children = (
-				8611715825DD9FF300ACD63A /* AppsFlyerX.cpp */,
 				8611715725DD9FF300ACD63A /* AppsFlyerX.h */,
 				551900DD1F8CCFF400150B9D /* AppsFlyerXApple.h */,
 				551900DE1F8CCFF400150B9D /* AppsFlyerXApple.mm */,
@@ -543,7 +540,6 @@
 				1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */,
 				1AF87B8B1F6F782A007BE51C /* RootViewController.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				8611716625DDA24800ACD63A /* AppsFlyerX.cpp in Sources */,
 				1AF87B8A1F6F7822007BE51C /* main.m in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
 			);

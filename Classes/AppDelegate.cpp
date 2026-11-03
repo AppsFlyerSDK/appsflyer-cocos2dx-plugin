@@ -23,7 +23,16 @@ using namespace CocosDenshion;
 USING_NS_CC;
 
 static void onSessionReadyStartSdk() {
-    AppsFlyerX::start();
+    AppsFlyerX::start(false)
+        .whenComplete([](const AppsFlyerResult& r) {
+            if (!r.success) {
+                CCLOG("[AF-SDK7] start failed");
+                return;
+            }
+            AppsFlyerX::LogEventParams event;
+            event.eventName = "test_event";
+            AppsFlyerX::logEvent(event);
+        });
 }
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
@@ -94,18 +103,6 @@ static void onConversionDataFail(cocos2d::ValueMap map) {
     }
 }
 
-static void onAppOpenAttribution(cocos2d::ValueMap map) {
-    for (auto &t : map){
-        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-    }
-}
-
-static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
-    for (auto &t : map){
-        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-    }
-}
-
 static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
     CCLOG("%s", "AppDelegate.cpp got ddl!");
     std::string ddl = "Deep link data is \n";
@@ -144,27 +141,51 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
 bool AppDelegate::applicationDidFinishLaunching() {
 
     AppsFlyerX::stop(false);
-    AppsFlyerX::setIsDebug(true);
-    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("942960987");
-#endif
-    AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
-    AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
-    AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
-    AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-    AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+    AppsFlyerX::SetPartnerDataParams partnerParams;
+    partnerParams.partnerId = "partnerID";
     ValueMap data;
     data["thePartnerId"] = "abcd";
     data["Item_id"] = 1;
     data["isLegacy"] = false;
-    AppsFlyerX::setPartnerData("partnerID", data);
+    partnerParams.data = data;
+    AppsFlyerX::setPartnerData(partnerParams);
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    // SDK 7 manual startup: deep link + conversion listeners above, then session-ready → start(), then init.
-    AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
-    AppsFlyerX::initSdk();
+    AppsFlyerX::enableDebug(true).whenComplete([](const AppsFlyerResult& rDebug) {
+                if (!rDebug.success) {
+                    CCLOG("[AF-SDK7] enableDebug failed");
+                    return;
+                }
+    });
+    AppsFlyerX::registerDeepLinkListener(
+        [](AppsFlyerXDeepLinkResult result) { didResolveDeepLink(result); })
+        .whenComplete([](const AppsFlyerResult& r) {
+            if (!r.success) {
+                CCLOG("[AF-SDK7] registerDeepLinkListener failed");
+                return;
+            }
+            AppsFlyerX::InitParams params;
+            params.devKey = "H9xZweqPFhzBEtiDh2vDj";
+            #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                params.appId = "942960987";
+            #endif
+            AppsFlyerX::init(params).whenComplete([](const AppsFlyerResult& r2) {
+                if (!r2.success) {
+                    CCLOG("[AF-SDK7] init failed");
+                    return;
+                }
+                AppsFlyerX::registerConversionListener(onConversionDataSuccess,
+                                                         onConversionDataFail)
+                    .whenComplete([](const AppsFlyerResult& r3) {
+                        if (!r3.success) {
+                            CCLOG("[AF-SDK7] registerConversionListener failed");
+                            return;
+                        }
+                        AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
+                    });
+            });
+        });
 #endif
 
     // initialize director
@@ -219,7 +240,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
-    AppsFlyerX::didEnterBackground();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::onPause();
+#endif
 
 #if USE_AUDIO_ENGINE
     AudioEngine::pauseAll();

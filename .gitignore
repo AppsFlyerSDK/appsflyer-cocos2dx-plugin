@@ -126,3 +126,5 @@ Build-ios
 .idea/
 
 proj.android-studio/.idea/
+tests/af-task/build/
+tools/af-schema-compiler/build/

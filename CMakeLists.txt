@@ -61,12 +61,13 @@ list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp
      Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
      Classes/AppsFlyer/AFXAdRevenueData.cpp
-     Classes/AppsFlyer/AppsFlyerX.cpp
      Classes/AppsFlyer/AppsFlyerXConsent.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
      Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
      Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
-     Classes/AppsFlyer/AppsFlyerXCore.cpp
+     Classes/AppsFlyer/rpc/AppsFlyerRpcJson.cpp
+     Classes/AppsFlyer/generated/AppsFlyerRpcSchema.generated.cpp
+     Classes/AppsFlyer/AppsFlyerTask.cpp
 )
 
 list(APPEND GAME_HEADER
@@ -76,7 +77,6 @@ list(APPEND GAME_HEADER
      Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
      Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXCore.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
      Classes/AppsFlyer/AppsFlyerXMacro.h
      Classes/AppsFlyer/EmailCryptTypeX.h

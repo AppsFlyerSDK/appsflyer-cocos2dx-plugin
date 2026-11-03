@@ -1,6 +1,6 @@
 # Phase 1 POC — SDK 7 RPC spine
 
-**Branch:** `DELIVERY-133719-sdk7-rpc-phase1-poc`  
+**Epic:** [DELIVERY-132096](https://appsflyer.atlassian.net/browse/DELIVERY-132096) · **Feature branch:** `DELIVERY-132096-sdk7-rpc` · **Phase 1 branch:** `DELIVERY-132096-sdk7-rpc-phase1-poc`  
 **Status:** Work in progress (uncommitted)  
 **Scope:** Prove RPC spine from cocos C++ on **Android and iOS** (Kotlin / Swift → native SDK 7 RPC).  
 **Native policy:** new bridge code is **Kotlin (Android) + Swift (iOS)** only; C++ is interop + public API.
@@ -56,7 +56,8 @@ cd proj.android-studio
 | GAP-005 | **Dual SDK dependency story** | Medium | Android + iOS samples are SDK 7 + RPC bridge only | Remove leftover `libAppsFlyer` references in docs/macOS target if any |
 | GAP-006 | ~~Schema JSON not committed~~ | — | **Resolved:** `schema/appsflyer-plugins-rpc-schema.json` @ 1.2.0 | Phase 2 codegen from schema |
 | GAP-007 | **No Gradle module split** — RPC Kotlin lives in sample `app` module, not reusable AAR | Medium | OK for POC | Extract `appsflyer-cocos2dx-bridge` library module |
-| GAP-008 | **Blocking JNI from wrong thread** — `executeRpcBlocking` must not be called from GL thread for slow RPC | High | Spike uses `std::thread` | Phase 2 async C++ API + queue to game thread for completions |
+| GAP-008 | **Blocking JNI from wrong thread** — `executeRpcBlocking` must not be called from GL thread for slow RPC | High | Spike uses `std::thread` | Phase 2: completions on game thread ([`PHASE2-SYNC-DESIGN-DRAFT.md`](./PHASE2-SYNC-DESIGN-DRAFT.md)) |
+| GAP-013 | **RPC synchronization to the game** — no per-call native listener RPC, no completion/error/rollback on register* / init / start / logEvent | High | Documented Phase 1 §8.1; POC batches listeners in `initSdk()` | Phase 2: [`PHASE2-TECH-DESIGN.md`](./PHASE2-TECH-DESIGN.md) — `AppsFlyerTask` + immediate native calls |
 | GAP-009 | **Xcode / CMake Swift** | — | **Resolved:** Swift RPC sources listed in `CMakeLists.txt` (IOS); `scripts/setup-ios-rpc-pods.sh` for Pods | Re-run cmake + pod install after RPC file changes |
 | GAP-010 | **Deep link / attribution** — no Swift `AppsFlyerAttribution` queue in POC | Medium | Legacy ObjC++ path still active on iOS | Port lifecycle from SDK 7 plugin pattern in Phase 1 PR |
 | GAP-011 | **Gradle `sourceSets.main`** — `java.srcDir "src"` pulled `src/test/kotlin` into main compile | Fixed in POC | Use explicit `java.srcDirs` for main vs test | Keep in Phase 1 PR |

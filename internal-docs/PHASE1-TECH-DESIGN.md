@@ -3,9 +3,10 @@
 | Field | Value |
 | --- | --- |
 | **Document type** | Technical design (Phase 1) |
-| **Ticket** | DELIVERY-133719 |
-| **Implementation branch** | `DELIVERY-133719-sdk7-rpc-phase1-poc` (to be pushed) |
-| **Status** | Draft — review before merge to [Notion (Phase 1 PR1)](https://app.notion.com/p/appsflyerrnd/Phase-1-SDK-7-RPC-spine-PR1-40cb7b13af5f81378541ed80412139fa) as the canonical Phase 1 tech design |
+| **Epic** | [DELIVERY-132096](https://appsflyer.atlassian.net/browse/DELIVERY-132096) |
+| **Feature branch** | `DELIVERY-132096-sdk7-rpc` |
+| **Phase 1 branch (PR1)** | `DELIVERY-132096-sdk7-rpc-phase1-poc` (rename from `DELIVERY-133719-sdk7-rpc-phase1-poc` if still on remote) |
+| **Status** | Published to [Notion (Phase 1 PR1)](https://app.notion.com/p/appsflyerrnd/Phase-1-SDK-7-RPC-spine-PR1-40cb7b13af5f81378541ed80412139fa); keep repo copy in sync on design changes |
 | **Repo** | `appsflyer-cocos2dx-plugin` |
 
 This document is the **authoritative tech design for Phase 1**. The Notion page is the published copy for stakeholders after approval; keep both in sync when the design changes.
@@ -37,6 +38,7 @@ This document is the **authoritative tech design for Phase 1**. The Notion page 
 | Reusable Android AAR / shipped integrator package layout | Phase 1 PR hardening / Phase 3 |
 | Cocos Creator plugin packaging | Separate product |
 | iOS attribution queue (cold-start deep links before bridge ready) | Phase 1 follow-up (GAP-010) |
+| **RPC synchronization to the game** (per-call native completion, error propagation, listener rollback) | Phase 2 — [`PHASE2-TECH-DESIGN.md`](./PHASE2-TECH-DESIGN.md) |
 
 ---
 
@@ -87,6 +89,7 @@ Game (C++)
 | D4 | Android deep link wire: `subscribeForDeepLink`; iOS: `registerDeeplinkListener` | Platform RPC map difference encapsulated in `AppsFlyerXCore` |
 | D5 | iOS build = CMake **+** Pods **workspace** | `AppsFlyerRPC` is a Pod, not vendored in repo |
 | D6 | Plugin id `cocos2dx` in `setPluginInfo` | Placeholder until bridge enum approval |
+| D7 | Phase 1 listener setters are **in-memory only**; native `register*Listener` wires run inside **`initSdk()`** worker batch | Spine validation only; **not** the SDK 7 integrator contract (Phase 2) |
 
 ---
 
@@ -107,23 +110,29 @@ sequenceDiagram
     participant SDK as AppsFlyer SDK 6.x
 
     App->>X: setAppsFlyerDevKey / setAppleAppID
+    X->>Plat: delegate (AppsFlyerXAndroid / AppsFlyerXApple)
     Plat->>Native: direct setter on SDK singleton
     Native->>SDK: init APIs (platform-specific)
 
     App->>X: setOnConversion* / setDidResolveDeepLink
+    X->>Plat: delegate (AppsFlyerXAndroid / AppsFlyerXApple)
     Plat->>Native: register delegates / listeners
     Native->>SDK: SDK 6 callback interfaces
 
     App->>X: start()
+    X->>Plat: delegate (AppsFlyerXAndroid / AppsFlyerXApple)
     Plat->>Native: startTracking / startSdk
     Native->>SDK: SDK 6 start
 
     App->>X: logEvent(name, values)
+    X->>Plat: delegate (AppsFlyerXAndroid / AppsFlyerXApple)
     Plat->>Native: logEvent JNI/ObjC
     Native->>SDK: SDK 6 in-app event
 ```
 
 ### 5.2 Post–Phase 1 (SDK 7 RPC)
+
+Simplified spine (three public calls). Dev key / app id and other RPC steps in `initSdk()` are omitted here; see §5.3.
 
 ```mermaid
 sequenceDiagram
@@ -131,34 +140,37 @@ sequenceDiagram
     participant X as AppsFlyerX
     participant Core as AppsFlyerXCore
     participant RPC as AppsFlyerRpcClient
-    participant Bridge as Kotlin / Swift bridge
-    participant Handler as AppsFlyerRpcHandler / AppsFlyerRPCBridge
+    participant Bridge as Native RPC bridge
     participant SDK as AppsFlyer SDK 7
 
-    App->>X: setAppsFlyerDevKey / setAppleAppID (iOS)
-    X->>Core: in-memory config (devKey, appId)
-
-    App->>X: setOnConversion* / setDidResolveDeepLink / registerSessionReadyListener
-    X->>Core: store callbacks + install rpcEvent demux
+    App->>X: registerSessionReadyListener(callback)
+    X->>Core: store callback
+    Core->>RPC: setRpcEventHandler (rpcEvent demux)
 
     App->>X: initSdk()
-    Core->>Core: worker thread (not GL thread)
-    Core->>RPC: executeBlocking(register* listeners, setPluginInfo, isDebug, init)
+    X->>Core: initSdk()
+    Note over Core: worker thread
+    Core->>RPC: executeBlocking(registerSessionReadyListener)
     RPC->>Bridge: executeRpcBlocking(JSON)
-    Bridge->>Handler: parse + dispatch
-    Handler->>SDK: SDK 7 RPC
+    Bridge->>SDK: registerSessionReadyListener RPC
+    Bridge-->>RPC: response JSON
+    Core->>RPC: executeBlocking(init)
+    RPC->>Bridge: executeRpcBlocking(JSON)
+    Bridge->>SDK: init RPC
+    Bridge-->>RPC: response JSON
+    RPC-->>Core: RpcResult
 
-    Note over SDK,Bridge: onSessionReady / conversion / deep link
-    SDK-->>Handler: events
-    Handler-->>Bridge: rpcEvent JSON
-    Bridge-->>RPC: JNI / nativeDeliverRpcEvent
-    RPC-->>Core: runOnGameThread → callbacks
+    SDK-->>Bridge: rpcEvent onSessionReady
+    Bridge-->>RPC: nativeDeliverRpcEvent
+    RPC->>Core: runOnGameThread → callback
 
-    App->>X: start() (from session-ready callback in sample)
-    X->>Core: worker → executeBlocking(start)
-
-    App->>X: logEvent(name, values)
-    X->>Core: worker → executeBlocking(logEvent)
+    App->>X: logEvent(name)
+    X->>Core: logEvent()
+    Note over Core: worker thread
+    Core->>RPC: executeBlocking(logEvent)
+    RPC->>Bridge: executeRpcBlocking(JSON)
+    Bridge->>SDK: SDK 7 RPC
+    Bridge-->>RPC: response JSON
 ```
 
 ### 5.3 RPC wire mapping (Phase 1 spike)
@@ -185,6 +197,8 @@ The sample `Classes/AppDelegate.cpp` uses SDK 7 manual start for end-to-end test
 4. `initSdk()` (POC: triggers bundled RPC sequence inside core)
 
 Integrators should treat this as **spike/demo ordering**, not a permanent contract. Later phases document per-method APIs and leave **init sequencing to the app**.
+
+**Phase 1 limitation:** Public listener methods (`setOnConversion*`, `setDidResolveDeepLink`, `registerSessionReadyListener`) do **not** issue native RPC at call time and do **not** report success or failure to the game. If `initSdk()` runs before a listener is registered, that listener’s native wire may never run. This is **not** supported as a long-term synchronization model — see §8.1.
 
 ---
 
@@ -343,6 +357,20 @@ They should **remove** reliance on `Classes/AppsFlyer/libAppsFlyer` for iOS SDK 
 | Android bridge | RPC on dedicated executors; **do not** call blocking RPC from main thread for slow ops |
 | Tests | `BlockingRpcClassificationTest` documents blocking vs non-blocking classification |
 
+### 8.1 RPC synchronization (not supported in Phase 1)
+
+Phase 1 intentionally does **not** implement the SDK 7 **integrator-facing synchronization** model used by other mobile plugins on the shared RPC schema. The following are **out of scope for PR1** and deferred to Phase 2 ([`PHASE2-TECH-DESIGN.md`](./PHASE2-TECH-DESIGN.md)):
+
+| Capability | Phase 1 behavior | Target (Phase 2) |
+| --- | --- | --- |
+| **Immediate native registration** when the app registers a listener | Listener RPCs are **batched inside `initSdk()`** on a worker thread | Each `register*Listener` (and matching `unregister*`) triggers its **own** RPC when the app calls it |
+| **Completion before the app continues** | All public RPC entry points are **`void`**; `initSdk` / `start` / `logEvent` are fire-and-forget on a worker | Each method returns **`AppsFlyerTask`**; optional **`AppsFlyerCompletion`** on the **game thread** (`whenComplete`) |
+| **Errors back to the game** | Failures are logged (`logRpcFailure` / `[AF-SDK7]`); no callback or exception | **`AppsFlyerResult`** / **`AppsFlyerError`** on completion; listener registration **rolls back** on failure |
+| **Call-order enforcement** | Documented only (sample app + §5.4); e.g. deep link before `initSdk` | Documented **SDK 7 order** on schema-aligned APIs; deep-link listener **before** `init` |
+| **`awaitResponse` on `start` / `logEvent`** | Fixed POC params (`awaitResponse: false`) | Params follow schema; app chooses sync vs fire-and-forget per call |
+
+Phase 1 **does** guarantee: outbound blocking JNI/native work runs off the **GL thread**, and inbound **`rpcEvent`** is delivered on the **game thread**. That is **thread** synchronization only — not **app-visible RPC** synchronization.
+
 ---
 
 ## 9. Schema & future codegen
@@ -353,7 +381,7 @@ They should **remove** reliance on `Classes/AppsFlyer/libAppsFlyer` for iOS SDK 
 | Version pin | `schema/rpc-schema.version` |
 | Fetch script | `scripts/download_rpc_schema_from_gar.sh` |
 
-Phase 2 replaces hand-maintained wire names and stubs with generated dispatch from the committed RPC schema.
+Phase 2 replaces hand-maintained wire names and stubs with generated dispatch from the committed RPC schema, and implements integrator synchronization via **`AppsFlyerTask`** / **`whenComplete`** (public API — no `Rpc` in type names) in [`PHASE2-TECH-DESIGN.md`](./PHASE2-TECH-DESIGN.md).
 
 ---
 
@@ -369,11 +397,10 @@ Phase 2 replaces hand-maintained wire names and stubs with generated dispatch fr
 
 ## 11. Open items / follow-up
 
-1. Push `DELIVERY-133719-sdk7-rpc-phase1-poc` and open PR1.
+1. Open PR1 from `DELIVERY-132096-sdk7-rpc-phase1-poc` into feature branch `DELIVERY-132096-sdk7-rpc`.
 2. Bridge team sign-off on `setPluginInfo` / `cocos2dx`.
 3. Port iOS deep link / attribution lifecycle queue (GAP-010).
 4. Extract Android RPC module; document integrator copy list.
-5. Publish approved version of **this document** to [Notion Phase 1 PR1](https://app.notion.com/p/appsflyerrnd/Phase-1-SDK-7-RPC-spine-PR1-40cb7b13af5f81378541ed80412139fa).
 
 ---
 
@@ -381,7 +408,7 @@ Phase 2 replaces hand-maintained wire names and stubs with generated dispatch fr
 
 After tech design approval:
 
-- [ ] Copy sections 1–11 to Notion (canonical stakeholder view)
-- [ ] Embed or attach Mermaid diagrams (§5.1–5.2)
+- [x] Copy sections 1–11 to Notion (canonical stakeholder view)
+- [x] Mermaid diagrams in Notion (§5.1–5.2 fenced code blocks)
 - [ ] Sync version pins with Gradle/Podfile at merge time
 - [ ] Link PR and branch in Notion properties

@@ -89,9 +89,7 @@ void AppsFlyerXApple::setAppsFlyerDevKey(const std::string& appsFlyerDevKey) {
          object: nil
          queue: nil
          usingBlock: ^ (NSNotification * note) {
-            if (AppsFlyerX::manualStart == false) {
-                [[AppsFlyerLib shared] start];
-            }
+            [[AppsFlyerLib shared] start];
          }];
     });
 
