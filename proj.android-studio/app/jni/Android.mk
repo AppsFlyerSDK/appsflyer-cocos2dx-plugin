@@ -9,9 +9,10 @@ LOCAL_MODULE_FILENAME := libAppsFlyerCocos2dX
 LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
                    $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerProxyX.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerX.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXCore.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp \

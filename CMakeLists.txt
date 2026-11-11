@@ -83,10 +83,6 @@ list(APPEND GAME_HEADER
 )
 
 if(ANDROID)
-    list(APPEND GAME_HEADER
-        Classes/AppsFlyer/AppsFlyerXAndroid.h
-    )
-
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
     set(APP_NAME AppsFlyerCocos2dX)
     list(APPEND GAME_SOURCE
