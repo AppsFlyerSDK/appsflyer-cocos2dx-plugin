@@ -1,5 +1,8 @@
  # Versions
 
+## Unreleased (SDK 7)
+- **BREAKING:** macOS desktop is no longer supported. The plugin targets Android and iOS only with SDK 7 and AppsFlyer RPC.
+
 ## 6.18.0
     - update Android SDK to 6.18.0
     - update iOS SDK to 6.18.0

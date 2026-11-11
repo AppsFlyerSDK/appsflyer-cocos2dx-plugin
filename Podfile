@@ -1,7 +1,7 @@
 # SDK 7 RPC: do NOT run `pod install` from repo root or proj.ios_mac.
-# CMake generates AppsFlyerCocos2dX.xcodeproj under your build dir; this file is copied there by:
-#   ./scripts/setup-ios-rpc-pods.sh build-device   # physical device (iphoneos)
-#   ./scripts/setup-ios-rpc-pods.sh build-ios-rpc  # simulator
+# CMake generates AppsFlyerCocos2dX.xcodeproj under your iOS build dir; this file is copied there by:
+#   ./scripts/setup-ios-rpc-pods.sh build-device
+#   ./scripts/setup-ios-rpc-pods.sh build-ios-rpc
 # Open <build-dir>/AppsFlyerCocos2dX.xcworkspace in Xcode.
 
 unless File.directory?('AppsFlyerCocos2dX.xcodeproj')
@@ -9,7 +9,7 @@ unless File.directory?('AppsFlyerCocos2dX.xcodeproj')
 
     AppsFlyerCocos2dX.xcodeproj not found in #{Dir.pwd}.
 
-    Generate it with CMake, then install pods via the setup script (from repo root), e.g.:
+    Generate an iOS project with CMake, then install pods via the setup script (from repo root), e.g.:
 
       cmake -B build-device -GXcode \\
         -DCMAKE_SYSTEM_NAME=iOS \\
@@ -18,6 +18,17 @@ unless File.directory?('AppsFlyerCocos2dX.xcodeproj')
       ./scripts/setup-ios-rpc-pods.sh build-device
 
     Legacy proj.ios_mac/AppsFlyerCocos2dX.xcodeproj is not wired to this Podfile.
+
+  MSG
+end
+
+pbxproj = 'AppsFlyerCocos2dX.xcodeproj/project.pbxproj'
+if File.exist?(pbxproj) && File.read(pbxproj).include?('SDKROOT = macosx')
+  raise <<~MSG
+
+    This Podfile is for iOS SDK 7 RPC only. macOS desktop is not supported in SDK 7.
+
+    Configure CMake with -DCMAKE_SYSTEM_NAME=iOS (see scripts/build-ios-cmake.sh).
 
   MSG
 end

@@ -103,64 +103,40 @@ elseif(WINDOWS)
          ${common_res_files}
          )
 elseif(APPLE)
-    if(IOS)
-        list(APPEND GAME_SOURCE
-             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
-             proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
-             proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
-             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
-             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
-             )
-        list(APPEND GAME_HEADER
-             Classes/AppsFlyer/AppsFlyerXApple.h
-             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.h
-             )
-    else()
-        list(APPEND GAME_SOURCE
-             Classes/AppsFlyer/AppsFlyerXApple.mm
-             Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
-             Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
-             Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
-             )
-        list(APPEND GAME_HEADER
-             Classes/AppsFlyer/AppsFlyerXApple.h
-             Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
-             Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
-             Classes/AppsFlyer/AppsFlyerXAppleHelper.h
-             )
+    if(NOT IOS)
+        message(FATAL_ERROR
+            "macOS desktop is not supported in SDK 7. Generate an iOS project instead, e.g.\n"
+            "  cmake -B build-ios-rpc -GXcode -DCMAKE_SYSTEM_NAME=iOS "
+            "-DCMAKE_OSX_SYSROOT=iphonesimulator -DCMAKE_OSX_DEPLOYMENT_TARGET=15.6")
     endif()
-    if(IOS)
-        list(APPEND GAME_HEADER
-             proj.ios_mac/ios/AppController.h
-             proj.ios_mac/ios/RootViewController.h
-             )
+    list(APPEND GAME_SOURCE
+         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
+         proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
+         proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
+         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
+         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+         )
+    list(APPEND GAME_HEADER
+         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.h
+         proj.ios_mac/ios/AppController.h
+         proj.ios_mac/ios/RootViewController.h
+         )
 
-        set(APP_UI_RES
-            proj.ios_mac/ios/LaunchScreen.storyboard
-            proj.ios_mac/ios/LaunchScreenBackground.png
-            proj.ios_mac/ios/Images.xcassets
-            )
-            
-        list(APPEND GAME_SOURCE
-             proj.ios_mac/ios/main.m
-             proj.ios_mac/ios/AppController.mm
-             proj.ios_mac/ios/RootViewController.mm
-             proj.ios_mac/ios/Prefix.pch
-             proj.ios_mac/ios/SwiftBridge.swift
-             proj.ios_mac/ios/SwiftCompatibilityStubs.m
-             ${APP_UI_RES}
-             )
-    elseif(MACOSX)
-        set(APP_UI_RES
-            proj.ios_mac/mac/Icon.icns
-            proj.ios_mac/mac/Info.plist
-            )
-        list(APPEND GAME_SOURCE
-             proj.ios_mac/mac/main.cpp
-             proj.ios_mac/mac/Prefix.pch
-             ${APP_UI_RES}
-             )
-    endif()
+    set(APP_UI_RES
+        proj.ios_mac/ios/LaunchScreen.storyboard
+        proj.ios_mac/ios/LaunchScreenBackground.png
+        proj.ios_mac/ios/Images.xcassets
+        )
+
+    list(APPEND GAME_SOURCE
+         proj.ios_mac/ios/main.m
+         proj.ios_mac/ios/AppController.mm
+         proj.ios_mac/ios/RootViewController.mm
+         proj.ios_mac/ios/Prefix.pch
+         proj.ios_mac/ios/SwiftBridge.swift
+         proj.ios_mac/ios/SwiftCompatibilityStubs.m
+         ${APP_UI_RES}
+         )
     list(APPEND GAME_SOURCE ${common_res_files})
 endif()
 
@@ -193,7 +169,6 @@ endif()
 target_link_libraries(${APP_NAME} cocos2d)
 target_include_directories(${APP_NAME}
         PRIVATE Classes
-        PRIVATE Classes/AppsFlyer/libAppsFlyer
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
 if(APPLE AND IOS)
@@ -227,11 +202,7 @@ if(APPLE)
     # Do not set DERIVED_DATA_PATH on iOS when using CocoaPods — it splits Pod
     # framework output from the app linker search paths (Pods_AppsFlyerCocos2dX not found).
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
-    if(MACOSX)
-        set_target_properties(${APP_NAME} PROPERTIES
-                              MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist"
-                              )
-    elseif(IOS)
+    if(IOS)
         #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
         # set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         # Set signing configuration

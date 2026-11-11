@@ -2,44 +2,16 @@
 
 # Cocos2dX iOS Integration Guide
 
-## Sample Project
+## Sample project
 
-There's a sample project in the `proj.ios_mac` directory.
+iOS sample sources live under `proj.ios_mac/ios/`. Generate the app with CMake (`scripts/build-ios-cmake.sh`), then run `scripts/setup-ios-rpc-pods.sh` and open the `.xcworkspace` in Xcode.
 
+## SDK 7 (RPC)
 
+Add the cross-platform C++ sources under `Classes/AppsFlyer/` (including `AppsFlyerXCore`, `rpc/`) and the iOS RPC bridge under `proj.ios_mac/ios/rpc/`. Link **AppsFlyerRPC** and **AppsFlyerFramework** via CocoaPods (see repo `Podfile` and setup script).
 
-## Installation
+## Strict mode (no IDFA)
 
-How to integrate the AppsFlyer SDK into your Cocos2dx Apple project.
+Use the AppsFlyer Strict subspecs in your Podfile and define `AFSDK_NO_IDFA=1` in Xcode build settings if required by your app.
 
-1\. Download the [source files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/AppsFlyer) and copy them to your project
-
- - `AppsFlyerX.cpp`
- - `AppsFlyerX.h`
- - `AppsFlyerX+AppController.h`
- - `AppsFlyerX+AppController.m`
- - `AppsFlyerXApple.h`
- - `AppsFlyerXApple.mm`
- - `AppsFlyerXAppleDelegate.h`
- - `AppsFlyerXAppleDelegate.mm`
- - `AppsFlyerXAppleHelper.h`
- - `AppsFlyerXAppleHelper.mm`
- - `AppsFlyerXMacro.h`
- - `EmailCryptTypeX.h`
- - `libAppsFlyer/AppsFlyerCrossPromotionHelper.h`
- - `libAppsFlyer/AppsFlyerLinkGenerator.h`
- - `libAppsFlyer/AppsFlyerShareInviteHelper.h`
- - `libAppsFlyer/AppsFlyerLib.h`
- - `libAppsFlyer/libAppsFlyerLib.a`
-
-to `Classes/AppsFlyer`
-
-
-2\. It looks like in the image below.
-
-![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/add-to-iOS-mk.png)
-
-If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk): <br>
-1\. Download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/Strict/AppsFlyer) and copy them to your project
-2\. Inside Xcode, go to your target, then **Build Settings** and define the Preprocessor Macro `AFSDK_NO_IDFA=1` <br>
 ![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/preprocessor_macro.png)

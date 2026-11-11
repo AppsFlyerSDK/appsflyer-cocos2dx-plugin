@@ -92,6 +92,7 @@ proj.ios_mac/*.xcodeproj/xcuserdata/
 build/*
 build-device/
 build-ios-rpc/
+build-mac/
 engine/*
 proj.android-studio/app/.cxx/
 CMakeFiles/*
