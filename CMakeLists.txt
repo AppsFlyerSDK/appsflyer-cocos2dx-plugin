@@ -131,7 +131,6 @@ elseif(APPLE)
          proj.ios_mac/ios/RootViewController.mm
          proj.ios_mac/ios/Prefix.pch
          proj.ios_mac/ios/SwiftBridge.swift
-         proj.ios_mac/ios/SwiftCompatibilityStubs.m
          ${APP_UI_RES}
          )
     list(APPEND GAME_SOURCE ${common_res_files})
@@ -204,8 +203,6 @@ if(APPLE)
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "Apple Development")
         set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
-        # libAppsFlyerLib.a: arm64 = device, x86_64 = simulator — on Apple Silicon simulators use x86_64 slice.
-        set_xcode_property(${APP_NAME} "EXCLUDED_ARCHS[sdk=iphonesimulator*]" "arm64")
 
         # Info.plist fields
         set_target_properties(${APP_NAME} PROPERTIES

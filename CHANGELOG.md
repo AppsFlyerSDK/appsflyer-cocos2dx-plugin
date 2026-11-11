@@ -2,6 +2,8 @@
 
 ## Unreleased (SDK 7)
 - **BREAKING:** macOS desktop is no longer supported. The plugin targets Android and iOS only with SDK 7 and AppsFlyer RPC.
+- Remove vendored SDK 6 `libAppsFlyer` static library and headers, legacy `Classes/Strict` tree, unused `AppsFlyerProxyX`, Swift compatibility stubs for the static lib, and the manual `proj.ios_mac/AppsFlyerCocos2dX.xcodeproj` (use CMake-generated Xcode + CocoaPods).
+- Drop CI workflow that validated vendored iOS header imports.
 
 ## 6.18.0
     - update Android SDK to 6.18.0

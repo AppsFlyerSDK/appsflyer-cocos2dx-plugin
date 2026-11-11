@@ -149,7 +149,8 @@ static AppDelegate s_sharedApplication;
 }
 
 - (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-//    [[AppsFlyerLib shared] registerUninstall:deviceToken];
+    // Phase 2+: forward deviceToken to AppsFlyer via RPC (registerUninstall).
+    (void)deviceToken;
 }
 
 
