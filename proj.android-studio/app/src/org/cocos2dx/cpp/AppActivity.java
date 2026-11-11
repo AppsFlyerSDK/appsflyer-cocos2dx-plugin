@@ -1,6 +1,6 @@
 /****************************************************************************
 Copyright (c) 2015-2017 Chukong Technologies Inc.
- 
+
 http://www.cocos2d-x.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,9 +23,24 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.cpp;
 
+import android.os.Bundle;
+
+import com.appsflyer.cocos2dx.rpc.AppsFlyerCocosRpcBridge;
+
 import org.cocos2dx.lib.Cocos2dxActivity;
 
 public class AppActivity extends Cocos2dxActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // Before Cocos runs native applicationDidFinishLaunching (GL init), RPC needs Activity/app context.
+        AppsFlyerCocosRpcBridge.onActivityCreated(this);
+        super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onDestroy() {
+        AppsFlyerCocosRpcBridge.onActivityDestroyed();
+        super.onDestroy();
+    }
 }

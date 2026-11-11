@@ -573,6 +573,7 @@
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 6UQAD4B3U2;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -599,7 +600,7 @@
 					"-lcocos2d",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sokoloff06.sdktest1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.AppsFlyerCocos2dX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
@@ -620,6 +621,7 @@
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 6UQAD4B3U2;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -645,7 +647,7 @@
 					"-lcocos2d",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sokoloff06.sdktest1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsflyer.AppsFlyerCocos2dX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;

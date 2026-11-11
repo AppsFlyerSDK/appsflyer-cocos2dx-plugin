@@ -73,6 +73,12 @@ public:
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
     static void start();
+
+    /** SDK 7 (Android/iOS): RPC init after dev key and listeners are configured. */
+    static void initSdk();
+
+    /** SDK 7 (Android/iOS): register callback on the game thread; sample calls [start] from it when the session is ready. */
+    static void registerSessionReadyListener(void (*callback)());
         
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
     

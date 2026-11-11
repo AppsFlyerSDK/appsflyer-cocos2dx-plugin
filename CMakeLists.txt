@@ -27,7 +27,7 @@ cmake_minimum_required(VERSION 3.6)
 
 set(APP_NAME AppsFlyerCocos2dX)
 
-project(${APP_NAME})
+project(${APP_NAME} LANGUAGES CXX C)
 set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
 
 set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
@@ -64,6 +64,9 @@ list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AppsFlyerX.cpp
      Classes/AppsFlyer/AppsFlyerXConsent.cpp
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
+     Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
+     Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
+     Classes/AppsFlyer/AppsFlyerXCore.cpp
 )
 
 list(APPEND GAME_HEADER
@@ -73,20 +76,15 @@ list(APPEND GAME_HEADER
      Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
      Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
+     Classes/AppsFlyer/AppsFlyerXCore.h
      Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
      Classes/AppsFlyer/AppsFlyerXMacro.h
      Classes/AppsFlyer/EmailCryptTypeX.h
 )
 
 if(ANDROID)
-    list(APPEND GAME_SOURCE
-    Classes/AppsFlyer/AppsFlyerXAndroid.cpp
-    Classes/AppsFlyer/AppsFlyerProxyX.cpp
-    )
-    
     list(APPEND GAME_HEADER
-    Classes/AppsFlyer/AppsFlyerXAndroid.h
-    Classes/AppsFlyer/AppsFlyerProxyX.h
+        Classes/AppsFlyer/AppsFlyerXAndroid.h
     )
 
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
@@ -109,18 +107,32 @@ elseif(WINDOWS)
          ${common_res_files}
          )
 elseif(APPLE)
-    list(APPEND GAME_SOURCE
-         Classes/AppsFlyer/AppsFlyerXApple.mm
-         Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
-         Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
-         Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
-         )
-    list(APPEND GAME_HEADER
-         Classes/AppsFlyer/AppsFlyerXApple.h
-         Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
-         Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
-         Classes/AppsFlyer/AppsFlyerXAppleHelper.h
-         )
+    if(IOS)
+        list(APPEND GAME_SOURCE
+             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
+             proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
+             proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
+             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
+             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+             )
+        list(APPEND GAME_HEADER
+             Classes/AppsFlyer/AppsFlyerXApple.h
+             proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.h
+             )
+    else()
+        list(APPEND GAME_SOURCE
+             Classes/AppsFlyer/AppsFlyerXApple.mm
+             Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.mm
+             Classes/AppsFlyer/AppsFlyerXAppleDelegate.mm
+             Classes/AppsFlyer/AppsFlyerXAppleHelper.mm
+             )
+        list(APPEND GAME_HEADER
+             Classes/AppsFlyer/AppsFlyerXApple.h
+             Classes/AppsFlyer/AppsFlyerXAppleDeepLinkDelegate.h
+             Classes/AppsFlyer/AppsFlyerXAppleDelegate.h
+             Classes/AppsFlyer/AppsFlyerXAppleHelper.h
+             )
+    endif()
     if(IOS)
         list(APPEND GAME_HEADER
              proj.ios_mac/ios/AppController.h
@@ -161,6 +173,19 @@ set(all_code_files
     ${GAME_HEADER}
     ${GAME_SOURCE}
     )
+if(APPLE AND IOS)
+    enable_language(Swift)
+    set(CMAKE_Swift_LANGUAGE_VERSION 5.9)
+    set(_ios_swift_rpc_sources
+        proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
+        proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
+        proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
+        proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+        proj.ios_mac/ios/SwiftBridge.swift
+    )
+    set_source_files_properties(${_ios_swift_rpc_sources} PROPERTIES LANGUAGE Swift)
+endif()
+
 if(NOT ANDROID)
     add_executable(${APP_NAME} ${all_code_files})
 else()
@@ -175,43 +200,36 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes/AppsFlyer/libAppsFlyer
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
-
-# Link AppsFlyer SDK for iOS
 if(APPLE AND IOS)
-    find_library(APPSFLYER_LIB AppsFlyerLib HINTS "${CMAKE_CURRENT_SOURCE_DIR}/Classes/AppsFlyer/libAppsFlyer" NO_DEFAULT_PATH)
-    if(APPSFLYER_LIB)
-        target_link_libraries(${APP_NAME} "${APPSFLYER_LIB}")
-    else()
-        # Fallback to direct path if find_library doesn't work
-        target_link_libraries(${APP_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/Classes/AppsFlyer/libAppsFlyer/libAppsFlyerLib.a")
-    endif()
-    
-    # Required frameworks for AppsFlyer SDK
+    target_include_directories(${APP_NAME} PRIVATE proj.ios_mac/ios/rpc)
+endif()
+
+# iOS SDK 7 RPC (AppsFlyerRPC via CocoaPods — run scripts/setup-ios-rpc-pods.sh after cmake)
+if(APPLE AND IOS)
     target_link_libraries(${APP_NAME}
         "-framework AdSupport"
-        "-framework iAd"
         "-framework AdServices"
         "-framework StoreKit"
     )
-    
-    # AppsFlyer SDK requires Swift runtime
+
     set_target_properties(${APP_NAME} PROPERTIES
-        XCODE_ATTRIBUTE_ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "YES"
+        XCODE_ATTRIBUTE_ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "$(inherited)"
         XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited) @executable_path/Frameworks"
-        XCODE_ATTRIBUTE_SWIFT_VERSION "5.0"
+        XCODE_ATTRIBUTE_SWIFT_VERSION "5.9"
+        XCODE_ATTRIBUTE_PRODUCT_MODULE_NAME "${APP_NAME}"
+        XCODE_ATTRIBUTE_SWIFT_OBJC_INTERFACE_HEADER_NAME "${APP_NAME}-Swift.h"
+        XCODE_ATTRIBUTE_SWIFT_OBJC_BRIDGING_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/ios/AppsFlyerCocos2dX-Bridging-Header.h"
+        XCODE_ATTRIBUTE_OTHER_LDFLAGS "$(inherited) -ObjC"
     )
-    
-    # Force link Swift runtime libraries
-    target_link_libraries(${APP_NAME} "-lswiftCore")
+
+    # CocoaPods sets baseConfigurationReference on `pod install`; do not override via CMake.
 endif()
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})
 if(APPLE)
-    if(IOS)
-        # Force DerivedData into the build tree so sandboxed environments can write to it
-        set(CMAKE_XCODE_ATTRIBUTE_DERIVED_DATA_PATH "${PROJECT_BINARY_DIR}/DerivedData")
-    endif()
+    # Do not set DERIVED_DATA_PATH on iOS when using CocoaPods — it splits Pod
+    # framework output from the app linker search paths (Pods_AppsFlyerCocos2dX not found).
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
     if(MACOSX)
         set_target_properties(${APP_NAME} PROPERTIES
@@ -225,7 +243,9 @@ if(APPLE)
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "Apple Development")
         set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
-        
+        # libAppsFlyerLib.a: arm64 = device, x86_64 = simulator — on Apple Silicon simulators use x86_64 slice.
+        set_xcode_property(${APP_NAME} "EXCLUDED_ARCHS[sdk=iphonesimulator*]" "arm64")
+
         # Info.plist fields
         set_target_properties(${APP_NAME} PROPERTIES
             MACOSX_BUNDLE_BUNDLE_NAME "AppsFlyerCocos2dX"

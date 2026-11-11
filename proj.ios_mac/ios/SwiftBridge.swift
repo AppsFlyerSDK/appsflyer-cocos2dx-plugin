@@ -1,11 +1,7 @@
-// This file is required to link Swift runtime for AppsFlyer SDK
-// Do not remove this file
-
+// Ensures the Swift runtime is linked into the app target (legacy cocos sample pattern).
 import Foundation
 
-@objc class SwiftBridge: NSObject {
-    @objc static func initialize() {
-        // Empty - just needed to force Swift runtime linking
-    }
+@objc(SwiftBridge)
+final class SwiftBridge: NSObject {
+    @objc static func linkSwiftRuntime() {}
 }
-

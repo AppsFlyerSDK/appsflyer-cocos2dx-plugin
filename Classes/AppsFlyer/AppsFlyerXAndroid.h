@@ -75,6 +75,12 @@ public:
 
     static void start();
 
+    /** SDK 7: setPluginInfo + init RPC (call after listeners are registered). */
+    static void initSdk();
+
+    /** SDK 7: native session-ready events invoke [callback] on the cocos thread; call [start] from it. */
+    static void registerSessionReadyListener(void (*callback)());
+
     static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
 
     static void logAdRevenue(const AFXAdRevenueData& adRevenueData, cocos2d::ValueMap params);

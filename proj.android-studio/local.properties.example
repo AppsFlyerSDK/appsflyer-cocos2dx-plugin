@@ -1,0 +1,2 @@
+# Copy to local.properties (not committed). Android Studio usually creates this on import.
+sdk.dir=/Users/YOUR_USER/Library/Android/sdk
