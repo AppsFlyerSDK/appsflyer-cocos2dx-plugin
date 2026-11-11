@@ -1,17 +1,27 @@
 package com.appsflyer.cocos2dx.rpc
 
 import android.app.Activity
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.pluginbridge.handler.AppsFlyerRpcHandler
 import com.appsflyer.pluginbridge.model.RpcResponse
 import com.appsflyer.pluginbridge.parser.JsonRpcRequestParser
 import org.json.JSONObject
+import java.util.ArrayDeque
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
+
+private const val AF_PLUGIN_TAG = "AppsFlyer_Cocos2dX_RPC"
+private const val RPC_METHOD_INIT = "init"
+private const val RPC_PARAM_AWAIT_RESPONSE = "awaitResponse"
+private const val AWAIT_RESPONSE_TIMEOUT_MS = 30_000L
+private const val RPC_EVENT_BUFFER_MAX = 64
 
 /**
  * JNI-facing RPC entry for the cocos2d-x C++ layer.
@@ -109,4 +119,114 @@ object AppsFlyerCocosRpcBridge {
 
     @JvmStatic
     private external fun nativeDeliverRpcEvent(eventJson: String)
+}
+
+/** Process-scoped Activity / application context for [AppsFlyerRpcHandler]. */
+private object AppsFlyerCocosContextHolder {
+
+    private val lock = Any()
+
+    @Volatile
+    private var appContext: Context? = null
+
+    private val attachments = LinkedHashMap<Any, Activity>()
+
+    fun current(): Context = synchronized(lock) {
+        attachments.values.lastOrNull()
+            ?: appContext
+            ?: throw IllegalStateException("AppsFlyer Cocos RPC: no context (call attach first)")
+    }
+
+    fun hasContext(): Boolean = synchronized(lock) {
+        attachments.isNotEmpty() || appContext != null
+    }
+
+    fun setAppContext(context: Context) {
+        appContext = context.applicationContext
+    }
+
+    fun attachActivity(owner: Any, activity: Activity) {
+        synchronized(lock) {
+            attachments.remove(owner)
+            attachments[owner] = activity
+        }
+    }
+
+    fun detachActivity(owner: Any) {
+        synchronized(lock) {
+            attachments.remove(owner)
+        }
+    }
+}
+
+/** Buffers RPC events until a JNI sink is attached; delivers on the main looper. */
+private object AppsFlyerCocosEventBus {
+
+    private val lock = Any()
+    private val buffer = ArrayDeque<String>()
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    @Volatile
+    private var deliverToNative: ((String) -> Unit)? = null
+
+    fun attach(deliver: (String) -> Unit) {
+        synchronized(lock) {
+            deliverToNative = deliver
+            while (buffer.isNotEmpty()) {
+                val event = buffer.removeFirst()
+                postDeliver(event)
+            }
+        }
+    }
+
+    fun publish(eventJson: String) {
+        mainHandler.post {
+            synchronized(lock) {
+                val deliver = deliverToNative
+                if (deliver == null) {
+                    if (buffer.size >= RPC_EVENT_BUFFER_MAX) {
+                        buffer.removeFirst()
+                        Log.w(AF_PLUGIN_TAG, "RPC event buffer overflow; dropped oldest event")
+                    }
+                    buffer.addLast(eventJson)
+                    return@post
+                }
+                deliver(eventJson)
+            }
+        }
+    }
+
+    private fun postDeliver(eventJson: String) {
+        synchronized(lock) {
+            deliverToNative?.invoke(eventJson)
+        }
+    }
+}
+
+private fun normalizeRpcResponse(response: RpcResponse): String = when (response) {
+    is RpcResponse.Success<*> -> JSONObject()
+        .put("success", true)
+        .put("data", JSONObject.wrap(response.result) ?: JSONObject.NULL)
+        .toString()
+    is RpcResponse.VoidSuccess -> JSONObject()
+        .put("success", true)
+        .put("data", JSONObject.NULL)
+        .toString()
+    is RpcResponse.Error -> normalizeRpcError(response.code, response.message)
+}
+
+private fun normalizeRpcError(code: Int, message: String): String = JSONObject()
+    .put("success", false)
+    .put("error", JSONObject().put("code", code).put("message", message))
+    .toString()
+
+private fun buildRpcRequest(method: String, params: JSONObject): String =
+    JSONObject().put("method", method).put("params", params).toString()
+
+internal fun isBlockingRpc(method: String, params: JSONObject): Boolean = when (method) {
+    RPC_METHOD_INIT -> true
+    "validateAndLogInAppPurchase" -> true
+    "start", "logEvent" -> params.optBoolean(RPC_PARAM_AWAIT_RESPONSE, false)
+    "generateInviteLink" -> params.optBoolean(RPC_PARAM_AWAIT_RESPONSE, true)
+    else -> false
 }
