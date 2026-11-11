@@ -37,10 +37,27 @@ platform :ios, '13.0'
 
 project 'AppsFlyerCocos2dX.xcodeproj'
 
+APPSFLYER_RPC_VERSION = '7.0.41'
+APPSFLYER_FRAMEWORK_VERSION = '7.0.4'
+
+# Kids / ad-ID-less iOS builds: uncomment before `pod install` (then re-run setup-ios-rpc-pods.sh).
+# Links AppsFlyerRPC/Strict + AppsFlyerFramework/Strict and defines AFSDK_NO_IDFA for C++ sources.
+# https://dev.appsflyer.com/hc/docs/install-ios-sdk#strict-mode-sdk
+# $AppsFlyerStrictMode = true
+
 target 'AppsFlyerCocos2dX' do
   use_frameworks! :linkage => :static
-  pod 'AppsFlyerRPC/Main', '7.0.41'
-  pod 'AppsFlyerFramework/Main', '7.0.4'
+  if defined?($AppsFlyerStrictMode) && $AppsFlyerStrictMode
+    Pod::UI.puts 'AppsFlyer Cocos2dX: Using AppsFlyerFramework/Strict'
+    pod 'AppsFlyerRPC/Strict', APPSFLYER_RPC_VERSION
+    pod 'AppsFlyerFramework/Strict', APPSFLYER_FRAMEWORK_VERSION
+  else
+    unless defined?($AppsFlyerStrictMode)
+      Pod::UI.puts 'AppsFlyer Cocos2dX: Using Main SDK (ATT may apply). Uncomment $AppsFlyerStrictMode in Podfile for kids / Strict mode.'
+    end
+    pod 'AppsFlyerRPC/Main', APPSFLYER_RPC_VERSION
+    pod 'AppsFlyerFramework/Main', APPSFLYER_FRAMEWORK_VERSION
+  end
 end
 
 # CMake sets a custom CONFIGURATION_BUILD_DIR for the app; Pods still emit
@@ -76,6 +93,14 @@ post_install do |installer|
         paths << entry unless paths.include?(entry)
       end
       config.build_settings['FRAMEWORK_SEARCH_PATHS'] = paths
+
+      if defined?($AppsFlyerStrictMode) && $AppsFlyerStrictMode
+        defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || '$(inherited)'
+        defs = [defs] if defs.is_a?(String)
+        defs = defs.dup
+        defs << 'AFSDK_NO_IDFA=1' unless defs.any? { |d| d.to_s.include?('AFSDK_NO_IDFA') }
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = defs
+      end
     end
 
     project.save

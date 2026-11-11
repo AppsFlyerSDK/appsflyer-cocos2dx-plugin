@@ -14,4 +14,16 @@ Add the cross-platform C++ sources under `Classes/AppsFlyer/` (including `AppsFl
 
 ## Privacy / IDFA
 
-Configure attribution privacy through the native SDK 7 stack linked by CocoaPods (`AppsFlyerFramework` / `AppsFlyerRPC`). Cocos-specific Strict-mode sources are not bundled with the SDK 7 RPC plugin.
+Regular builds link **Main** subspecs via the repo `Podfile` (copied into your CMake build dir by `scripts/setup-ios-rpc-pods.sh`).
+
+### Strict mode (kids / ad-ID-less apps)
+
+Opt in at **`pod install`** time.
+
+1. Edit the `Podfile` in your CMake build directory (or change the repo-root `Podfile` before re-running the setup script).
+2. Uncomment `$AppsFlyerStrictMode = true` at the top of the target section.
+3. Run `./scripts/setup-ios-rpc-pods.sh <your-build-dir>` (or `pod install` in that directory).
+
+That resolves `AppsFlyerRPC/Strict` and `AppsFlyerFramework/Strict` and sets `AFSDK_NO_IDFA=1` on the app target so C++ sources match the Strict binary. Do not add extra `AppsFlyerFramework/Strict` pods by hand — use only the conditional block in the template Podfile.
+
+Runtime `setDisableAdvertisingIdentifier` does not replace Strict mode; it configures behavior inside whichever native binary is linked. See [AppsFlyer Strict mode docs](https://dev.appsflyer.com/hc/docs/install-ios-sdk#strict-mode-sdk).
