@@ -2,6 +2,7 @@
 
 # Cocos2dX Android Integration Guide
 
+For Cocos2d-x lifecycle and SDK 7 RPC timing, see [SDK7_LIFECYCLE.md](SDK7_LIFECYCLE.md).
 
 ##  Integration:
 How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.

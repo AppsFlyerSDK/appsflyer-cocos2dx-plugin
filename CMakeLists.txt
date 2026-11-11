@@ -111,9 +111,6 @@ elseif(APPLE)
     endif()
     list(APPEND GAME_SOURCE
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
-         proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
-         proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
-         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
          )
     list(APPEND GAME_HEADER
@@ -149,9 +146,6 @@ if(APPLE AND IOS)
     enable_language(Swift)
     set(CMAKE_Swift_LANGUAGE_VERSION 5.9)
     set(_ios_swift_rpc_sources
-        proj.ios_mac/ios/rpc/AFCocosRPCBridge.swift
-        proj.ios_mac/ios/rpc/AppsFlyerCocosEventBus.swift
-        proj.ios_mac/ios/rpc/AppsFlyerCocosRpcResponse.swift
         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
         proj.ios_mac/ios/SwiftBridge.swift
     )
