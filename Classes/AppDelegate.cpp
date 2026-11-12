@@ -18,12 +18,25 @@ using namespace CocosDenshion;
 
 #include "AppsFlyer/AppsFlyerX.h"
 #include "AppsFlyer/AppsFlyerXDeepLinkResult.h"
+#include "platform/CCCommon.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
+
+#include <cstdio>
 
 USING_NS_CC;
 
+static void showSampleDialog(const char* title, const char* message) {
+    cocos2d::ccMessageBox(message, title);
+}
+
 static void onSessionReadyStartSdk() {
-    AppsFlyerX::start();
+    AppsFlyerX::start(true, [](bool success) {
+        char message[128];
+        std::snprintf(message, sizeof(message),
+                      "start(awaitResponse:true) finished\nRPC success: %s", success ? "yes" : "no");
+        showSampleDialog("AppsFlyer", message);
+        CCLOG("[AF-SDK7] start awaitResponse complete, success=%d", success ? 1 : 0);
+    });
 }
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
@@ -159,12 +172,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     data["Item_id"] = 1;
     data["isLegacy"] = false;
     AppsFlyerX::setPartnerData("partnerID", data);
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // SDK 7 manual startup: deep link + conversion listeners above, then session-ready → start(), then init.
     AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
     AppsFlyerX::initSdk();
-#endif
 
     // initialize director
     auto director = Director::getInstance();

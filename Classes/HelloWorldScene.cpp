@@ -7,8 +7,11 @@ USING_NS_CC;
 #include <cstdlib>
 #include "ui/CocosGUI.h"
 #include "AppsFlyer/AppsFlyerX.h"
+#include "platform/CCCommon.h"
 #include "../cocos2d/cocos/ui/UIWidget.h"
 #include "../cocos2d/cocos/base/CCValue.h"
+
+#include <cstdio>
 
 using namespace ui;
 
@@ -64,7 +67,13 @@ bool HelloWorld::init()
                 map["key2"] = 1;
                 map["key3"] = true;
                 map["key4"] = 3.0;
-                AppsFlyerX::logEvent("test_event", map);
+                AppsFlyerX::logEvent("test_event", map, true, [](bool success) {
+                    char message[128];
+                    std::snprintf(message, sizeof(message),
+                                  "logEvent(awaitResponse:true) finished\nRPC success: %s",
+                                  success ? "yes" : "no");
+                    cocos2d::ccMessageBox(message, "AppsFlyer");
+                });
 
                 AppsFlyerX::setCustomerUserID("CustomId");
 

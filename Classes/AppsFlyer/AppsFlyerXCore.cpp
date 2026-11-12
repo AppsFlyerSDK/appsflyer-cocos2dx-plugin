@@ -5,6 +5,7 @@
 #include "AFXAdRevenueData.h"
 #include "AppsFlyerX.h"
 
+#include "AppsFlyer/rpc/AppsFlyerCocosThread.h"
 #include "AppsFlyer/rpc/AppsFlyerRpcClient.h"
 
 #include "cocos2d.h"
@@ -258,20 +259,42 @@ void initSdk() {
 #endif
 }
 
-void start() {
+void start(bool awaitResponse, std::function<void(bool success)> onComplete) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    runOnWorker([]() { logRpcFailure("start", rpcCall("start", "{\"awaitResponse\":false}")); });
+    runOnWorker([awaitResponse, onComplete = std::move(onComplete)]() {
+        const std::string params =
+            awaitResponse ? "{\"awaitResponse\":true}" : "{\"awaitResponse\":false}";
+        const rpc::RpcResult result = rpcCall("start", params);
+        if (onComplete) {
+            const bool success = result.success;
+            cocos::runOnGameThread([onComplete = std::move(onComplete), success]() {
+                onComplete(success);
+            });
+        } else {
+            logRpcFailure("start", result);
+        }
+    });
 #endif
 }
 
 void stop(bool /*shouldStop*/) {}
 
-void logEvent(const std::string& eventName, cocos2d::ValueMap /*eventValues*/) {
+void logEvent(const std::string& eventName, cocos2d::ValueMap /*eventValues*/, bool awaitResponse,
+              std::function<void(bool success)> onComplete) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    runOnWorker([eventName]() {
+    runOnWorker([eventName, awaitResponse, onComplete = std::move(onComplete)]() {
         const std::string params = std::string("{\"eventName\":\"") + eventName +
-                                   "\",\"eventValues\":{},\"awaitResponse\":false}";
-        logRpcFailure("logEvent", rpcCall("logEvent", params));
+                                   "\",\"eventValues\":{},\"awaitResponse\":" +
+                                   (awaitResponse ? "true" : "false") + "}";
+        const rpc::RpcResult result = rpcCall("logEvent", params);
+        if (onComplete) {
+            const bool success = result.success;
+            cocos::runOnGameThread([onComplete = std::move(onComplete), success]() {
+                onComplete(success);
+            });
+        } else {
+            logRpcFailure("logEvent", result);
+        }
     });
 #endif
 }

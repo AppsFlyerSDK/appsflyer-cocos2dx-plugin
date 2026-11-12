@@ -82,7 +82,7 @@ Each step is a **blocking RPC** (`AppsFlyerRpcClient::executeBlocking`):
 - **Android:** JNI → `AppsFlyerCocosRpcBridge.executeRpcBlocking` → Kotlin executor → `AppsFlyerRpcHandler`
 - **iOS:** C++ → `executeRpcBlockingRequest` → Swift `AppsFlyerCocosRpcBridge` → `AppsFlyerRPC`
 
-**Manual start:** The sample does **not** call `start()` in `applicationDidFinishLaunching()`. It waits for the **`onSessionReady`** event, then the session-ready listener calls `AppsFlyerX::start()` (another worker RPC with `awaitResponse: false`).
+**Manual start:** The sample does **not** call `start()` in `applicationDidFinishLaunching()`. It waits for the **`onSessionReady`** event, then the session-ready listener calls `AppsFlyerX::start(true, onComplete)` so the dialog reflects schema **`awaitResponse`** (blocking RPC on a worker, completion on the game thread).
 
 ```mermaid
 sequenceDiagram
@@ -116,6 +116,8 @@ sequenceDiagram
 | `onDeepLinking` | `setDidResolveDeepLink` (Phase 1: minimal `FOUND` stub) |
 
 **Important:** Register listeners **synchronously before `initSdk()`** on the game thread so the worker sees non-null callbacks and native listener registration runs during the init batch.
+
+**Start / logEvent completion (schema):** There is no `setOnRequestResponse` in the RPC schema. Use the method parameter **`awaitResponse: true`** on `start` / `logEvent` (same as Flutter/Capacitor). The sample passes an `onComplete` callback; `AppsFlyerXCore` runs it on the **game thread** after the blocking RPC returns.
 
 ---
 

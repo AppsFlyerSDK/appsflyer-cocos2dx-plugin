@@ -34,9 +34,12 @@ void setOnConversionFail(void (*callback)(cocos2d::ValueMap));
 void setOnDeepLinking(void (*callback)(AppsFlyerXDeepLinkResult));
 
 void initSdk();
-void start();
+/** Schema: `start` RPC with optional `awaitResponse` (waits for native completion when true). */
+void start(bool awaitResponse = false, std::function<void(bool success)> onComplete = nullptr);
 void stop(bool shouldStop);
-void logEvent(const std::string& eventName, cocos2d::ValueMap eventValues);
+/** Schema: `logEvent` RPC with optional `awaitResponse`. */
+void logEvent(const std::string& eventName, cocos2d::ValueMap eventValues, bool awaitResponse = false,
+              std::function<void(bool success)> onComplete = nullptr);
 
 // --- Phase 1+ stubs (not wired to RPC yet) ---
 void enableTCFDataCollection(bool shouldCollectConsentData);

@@ -226,8 +226,8 @@ void AppsFlyerX::setUserEmails(std::vector<std::string> userEmails, EmailCryptTy
 #endif
 }
 
-void AppsFlyerX::start() {
-    appsflyer::start();
+void AppsFlyerX::start(bool awaitResponse, std::function<void(bool success)> onComplete) {
+    appsflyer::start(awaitResponse, std::move(onComplete));
 }
 
 void AppsFlyerX::initSdk() {
@@ -238,8 +238,9 @@ void AppsFlyerX::registerSessionReadyListener(void (*callback)()) {
     appsflyer::registerSessionReadyListener(callback);
 }
 
-void AppsFlyerX::logEvent(const std::string& eventName, cocos2d::ValueMap values) {
-    appsflyer::logEvent(eventName, values);
+void AppsFlyerX::logEvent(const std::string& eventName, cocos2d::ValueMap values, bool awaitResponse,
+                          std::function<void(bool success)> onComplete) {
+    appsflyer::logEvent(eventName, values, awaitResponse, std::move(onComplete));
 }
 
 void AppsFlyerX::validateAndLogInAppPurchase(const std::string& productIdentifier,
