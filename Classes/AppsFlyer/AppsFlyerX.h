@@ -10,6 +10,7 @@
 #define AppsFlyerX_h
 
 #include "cocos2d.h"
+#include <functional>
 #include <iostream>
 
 #include "EmailCryptTypeX.h"
@@ -72,9 +73,17 @@ public:
     
     static void setUserEmails(std::vector<std::string> userEmails, EmailCryptTypeX type);
     
-    static void start();
-        
-    static void logEvent(const std::string& eventName, cocos2d::ValueMap values);
+    /** Schema `start`; pass `awaitResponse: true` and `onComplete` to run when the native handler finishes. */
+    static void start(bool awaitResponse = false, std::function<void(bool success)> onComplete = nullptr);
+
+    /** SDK 7 (Android/iOS): RPC init after dev key and listeners are configured. */
+    static void initSdk();
+
+    /** SDK 7 (Android/iOS): register callback on the game thread; sample calls [start] from it when the session is ready. */
+    static void registerSessionReadyListener(void (*callback)());
+
+    static void logEvent(const std::string& eventName, cocos2d::ValueMap values,
+                         bool awaitResponse = false, std::function<void(bool success)> onComplete = nullptr);
     
     static void logAdRevenue(AFXAdRevenueData adRevenueData, cocos2d::ValueMap additionalParameters);
     

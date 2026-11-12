@@ -18,9 +18,26 @@ using namespace CocosDenshion;
 
 #include "AppsFlyer/AppsFlyerX.h"
 #include "AppsFlyer/AppsFlyerXDeepLinkResult.h"
+#include "platform/CCCommon.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
+#include <cstdio>
+
 USING_NS_CC;
+
+static void showSampleDialog(const char* title, const char* message) {
+    cocos2d::ccMessageBox(message, title);
+}
+
+static void onSessionReadyStartSdk() {
+    AppsFlyerX::start(true, [](bool success) {
+        char message[128];
+        std::snprintf(message, sizeof(message),
+                      "start(awaitResponse:true) finished\nRPC success: %s", success ? "yes" : "no");
+        showSampleDialog("AppsFlyer", message);
+        CCLOG("[AF-SDK7] start awaitResponse complete, success=%d", success ? 1 : 0);
+    });
+}
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
@@ -139,45 +156,25 @@ static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
 
 bool AppDelegate::applicationDidFinishLaunching() {
 
-    AppsFlyerX::stop(false);
-//    AppsFlyerX::enableTCFDataCollection(true);
     AppsFlyerX::setIsDebug(true);
-//    AppsFlyerX::setConsentData(AppsFlyerXConsent::initNonGDPRUser());
-    // AppsFlyerX::setConsentData(AppsFlyerXConsent::initForGDPRUser(true,true));
-    //AppsFlyerX::setMinTimeBetweenSessions(9);
-    AppsFlyerX::setAppsFlyerDevKey("YOUR_DEV_KEY");
+    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    // // In case you want to use manual mode. 
-    // AppsFlyerX::setManualStart(true);
-    // // 
-    AppsFlyerX::setAppleAppID("YOUR_APP_ID");
-   // AppsFlyerX::waitForATTUserAuthorizationWithTimeoutInterval(60);
-
+    AppsFlyerX::setAppleAppID("942960987");
 #endif
-//        std::vector<std::string> partners;
-//         partners.push_back("facebook_int");
-//         partners.push_back("googleadwords_int");
-//         AppsFlyerX::sharingFilter(partners);
-//        AppsFlyerX::sharingFilterForAllPartners();
-        AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
-        AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
-        AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
-        AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-       AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
+    AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
+    AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
+    AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
+    AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
+    AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
     ValueMap data;
     data["thePartnerId"] = "abcd";
     data["Item_id"] = 1;
     data["isLegacy"] = false;
     AppsFlyerX::setPartnerData("partnerID", data);
-
-//    AppsFlyerX::logEvent(AFEventPurchase, {{ "key1", cocos2d::Value("value1")},
-//                                             { "key2", cocos2d::Value("value2")}});
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-// remove this to use manual mode.
-  AppsFlyerX::start();
-//
-#endif
+    // SDK 7 manual startup: deep link + conversion listeners above, then session-ready → start(), then init.
+    AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
+    AppsFlyerX::initSdk();
 
     // initialize director
     auto director = Director::getInstance();
@@ -246,12 +243,6 @@ void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
     //CCLOG("%s", "~+~+~+~+~   applicationWillEnterForeground ~+~+~+~+~");
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-// remove this to use manual mode.
-  AppsFlyerX::start();
-//
-#endif
 
 #if USE_AUDIO_ENGINE
     AudioEngine::resumeAll();

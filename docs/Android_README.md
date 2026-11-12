@@ -2,6 +2,7 @@
 
 # Cocos2dX Android Integration Guide
 
+For Cocos2d-x lifecycle and SDK 7 RPC timing, see [SDK7_LIFECYCLE.md](SDK7_LIFECYCLE.md).
 
 ##  Integration:
 How to integrate the AppsFlyer SDK into your Cocos2d-x Android project.
@@ -17,9 +18,10 @@ Take the files from the `AppsFlyer` [folder](/Classes/AppsFlyer) and add them to
 ### 2.  Add the C++ source file definitions
 Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in your `Android.mk` file if you use `PROP_BUILD_TYPE=ndk-build`
 ```mk
-../../../Classes/AppsFlyer/AppsFlyerXAndroid.cpp \
-../../../Classes/AppsFlyer/AppsFlyerProxyX.cpp \
-../../../Classes/AppsFlyer/AppsFlyerX.cpp
+../../../Classes/AppsFlyer/AppsFlyerX.cpp \
+../../../Classes/AppsFlyer/AppsFlyerXCore.cpp \
+../../../Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp \
+../../../Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
 ```
 
 ![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png?raw=true)
@@ -32,15 +34,15 @@ For example in `CMakeLists.txt`:
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppsFlyer/AppsFlyerXAndroid.cpp
-     Classes/AppsFlyer/AppsFlyerProxyX.cpp
+     Classes/AppsFlyer/AppsFlyerXCore.cpp
+     Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
+     Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXAndroid.h
-     Classes/AppsFlyer/AppsFlyerProxyX.h
+     Classes/AppsFlyer/AppsFlyerXCore.h
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
      )

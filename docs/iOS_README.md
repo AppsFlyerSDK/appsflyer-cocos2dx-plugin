@@ -2,44 +2,28 @@
 
 # Cocos2dX iOS Integration Guide
 
-## Sample Project
+For startup order, threading, and when RPC runs relative to Cocos2d-x, see [SDK7_LIFECYCLE.md](SDK7_LIFECYCLE.md).
 
-There's a sample project in the `proj.ios_mac` directory.
+## Sample project
 
+iOS sample sources live under `proj.ios_mac/ios/`. Generate the app with CMake (`scripts/build-ios-cmake.sh`), then run `scripts/setup-ios-rpc-pods.sh` and open the `.xcworkspace` in Xcode.
 
+## SDK 7 (RPC)
 
-## Installation
+Add the cross-platform C++ sources under `Classes/AppsFlyer/` (including `AppsFlyerXCore`, `rpc/`) and the iOS RPC bridge under `proj.ios_mac/ios/rpc/` (`AppsFlyerCocosRpcBridge.swift`, `.mm`, `.h`, plus `AppsFlyerCocos2dX-Bridging-Header.h`). Link **AppsFlyerRPC** and **AppsFlyerFramework** via CocoaPods (see repo `Podfile` and setup script). Keep `proj.ios_mac/ios/SwiftBridge.swift` in the app target so the Swift runtime links.
 
-How to integrate the AppsFlyer SDK into your Cocos2dx Apple project.
+## Privacy / IDFA
 
-1\. Download the [source files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/AppsFlyer) and copy them to your project
+Regular builds link **Main** subspecs via the repo `Podfile` (copied into your CMake build dir by `scripts/setup-ios-rpc-pods.sh`).
 
- - `AppsFlyerX.cpp`
- - `AppsFlyerX.h`
- - `AppsFlyerX+AppController.h`
- - `AppsFlyerX+AppController.m`
- - `AppsFlyerXApple.h`
- - `AppsFlyerXApple.mm`
- - `AppsFlyerXAppleDelegate.h`
- - `AppsFlyerXAppleDelegate.mm`
- - `AppsFlyerXAppleHelper.h`
- - `AppsFlyerXAppleHelper.mm`
- - `AppsFlyerXMacro.h`
- - `EmailCryptTypeX.h`
- - `libAppsFlyer/AppsFlyerCrossPromotionHelper.h`
- - `libAppsFlyer/AppsFlyerLinkGenerator.h`
- - `libAppsFlyer/AppsFlyerShareInviteHelper.h`
- - `libAppsFlyer/AppsFlyerLib.h`
- - `libAppsFlyer/libAppsFlyerLib.a`
+### Strict mode (kids / ad-ID-less apps)
 
-to `Classes/AppsFlyer`
+Opt in at **`pod install`** time.
 
+1. Edit the `Podfile` in your CMake build directory (or change the repo-root `Podfile` before re-running the setup script).
+2. Uncomment `$AppsFlyerStrictMode = true` at the top of the target section.
+3. Run `./scripts/setup-ios-rpc-pods.sh <your-build-dir>` (or `pod install` in that directory).
 
-2\. It looks like in the image below.
+That resolves `AppsFlyerRPC/Strict` and `AppsFlyerFramework/Strict` and sets `AFSDK_NO_IDFA=1` on the app target so C++ sources match the Strict binary. Do not add extra `AppsFlyerFramework/Strict` pods by hand — use only the conditional block in the template Podfile.
 
-![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/add-to-iOS-mk.png)
-
-If you want to use [AppsFlyer Strict mode SDK](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-V6-X-integration-guide-for-developers#integration-strict-mode-sdk): <br>
-1\. Download the source files from [here](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/tree/master/Classes/Strict/AppsFlyer) and copy them to your project
-2\. Inside Xcode, go to your target, then **Build Settings** and define the Preprocessor Macro `AFSDK_NO_IDFA=1` <br>
-![](https://raw.githubusercontent.com/AppsFlyerSDK/appsflyer-cocos2dx-plugin/master/Resources/preprocessor_macro.png)
+Runtime `setDisableAdvertisingIdentifier` does not replace Strict mode; it configures behavior inside whichever native binary is linked. See [AppsFlyer Strict mode docs](https://dev.appsflyer.com/hc/docs/install-ios-sdk#strict-mode-sdk).

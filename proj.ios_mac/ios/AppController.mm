@@ -27,7 +27,10 @@
 #import "cocos2d.h"
 #import "AppDelegate.h"
 #import "RootViewController.h"
-#import "AppsFlyer/libAppsFlyer/AppsFlyerLib.h"
+
+#if __has_include("AppsFlyerCocos2dX-Swift.h")
+#import "AppsFlyerCocos2dX-Swift.h"
+#endif
 
 @implementation AppController
 
@@ -40,7 +43,11 @@
 static AppDelegate s_sharedApplication;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
+#if __has_include("AppsFlyerCocos2dX-Swift.h")
+    [AppsFlyerCocosRpcBridge installEventPipeline];
+#endif
+
     cocos2d::Application *app = cocos2d::Application::getInstance();
     
     // The userNotificationTypes below is just an example and may be changed depending on the app
@@ -105,14 +112,6 @@ static AppDelegate s_sharedApplication;
     /* cocos2d::Director::getInstance()->pause(); */
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
-    // We don't need to call this method any more. It will interrupt user defined game pause&resume logic
-    /* cocos2d::Director::getInstance()->resume(); */
-}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
@@ -150,7 +149,8 @@ static AppDelegate s_sharedApplication;
 }
 
 - (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-//    [[AppsFlyerLib shared] registerUninstall:deviceToken];
+    // Phase 2+: forward deviceToken to AppsFlyer via RPC (registerUninstall).
+    (void)deviceToken;
 }
 
 

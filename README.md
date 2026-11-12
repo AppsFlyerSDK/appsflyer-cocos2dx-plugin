@@ -59,8 +59,12 @@ To do so, please follow [this article](https://support.appsflyer.com/hc/en-us/ar
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- Android AppsFlyer SDK **v6.17.5** 
-- iOS AppsFlyer SDK **v6.17.8**
+The **SDK 7 RPC** line (see `docs/iOS_README.md`, `docs/Android_README.md`, and `docs/SDK7_LIFECYCLE.md`) targets:
+
+- Android: **af-android-sdk BOM 7.0.4**, **af-android-plugin-bridge 7.0.13**
+- iOS: **AppsFlyerFramework 7.0.4**, **AppsFlyerRPC 7.0.41** (CocoaPods)
+
+The API sections below describe the historical **SDK 6** `AppsFlyerX` surface; many calls are stubs on the RPC path until later delivery phases.
 
 
 ### <a id="integration"> Integration:
@@ -637,35 +641,7 @@ You can use the `registerUninstall(void* deviceToken, unsigned long length)` API
 
  *or*
  
- As alternative way use directly native API:
-Open your Xcode project and locate the file `AppController.mm` under the iOS folder inside your project. Add the following code snippet under `didFinishLaunchingWithOptions` :
-
-```cpp 
-#import "AppsFlyerLib.h"
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-//...
-UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                    UIUserNotificationTypeBadge |
-                                                    UIUserNotificationTypeSound);
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-                                                                             categories:nil];
-    [application registerUserNotificationSettings:settings];
-    [application registerForRemoteNotifications];
-//..
-}
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
-    [[AppsFlyerLib shared] registerUninstall:deviceToken];
-}
-```
-and method implementation:
-
-```cpp 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {    
-    [[AppsFlyerLib shared] registerUninstall:deviceToken];
-}
-```
+ On SDK 7, register for push in `AppController.mm` as in the sample project, then forward the device token through the RPC bridge when `registerUninstall` is implemented (not wired in Phase 1). See `docs/SDK7_LIFECYCLE.md`.
 
 
 
@@ -729,14 +705,10 @@ TBD
 TBD
  
  ### <a id="ddl"> Unified deep linking
-```cpp 
-#import "AppsFlyerLib.h"
+```cpp
+// Register before init/start — see docs/SDK7_LIFECYCLE.md (SDK 7 sample AppDelegate).
+AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-//...
- AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
-//..
-}
 static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
     CCLOG("%s", "AppDelegate.cpp got ddl!");
     std::string ddl = "Deep link data is \n";
