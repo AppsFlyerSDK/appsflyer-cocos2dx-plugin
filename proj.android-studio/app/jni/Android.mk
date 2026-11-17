@@ -9,14 +9,9 @@ LOCAL_MODULE_FILENAME := libAppsFlyerCocos2dX
 LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
                    $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerX.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXCore.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp \
-                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AFXAdRevenueData.cpp
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerRpc.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/AppsFlyerTask.cpp \
+                   $(LOCAL_PATH)/../../../Classes/AppsFlyer/generated/AppsFlyerRpcSchema.generated.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes

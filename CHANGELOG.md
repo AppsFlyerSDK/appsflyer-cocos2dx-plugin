@@ -4,6 +4,16 @@
 - **BREAKING:** macOS desktop is no longer supported. The plugin targets Android and iOS only with SDK 7 and AppsFlyer RPC.
 - Remove vendored SDK 6 `libAppsFlyer` static library and headers, legacy `Classes/Strict` tree, unused `AppsFlyerProxyX`, Swift compatibility stubs for the static lib, and the manual `proj.ios_mac/AppsFlyerCocos2dX.xcodeproj` (use CMake-generated Xcode + CocoaPods).
 - Drop CI workflow that validated vendored iOS header imports.
+- **BREAKING:** `AppsFlyerX` public API is schema-generated: methods return **`AppsFlyerTask`** with optional **`whenComplete`**. Removed **`initSdk()`** batching, legacy void listener setters, and hand-maintained `AppsFlyerXCore`. Use **`InitParams`**, **`register*Listener`**, and explicit init order (see `doc/migration-guide.md`).
+- Schema-driven codegen: `tools/af-schema-compiler`, **79** Cocos RPC methods, pinned `schema/appsflyer-plugins-rpc-schema.json`.
+- Inbound `rpcEvent` payloads parsed into `ValueMap` / `appsflyer::DeepLinkData` where `data` is present.
+- **BREAKING:** Replace `AppsFlyerXDeepLinkResult` with header-only `appsflyer::DeepLinkData` (js-core / Flutter–aligned status normalization; use `deepLink` map fields such as `deep_link_value`, `media_source`).
+- Refresh `AppsFlyerXMacro.h` against iOS `AppsFlyerLib.h` and Android `AFInAppEventType` / `AFInAppEventParameterName` (7.x); fix duplicate/typo macros; omit ad-revenue param keys (use `logAdRevenue`).
+- Remove unused SDK 6 helper types (`AFSDKXPurchaseDetails`, `AFSDKXValidateAndLogResult`, `AFXAdRevenueData`, `AppsFlyerXConsent`, `EmailCryptTypeX`). Use schema `*Params` structs from `Classes/AppsFlyer/generated/` (see `doc/migration-guide.md`).
+- Schema-first `logAdRevenue.mediationNetwork`: `enum class MediationNetwork` and platform `valueMap` resolution in `AppsFlyerRpcSchema.generated.*` (aligned with Cordova/js-core).
+- Schema transforms: `setLogLevel` → `androidLogLevel`; `validateAndLogInAppPurchase` → `PurchaseType`, `InAppPurchaseDetails`, and Android/iOS RPC wire encoding (`androidPurchaseType` / `iosPurchaseType`).
+- Consolidate RPC bridge into `Classes/AppsFlyer/AppsFlyerRpc.{h,cpp}` (replaces former `rpc/` transport split and related headers).
+- Canonical plugin semver for internal `setPluginInfo`: `version/plugin-version.json` → `AppsFlyerPluginMetadata.generated.h` (Codegen `af-schema-compiler`).
 
 ## 6.18.0
     - update Android SDK to 6.18.0

@@ -1,12 +1,11 @@
-#ifndef AppsFlyerCocosThread_h
-#define AppsFlyerCocosThread_h
+#ifndef AppsFlyerCocosThread_test_stub
+#define AppsFlyerCocosThread_test_stub
 
 #include <functional>
 
 namespace appsflyer {
 namespace cocos {
 
-/// Runs [fn] on the cocos main thread (Director scheduler).
 void runOnGameThread(const std::function<void()>& fn);
 
 } // namespace cocos

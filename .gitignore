@@ -127,10 +127,8 @@ Build-ios
 .idea/
 
 proj.android-studio/.idea/
+tests/af-task/build/
+tools/af-schema-compiler/build/
 
-# Internal tech designs / phase notes (Notion + local only — not shipped in plugin repo)
+# Local engineering notes (phase tech designs, Notion drafts); not shipped in the plugin repo.
 internal-docs/
-
-# Phase 2 codegen / headless tests (not part of Phase 1 PR1)
-tests/
-tools/

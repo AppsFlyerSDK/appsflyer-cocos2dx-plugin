@@ -20,8 +20,7 @@ Add the paths of the AppsFlyer C++ files to the `LOCAL_SRC_FILES` section in you
 ```mk
 ../../../Classes/AppsFlyer/AppsFlyerX.cpp \
 ../../../Classes/AppsFlyer/AppsFlyerXCore.cpp \
-../../../Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp \
-../../../Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
+../../../Classes/AppsFlyer/AppsFlyerRpc.cpp
 ```
 
 ![add-android-files](https://github.com/AppsFlyerSDK/AppsFlyerCocos2dX/blob/development/Resources/add-to-android-mk.png?raw=true)
@@ -35,8 +34,7 @@ For example in `CMakeLists.txt`:
 list(APPEND GAME_SOURCE
      Classes/AppsFlyer/AppsFlyerX.cpp
      Classes/AppsFlyer/AppsFlyerXCore.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
+     Classes/AppsFlyer/AppsFlyerRpc.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
      )

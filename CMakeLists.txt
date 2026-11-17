@@ -58,28 +58,17 @@ endif()
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
-     Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp
-     Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
-     Classes/AppsFlyer/AFXAdRevenueData.cpp
-     Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppsFlyer/AppsFlyerXConsent.cpp
-     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
-     Classes/AppsFlyer/AppsFlyerXCore.cpp
+     Classes/AppsFlyer/AppsFlyerRpc.cpp
+     Classes/AppsFlyer/generated/AppsFlyerRpcSchema.generated.cpp
+     Classes/AppsFlyer/AppsFlyerTask.cpp
 )
 
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
-     Classes/AppsFlyer/AFSDKXPurchaseDetails.h
-     Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
-     Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXCore.h
-     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
+     Classes/AppsFlyer/AppsFlyerDeepLinkData.h
      Classes/AppsFlyer/AppsFlyerXMacro.h
-     Classes/AppsFlyer/EmailCryptTypeX.h
 )
 
 if(ANDROID)

@@ -10,7 +10,7 @@ iOS sample sources live under `proj.ios_mac/ios/`. Generate the app with CMake (
 
 ## SDK 7 (RPC)
 
-Add the cross-platform C++ sources under `Classes/AppsFlyer/` (including `AppsFlyerXCore`, `rpc/`) and the iOS RPC bridge under `proj.ios_mac/ios/rpc/` (`AppsFlyerCocosRpcBridge.swift`, `.mm`, `.h`, plus `AppsFlyerCocos2dX-Bridging-Header.h`). Link **AppsFlyerRPC** and **AppsFlyerFramework** via CocoaPods (see repo `Podfile` and setup script). Keep `proj.ios_mac/ios/SwiftBridge.swift` in the app target so the Swift runtime links.
+Add the cross-platform C++ sources under `Classes/AppsFlyer/` (including `AppsFlyerX.h`, `generated/`, `rpc/`, `AppsFlyerTask.*`) and the iOS RPC bridge under `proj.ios_mac/ios/rpc/` (`AppsFlyerCocosRpcBridge.swift`, `.mm`, `.h`, plus `AppsFlyerCocos2dX-Bridging-Header.h`). Link **AppsFlyerRPC** and **AppsFlyerFramework** via CocoaPods (see repo `Podfile` and setup script). Keep `proj.ios_mac/ios/SwiftBridge.swift` in the app target so the Swift runtime links.
 
 ## Privacy / IDFA
 

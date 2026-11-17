@@ -17,7 +17,7 @@ using namespace CocosDenshion;
 #endif
 
 #include "AppsFlyer/AppsFlyerX.h"
-#include "AppsFlyer/AppsFlyerXDeepLinkResult.h"
+#include "AppsFlyer/AppsFlyerDeepLinkData.h"
 #include "platform/CCCommon.h"
 #include "../cocos2d/cocos/platform/CCPlatformMacros.h"
 
@@ -30,13 +30,20 @@ static void showSampleDialog(const char* title, const char* message) {
 }
 
 static void onSessionReadyStartSdk() {
-    AppsFlyerX::start(true, [](bool success) {
-        char message[128];
-        std::snprintf(message, sizeof(message),
-                      "start(awaitResponse:true) finished\nRPC success: %s", success ? "yes" : "no");
-        showSampleDialog("AppsFlyer", message);
-        CCLOG("[AF-SDK7] start awaitResponse complete, success=%d", success ? 1 : 0);
-    });
+    AppsFlyerX::start(true)
+        .whenComplete([](const AppsFlyerResult& r) {
+            char message[128];
+            std::snprintf(message, sizeof(message),
+                          "start(awaitResponse:true) finished\nRPC success: %s", r.success ? "yes" : "no");
+            showSampleDialog("AppsFlyer", message);
+            CCLOG("[AppsFlyer] start awaitResponse complete, success=%d", r.success ? 1 : 0);
+            if (!r.success) {
+                return;
+            }
+            AppsFlyerX::LogEventParams event;
+            event.eventName = "test_event";
+            AppsFlyerX::logEvent(event);
+        });
 }
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
@@ -44,12 +51,9 @@ static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
-AppDelegate::AppDelegate()
-{
-}
+AppDelegate::AppDelegate() {}
 
-AppDelegate::~AppDelegate() 
-{
+AppDelegate::~AppDelegate() {
 #if USE_AUDIO_ENGINE
     AudioEngine::end();
 #elif USE_SIMPLE_AUDIO_ENGINE
@@ -59,29 +63,24 @@ AppDelegate::~AppDelegate()
 
 // if you want a different context, modify the value of glContextAttrs
 // it will affect all platforms
-void AppDelegate::initGLContextAttrs()
-{
+void AppDelegate::initGLContextAttrs() {
     // set OpenGL context attributes: red,green,blue,alpha,depth,stencil
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
 
     GLView::setGLContextAttrs(glContextAttrs);
-    
-    
 }
 
-// if you want to use the package manager to install more packages,  
+// if you want to use the package manager to install more packages,
 // don't modify or remove this function
-static int register_all_packages()
-{
-    return 0; //flag for packages manager
+static int register_all_packages() {
+    return 0; // flag for packages manager
 }
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
     std::string gcd = "Conversion Data : ";
-    
-    for (auto &t : installData){
-        
+
+    for (auto& t : installData) {
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
         gcd.append(t.first.c_str());
         gcd.append(" : ");
@@ -97,91 +96,111 @@ static void onConversionDataSuccess(cocos2d::ValueMap installData) {
 //    //myLabel->setHeight( origin.y + size.height - 180);
 //    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
 //    currentScene->addChild(myLabel,1);
-   
-    
 }
 
 static void onConversionDataFail(cocos2d::ValueMap map) {
-    for (auto &t : map){
+    for (auto& t : map) {
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
     }
 }
 
-static void onAppOpenAttribution(cocos2d::ValueMap map) {
-    for (auto &t : map){
-        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-    }
-}
-
-static void onAppOpenAttributionFailure(cocos2d::ValueMap map) {
-    for (auto &t : map){
-        CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-    }
-}
-
-static void didResolveDeepLink(AppsFlyerXDeepLinkResult result){
+static void didResolveDeepLink(appsflyer::DeepLinkData result) {
     CCLOG("%s", "AppDelegate.cpp got ddl!");
     std::string ddl = "Deep link data is \n";
     switch (result.status) {
-    case NOTFOUND:
-            CCLOG("deep link not found");
-            break;
-        case FOUND:
-            if (!result.deepLink.empty()){
-                if (!result.getMediaSource().empty()) {
-                    CCLOG("Media source is %s", result.getMediaSource().c_str());
-                }
-                for (auto &t : result.deepLink){
-                    CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-                    ddl.append(t.first.c_str());
-                    ddl.append(" : ");
-                    ddl.append(t.second.asString().c_str());
-                    ddl.append("\n");
-                }
-                auto currentScene = Director::getInstance()->getRunningScene();
-                auto child = currentScene->getChildByTag(1);
-                if (child != NULL)
-                    currentScene->removeChildByTag(1);
-                auto size = Director::getInstance()->getVisibleSize();
-                Vec2 origin = Director::getInstance()->getVisibleOrigin();
-                auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
-                myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
-                //myLabel->setHeight( origin.y + size.height - 180);
-                //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-                currentScene->addChild(myLabel,1, 1);
+    case appsflyer::DeepLinkStatus::NotFound:
+        CCLOG("deep link not found");
+        break;
+    case appsflyer::DeepLinkStatus::Found:
+        if (!result.deepLink.empty()) {
+            const std::string mediaSource = result.deepLinkStringField("media_source");
+            if (!mediaSource.empty()) {
+                CCLOG("Media source is %s", mediaSource.c_str());
             }
+            for (auto& t : result.deepLink) {
+                CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
+                ddl.append(t.first.c_str());
+                ddl.append(" : ");
+                ddl.append(t.second.asString().c_str());
+                ddl.append("\n");
+            }
+            auto currentScene = Director::getInstance()->getRunningScene();
+            auto child = currentScene->getChildByTag(1);
+            if (child != NULL) {
+                currentScene->removeChildByTag(1);
+            }
+            auto size = Director::getInstance()->getVisibleSize();
+            Vec2 origin = Director::getInstance()->getVisibleOrigin();
+            auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
+            myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
+            //myLabel->setHeight( origin.y + size.height - 180);
+            //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+            currentScene->addChild(myLabel, 1, 1);
+        }
+        break;
+    default:
+        break;
     }
-
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+    AppsFlyerX::stop(false);
 
-    AppsFlyerX::setIsDebug(true);
-    AppsFlyerX::setAppsFlyerDevKey("H9xZweqPFhzBEtiDh2vDj");
+    AppsFlyerX::SetPartnerDataParams partnerParams;
+    partnerParams.partnerId = "partnerID";
+    ValueMap partnerData;
+    partnerData["thePartnerId"] = "abcd";
+    partnerData["Item_id"] = 1;
+    partnerData["isLegacy"] = false;
+    partnerParams.data = partnerData;
+    AppsFlyerX::setPartnerData(partnerParams);
 
+    // SDK 7 manual startup: deep link + conversion listeners, then session-ready → start() (after init task chain).
+    // Schema task order: deep link → enableDebug → init → conversion + session-ready listeners → start().
+    AppsFlyerX::registerDeepLinkListener(
+        [](appsflyer::DeepLinkData result) { didResolveDeepLink(result); })
+        .whenComplete([](const AppsFlyerResult& rDeepLink) {
+            if (!rDeepLink.success) {
+                CCLOG("[AppsFlyer] registerDeepLinkListener failed");
+                return;
+            }
+            AppsFlyerX::enableDebug(true).whenComplete([](const AppsFlyerResult& rDebug) {
+                if (!rDebug.success) {
+                    CCLOG("[AppsFlyer] enableDebug failed");
+                    return;
+                }
+                AppsFlyerX::InitParams params;
+                params.devKey = "H9xZweqPFhzBEtiDh2vDj";
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    AppsFlyerX::setAppleAppID("942960987");
+                params.appId = "942960987";
 #endif
-    AppsFlyerX::setOnConversionDataSuccess(onConversionDataSuccess);
-    AppsFlyerX::setOnConversionDataFail(onConversionDataFail);
-    AppsFlyerX::setOnAppOpenAttribution(onAppOpenAttribution);
-    AppsFlyerX::setOnAppOpenAttributionFailure(onAppOpenAttributionFailure);
-    AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
-    ValueMap data;
-    data["thePartnerId"] = "abcd";
-    data["Item_id"] = 1;
-    data["isLegacy"] = false;
-    AppsFlyerX::setPartnerData("partnerID", data);
-    // SDK 7 manual startup: deep link + conversion listeners above, then session-ready → start(), then init.
-    AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
-    AppsFlyerX::initSdk();
+                AppsFlyerX::init(params).whenComplete([](const AppsFlyerResult& rInit) {
+                    if (!rInit.success) {
+                        CCLOG("[AppsFlyer] init failed");
+                        return;
+                    }
+                    AppsFlyerX::registerConversionListener(onConversionDataSuccess,
+                                                           onConversionDataFail)
+                        .whenComplete([](const AppsFlyerResult& rConv) {
+                            if (!rConv.success) {
+                                CCLOG("[AppsFlyer] registerConversionListener failed");
+                                return;
+                            }
+                            AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
+                        });
+                });
+            });
+        });
 
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    if(!glview) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("AppsFlyerCocos2dX", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+    if (!glview) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || \
+    (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+        glview = GLViewImpl::createWithRect("AppsFlyerCocos2dX",
+                                            cocos2d::Rect(0, 0, designResolutionSize.width,
+                                                          designResolutionSize.height));
 #else
         glview = GLViewImpl::create("AppsFlyerCocos2dX");
 #endif
@@ -195,29 +214,33 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height,
+                                    ResolutionPolicy::NO_BORDER);
     auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
+    if (frameSize.height > mediumResolutionSize.height) {
+        director->setContentScaleFactor(
+            MIN(largeResolutionSize.height / designResolutionSize.height,
+                largeResolutionSize.width / designResolutionSize.width));
     }
     // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
+    else if (frameSize.height > smallResolutionSize.height) {
+        director->setContentScaleFactor(
+            MIN(mediumResolutionSize.height / designResolutionSize.height,
+                mediumResolutionSize.width / designResolutionSize.width));
     }
     // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
+    else {
+        director->setContentScaleFactor(
+            MIN(smallResolutionSize.height / designResolutionSize.height,
+                smallResolutionSize.width / designResolutionSize.width));
     }
 
     register_all_packages();
 
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
-    
+
     // run
     director->runWithScene(scene);
 
@@ -228,7 +251,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
-    AppsFlyerX::didEnterBackground();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    AppsFlyerX::onPause();
+#endif
 
 #if USE_AUDIO_ENGINE
     AudioEngine::pauseAll();

@@ -61,30 +61,35 @@ bool HelloWorld::init()
                 //     AppsFlyerX::setManualStart(false);
                 // #endif
                 // AppsFlyerX::start();
-                // // 
+                // //
                 ValueMap map;
                 map["key1"] = "value1";
                 map["key2"] = 1;
                 map["key3"] = true;
                 map["key4"] = 3.0;
-                AppsFlyerX::logEvent("test_event", map, true, [](bool success) {
+                AppsFlyerX::LogEventParams logParams;
+                logParams.eventName = "test_event";
+                logParams.eventValues = map;
+                logParams.awaitResponse = true;
+                AppsFlyerX::logEvent(logParams).whenComplete([](const AppsFlyerResult& r) {
                     char message[128];
                     std::snprintf(message, sizeof(message),
                                   "logEvent(awaitResponse:true) finished\nRPC success: %s",
-                                  success ? "yes" : "no");
+                                  r.success ? "yes" : "no");
                     cocos2d::ccMessageBox(message, "AppsFlyer");
                 });
 
-                AppsFlyerX::setCustomerUserID("CustomId");
+                AppsFlyerX::setCustomerUserId("CustomId");
 
                 ValueMap test_map;
                 test_map["key1"] = "value1";
                 test_map["key2"] = "eee";
                 test_map["key3"] = "sssss";
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-                AppsFlyerX::validateAndLogInAppPurchase("public", "sig", "pd", "price", "curr", test_map);
+                // Legacy 6.x: validateAndLogInAppPurchase(publicKey, signature, ...). SDK 7: ValidateAndLogInAppPurchaseParams.
+                // AppsFlyerX::validateAndLogInAppPurchase(...);
 #endif
-              
+
                 break;
             }
             default:
@@ -118,28 +123,19 @@ bool HelloWorld::init()
         switch (type) {
             case Widget::TouchEventType::ENDED: {
                 std::cout << "Log event raised" << std::endl;
-                
-                ValueMap params;
-                AFSDKXPurchaseDetails details = AFSDKXPurchaseDetails(AFXPurchaseType::SUBSCRIPTION, "public", "customId", "price", "curr", "transactionId");
-                AppsFlyerX::validateAndLogInAppPurchase(
-                        details,
-                        params,
-                        [](ValueMap validationResult, ValueMap error) {
-                            if (!error.empty()) {
-                                std::cout << "Validation failed\n";
 
-                                for (const auto &it : error) {
-                                    std::cout << "Error key: " << it.first << std::endl;
-                                }
-                            } else {
-                                std::cout << "Validation success\n";
-
-                                for (const auto &it : validationResult) {
-                                    std::cout << "Result key: " << it.first << std::endl;
-                                }
-                            }
-                        }
-                    );
+                // SDK 7: ValidateAndLogInAppPurchaseParams + validateAndLogInAppPurchase(…, onComplete).
+                AppsFlyerX::ValidateAndLogInAppPurchaseParams purchaseParams;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+                purchaseParams.purchase.purchaseType = AppsFlyerX::PurchaseType::OneTimePurchase;
+                purchaseParams.purchase.productId = "demo_product";
+                purchaseParams.purchase.purchaseToken = "demo_token";
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                purchaseParams.purchase.purchaseType = AppsFlyerX::PurchaseType::OneTimePurchase;
+                purchaseParams.purchase.productId = "demo_product";
+                purchaseParams.purchase.transactionId = "demo_txn";
+#endif
+                AppsFlyerX::validateAndLogInAppPurchase(purchaseParams);
                 break;
             }
             default:
