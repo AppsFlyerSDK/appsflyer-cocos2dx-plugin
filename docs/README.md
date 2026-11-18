@@ -1,12 +1,14 @@
 # AppsFlyer Cocos2d-x documentation
 
-| Doc | Audience |
+## Start here (SDK 7)
+
+| If you need… | Read |
 | --- | --- |
-| [migration-guide.md](migration-guide.md) | Upgrading from plugin 6.x to SDK 7 (RPC + `AppsFlyerTask`) |
-| [SDK7_LIFECYCLE.md](SDK7_LIFECYCLE.md) | Init order, threading, bridges, sample app flow |
-| [Android_README.md](Android_README.md) | Android Studio / NDK integration |
-| [iOS_README.md](iOS_README.md) | CMake, CocoaPods, iOS RPC bridge |
+| **Upgrade from 6.x** (API + how distribution changed) | [Migration-Guide.md](Migration-Guide.md) |
+| **iOS — first time** | [iOS-README.md](iOS-README.md) ([integration checklist](iOS-README.md#integration-checklist)) |
+| **Android** — Gradle, `Classes/`, NDK | [Android-README.md](Android-README.md) |
+| **When to call init / listeners** | [SDK7-Lifecycle.md](SDK7-Lifecycle.md) |
 
-Repository root [README.md](../README.md) lists the historical 6.x API surface; use the migration guide for SDK 7.
+Repository [README.md](../README.md) still documents the historical **6.x** `AppsFlyerX` API; new work should follow the guides above.
 
-Maintainer-only schema and codegen notes: [`schema/README.md`](../schema/README.md), [`tools/af-schema-compiler/README.md`](../tools/af-schema-compiler/README.md).
+**Maintainers:** [`schema/README.md`](../schema/README.md), [`tools/af-schema-compiler/README.md`](../tools/af-schema-compiler/README.md).

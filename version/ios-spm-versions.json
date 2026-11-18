@@ -1,0 +1,10 @@
+{
+  "minimumIos": "15.0",
+  "cmakeDeploymentTarget": "15.6",
+  "appsflyerAppleRpc": "7.0.41",
+  "appsflyerFrameworkStatic": "7.0.4",
+  "appsflyerAppleRpcUrl": "https://github.com/AppsFlyerSDK/appsflyer-apple-rpc.git",
+  "appsflyerFrameworkStaticUrl": "https://github.com/AppsFlyerSDK/AppsFlyerFramework-Static.git",
+  "productRpc": "AppsFlyerRPC",
+  "productFramework": "AppsFlyerLib-Static"
+}

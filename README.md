@@ -2,7 +2,9 @@
 
 # Cocos2dX AppsFlyer plugin for Android and iOS.
 
-> **SDK 7 (RPC):** The sample app and new integrations use schema-generated `AppsFlyerX` methods (`AppsFlyerTask`, `*Params` types under `Classes/AppsFlyer/generated/`). Much of this README still describes the **6.x** void API for reference. For init order, listener registration, and removed helpers (`AFSDKXPurchaseDetails`, `AFXAdRevenueData`, `AppsFlyerXConsent`, etc.), see **[`docs/migration-guide.md`](docs/migration-guide.md)**.
+> **SDK 7 (RPC):** New integrations start at **[`docs/README.md`](docs/README.md)**. **iOS:** [`docs/iOS-README.md`](docs/iOS-README.md) (incl. [integration checklist](docs/iOS-README.md#integration-checklist)). Init order: [`docs/SDK7-Lifecycle.md`](docs/SDK7-Lifecycle.md). API migration: [`docs/Migration-Guide.md`](docs/Migration-Guide.md).
+>
+> The sections below still describe the **6.x** void API for reference. SDK 7 uses schema-generated `AppsFlyerX` methods (`AppsFlyerTask`, types under `Classes/AppsFlyer/generated/`).
 
 ----------
 
@@ -61,17 +63,17 @@ To do so, please follow [this article](https://support.appsflyer.com/hc/en-us/ar
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-The **SDK 7 RPC** line (see [`docs/README.md`](docs/README.md), [`docs/iOS_README.md`](docs/iOS_README.md), [`docs/Android_README.md`](docs/Android_README.md), and [`docs/SDK7_LIFECYCLE.md`](docs/SDK7_LIFECYCLE.md)) targets:
+The **SDK 7 RPC** line (see [`docs/README.md`](docs/README.md), [`docs/iOS-README.md`](docs/iOS-README.md), [`docs/Android-README.md`](docs/Android-README.md), and [`docs/SDK7-Lifecycle.md`](docs/SDK7-Lifecycle.md)) targets:
 
 - Android: **af-android-sdk BOM 7.0.4**, **af-android-plugin-bridge 7.0.13**
-- iOS: **AppsFlyerFramework 7.0.4**, **AppsFlyerRPC 7.0.41** (CocoaPods)
+- iOS: **AppsFlyerFramework 7.0.4**, **AppsFlyerRPC 7.0.41** (SwiftPM; see [docs/Migration-Guide.md](docs/Migration-Guide.md))
 
 The API sections below describe the historical **SDK 6** `AppsFlyerX` surface; many calls are stubs on the RPC path until later delivery phases.
 
 
 ### <a id="integration"> Integration:
- - [Android integration Documents](docs/Android_README.md)
- - [iOS integration Documents](docs/iOS_README.md)
+ - [Android integration Documents](docs/Android-README.md)
+ - [iOS integration (SDK 7 — copy manifest, SPM, Xcode)](docs/iOS-README.md)
 
  
 
@@ -215,7 +217,7 @@ ___
 
 ##### <a id="validate_and_log_2.0"> **`Validate and log (SDK 7)`**
 
-SDK 7 exposes a single RPC method. Build `ValidateAndLogInAppPurchaseParams` with typed **`InAppPurchaseDetails`** (`PurchaseType`, `productId`, and `purchaseToken` on Android or `transactionId` on iOS) plus optional **`additionalParameters`**. Codegen maps to native RPC wire (see [`docs/migration-guide.md`](docs/migration-guide.md)).
+SDK 7 exposes a single RPC method. Build `ValidateAndLogInAppPurchaseParams` with typed **`InAppPurchaseDetails`** (`PurchaseType`, `productId`, and `purchaseToken` on Android or `transactionId` on iOS) plus optional **`additionalParameters`**. Codegen maps to native RPC wire (see [`docs/Migration-Guide.md`](docs/Migration-Guide.md)).
 
 *Example (Android):*
 ```cpp
@@ -230,7 +232,7 @@ AppsFlyerX::validateAndLogInAppPurchase(params).whenComplete([](const AppsFlyerR
 });
 ```
 
-6.x `AFSDKXPurchaseDetails` and per-platform overloads were **removed** — see [`docs/migration-guide.md`](docs/migration-guide.md).
+6.x `AFSDKXPurchaseDetails` and per-platform overloads were **removed** — see [`docs/Migration-Guide.md`](docs/Migration-Guide.md).
 
 ---
 
@@ -249,7 +251,7 @@ params.revenue = 7.99;
 AppsFlyerX::logAdRevenue(params);
 ```
 
-The 6.x **`AFXAdRevenueData`** helper class was removed — see [`docs/migration-guide.md`](docs/migration-guide.md).
+The 6.x **`AFXAdRevenueData`** helper class was removed — see [`docs/Migration-Guide.md`](docs/Migration-Guide.md).
 
 
 ---
@@ -485,7 +487,7 @@ AppsFlyerX::setUseUninstallSandbox(true);
 
 ##### <a id="validateAndLogInAppPurchase"> **`validateAndLogInAppPurchase` (SDK 7)**
 
-Android and iOS share one method. Fill **`ValidateAndLogInAppPurchaseParams::purchase`** (`InAppPurchaseDetails`) per platform. See [Validate and log (SDK 7)](#validate_and_log_2.0) and [`docs/migration-guide.md`](docs/migration-guide.md). Legacy Android/iOS-specific overloads were removed.
+Android and iOS share one method. Fill **`ValidateAndLogInAppPurchaseParams::purchase`** (`InAppPurchaseDetails`) per platform. See [Validate and log (SDK 7)](#validate_and_log_2.0) and [`docs/Migration-Guide.md`](docs/Migration-Guide.md). Legacy Android/iOS-specific overloads were removed.
 
 ---
 
@@ -534,7 +536,7 @@ You can use the `registerUninstall(void* deviceToken, unsigned long length)` API
 
  *or*
  
- On SDK 7, register for push in `AppController.mm` as in the sample project, then forward the device token through the RPC bridge when `registerUninstall` is wired in the sample app. See `docs/SDK7_LIFECYCLE.md`.
+ On SDK 7, register for push in `AppController.mm` as in the sample project, then forward the device token through the RPC bridge when `registerUninstall` is wired in the sample app. See `docs/SDK7-Lifecycle.md`.
 
 
 
@@ -599,7 +601,7 @@ TBD
  
  ### <a id="ddl"> Unified deep linking
 ```cpp
-// Register before init/start — see docs/SDK7_LIFECYCLE.md (SDK 7 sample AppDelegate).
+// Register before init/start — see docs/SDK7-Lifecycle.md (SDK 7 sample AppDelegate).
 AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
 
 static void didResolveDeepLink(appsflyer::DeepLinkData result){
@@ -773,7 +775,7 @@ on iOS you need to implement IDFA request pop up and add AppTrackTransparency fr
 
 ## <a id="dma_support"> Send consent for DMA compliance 
 
-**SDK 7:** Pass **`SetConsentDataParams`** to **`AppsFlyerX::setConsentData`** (returns `AppsFlyerTask`). The **`AppsFlyerXConsent`** class was removed — see [`docs/migration-guide.md`](docs/migration-guide.md).
+**SDK 7:** Pass **`SetConsentDataParams`** to **`AppsFlyerX::setConsentData`** (returns `AppsFlyerTask`). The **`AppsFlyerXConsent`** class was removed — see [`docs/Migration-Guide.md`](docs/Migration-Guide.md).
 
 For a general introduction to DMA consent data, see [here](https://dev.appsflyer.com/hc/docs/send-consent-for-dma-compliance).<be> 
 The SDK offers two alternative methods for gathering consent data:<br> 

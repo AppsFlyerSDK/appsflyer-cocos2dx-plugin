@@ -1,6 +1,66 @@
 # Migration guide — AppsFlyer Cocos2d-x 6.x → SDK 7 (RPC)
 
-This guide covers the **SDK 7** task surface on **`AppsFlyerX`** (schema-generated methods in `Classes/AppsFlyer/generated/`; transport in `AppsFlyerRpc.{h,cpp}`).
+This guide covers:
+
+1. **How the plugin is packaged** and how you pull in native SDK dependencies (iOS uses **Swift Package Manager**).
+2. **SDK 7** API changes on **`AppsFlyerX`** (schema-generated methods in `Classes/AppsFlyer/generated/`; transport in `AppsFlyerRpc.{h,cpp}`).
+
+| Topic | Document |
+| --- | --- |
+| **iOS — step-by-step + checklist** | [iOS-README.md](iOS-README.md) |
+| **Init order, threading, bridges** | [SDK7-Lifecycle.md](SDK7-Lifecycle.md) |
+| **Android Gradle** | [Android-README.md](Android-README.md), `proj.android-studio/app/build.gradle` |
+
+## How the plugin is distributed (game developers)
+
+The Cocos2d-x AppsFlyer plugin has **never been a standalone registry package** (no npm, CocoaPods spec, or Maven artifact for the bridge itself). You **copy source trees into your game** and wire your **existing** Android Studio / Xcode projects.
+
+### SDK 6.x (what shipped on GitHub until 6.18.x)
+
+| Piece | What you did |
+| --- | --- |
+| **Plugin bridge (C++)** | Copy `Classes/AppsFlyer/` into the game; add files to `CMakeLists.txt`, `Android.mk`, or the IDE project. |
+| **iOS native SDK** | **Vendored inside the plugin repo**: prebuilt `libAppsFlyer` + public headers (and an optional **`Classes/Strict`** tree for kids / ad-ID-less variants). You linked the static library in Xcode and included Obj‑C++/C++ glue from the plugin. |
+| **iOS project** | Sample used a **checked-in** `proj.ios_mac/…xcodeproj` or your own Xcode target; no separate package manager for AppsFlyer on iOS in the published flow. |
+| **Android native SDK** | **Your** `build.gradle` / `implementation` line (Maven) or a copied `.jar` — the plugin did not ship the AAR inside `Classes/`. |
+| **macOS desktop** | Supported in older lines; **removed in SDK 7**. |
+
+### SDK 7 (this line)
+
+| Piece | What you do now |
+| --- | --- |
+| **Plugin bridge** | Still **manual copy**: `Classes/AppsFlyer/` (incl. `generated/`, `AppsFlyerRpc.*`, `AppsFlyerTask.*`) + platform bridges. |
+| **iOS native SDK** | **Not vendored.** Add **Swift Package Manager** dependencies in Xcode on the **app** target (see below). Minimum **iOS 15.0** (sample CMake uses **15.6**). |
+| **Android native SDK** | **Maven** BOM + RPC bridge artifact in Gradle (see sample `proj.android-studio/app/build.gradle`), same pattern as other AppsFlyer mobile plugins. |
+| **Codegen** | Optional maintainer flow: `./scripts/codegen/run.sh` after schema changes. Games normally consume committed `generated/` output. |
+
+### CMake vs non-CMake (iOS)
+
+- **CMake + Xcode generator** — what **this repository’s sample** uses: `cmake -B build-device -GXcode …` produces `AppsFlyerCocos2dX.xcodeproj`. Run `./scripts/setup-ios-spm.sh` to inject SwiftPM refs and fix CMake’s legacy build-dir settings, then build with `./scripts/build-ios-cmake.sh` or Xcode.
+- **Non-CMake** — **most production Cocos games**: you already have an Xcode project from Cocos Creator, `cocos compile`, or a hand-maintained `proj.ios_mac` tree. You **do not** need to adopt CMake. Follow **[iOS-README.md](iOS-README.md)** (copy manifest + Xcode steps).
+
+### Main vs Strict (iOS native binaries)
+
+AppsFlyer ships the iOS SDK in two **compile-time** variants:
+
+| Variant | Typical use | Cocos2d-x SDK 7 consumption |
+| --- | --- | --- |
+| **Main (regular)** | Standard apps; can use ATT / IDFA when allowed | Default SPM products **`AppsFlyerRPC`** + **`AppsFlyerLib-Static`** from the public GitHub packages (pins in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json)). |
+| **Strict** (user-data–private / kids binary) | Apps that must ship AppsFlyer’s **Strict** native binary and **privacy manifest** (IDFA-related APIs compiled out) | In Xcode, depend on the **Strict** Swift package products for the same RPC/Framework versions (not `AppsFlyerLib-Static` Main). Add `AFSDK_NO_IDFA=1` on the app target. Product names change with SDK releases — use the [iOS SDK install guide](https://dev.appsflyer.com/hc/docs/install-ios-sdk#strict-mode-sdk). |
+
+**Runtime** APIs such as `setDisableAdvertisingIdentifier` only change behavior inside **whichever binary you linked**; they do **not** switch Main ↔ Strict. Pick the variant at **link time**.
+
+Android does not use Main/Strict the same way as iOS; use Gradle BOM + bridge and follow Android SDK privacy docs.
+
+## iOS (Swift Package Manager)
+
+All step-by-step iOS work — **what to copy where**, integration cases (CMake vs manual Xcode), SPM pins, build settings, and troubleshooting — lives in **[iOS-README.md](iOS-README.md)**.
+
+Summary only:
+
+- Native SDKs: **`AppsFlyerRPC`** + **`AppsFlyerLib-Static`** via SwiftPM on the **app** target; exact versions in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json).
+- Repo sample: `./scripts/build-ios-cmake.sh` runs `cmake`, then `setup-ios-spm.sh`, then `xcodebuild` (pass `DEVELOPMENT_TEAM=<id>` as an extra xcodebuild setting when signing).
+- After any manual `cmake -B`, run `./scripts/setup-ios-spm.sh` again before building.
 
 ## Breaking changes (summary)
 

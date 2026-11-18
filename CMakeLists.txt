@@ -157,7 +157,7 @@ if(APPLE AND IOS)
     target_include_directories(${APP_NAME} PRIVATE proj.ios_mac/ios/rpc)
 endif()
 
-# iOS SDK 7 RPC (AppsFlyerRPC via CocoaPods — run scripts/setup-ios-rpc-pods.sh after cmake)
+# iOS SDK 7 RPC (AppsFlyerRPC via SwiftPM — run scripts/setup-ios-spm.sh after cmake)
 if(APPLE AND IOS)
     target_link_libraries(${APP_NAME}
         "-framework AdSupport"
@@ -175,14 +175,13 @@ if(APPLE AND IOS)
         XCODE_ATTRIBUTE_OTHER_LDFLAGS "$(inherited) -ObjC"
     )
 
-    # CocoaPods sets baseConfigurationReference on `pod install`; do not override via CMake.
+    # SwiftPM package wiring is applied by scripts/setup-ios-spm.sh after CMake generates the project.
 endif()
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})
 if(APPLE)
-    # Do not set DERIVED_DATA_PATH on iOS when using CocoaPods — it splits Pod
-    # framework output from the app linker search paths (Pods_AppsFlyerCocos2dX not found).
+    # Prefer -clonedSourcePackagesDirPath under the build dir when resolving SPM (setup-ios-spm.sh).
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
     if(IOS)
         #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")

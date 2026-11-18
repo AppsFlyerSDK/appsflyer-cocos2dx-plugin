@@ -1,6 +1,6 @@
 # Cocos2d-x lifecycle and AppsFlyer SDK 7
 
-Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). For migration from 6.x or batched `initSdk()`, see [migration-guide.md](migration-guide.md).
+Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). For migration from 6.x or batched `initSdk()`, see [Migration-Guide.md](Migration-Guide.md).
 
 **Platforms:** Android and iOS only ([`CHANGELOG.md`](../CHANGELOG.md)).
 
@@ -12,6 +12,34 @@ Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenCo
 |----------|------|
 | **Android** | `AppActivity.onCreate` → `AppsFlyerCocosRpcBridge.onActivityCreated(this)` **before** `super.onCreate()` |
 | **iOS** | `AppController` → `[AppsFlyerCocosRpcBridge installEventPipeline]` **before** `Application::run()` |
+
+iOS file copy, SwiftPM, checklist, and Xcode settings: [iOS-README.md](iOS-README.md).
+
+### iOS startup timeline (Cocos2d-x)
+
+Two layers run in order — native (UIKit) first, then Cocos game code:
+
+```mermaid
+sequenceDiagram
+    participant UI as AppController.mm (UIKit)
+    participant Pipe as AppsFlyerCocosRpcBridge
+    participant Cocos as Application::run()
+    participant Game as AppDelegate.cpp (C++)
+    participant AF as AppsFlyerX / native RPC
+
+    UI->>Pipe: installEventPipeline()
+    UI->>Cocos: run()
+    Cocos->>Game: applicationDidFinishLaunching()
+    Game->>AF: registerDeepLinkListener → init → …
+    AF-->>Game: whenComplete (game thread)
+    Game->>AF: registerSessionReadyListener
+  Note over AF,Game: session-ready callback
+    Game->>AF: start()
+```
+
+- **`installEventPipeline`** must run **before** `run()` so inbound `rpcEvent` callbacks can reach C++.
+- **`init` / `start`** run later on the **game thread** inside `applicationDidFinishLaunching()` (not in `AppController.mm`).
+- Minimal C++ example: [`snippets/ios-minimal-init.cpp`](snippets/ios-minimal-init.cpp) (full QA: `Classes/AppDelegate.cpp`).
 
 ---
 

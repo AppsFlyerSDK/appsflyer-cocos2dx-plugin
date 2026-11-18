@@ -91,6 +91,8 @@ proj.ios_mac/*.xcodeproj/xcuserdata/
 # Sample Apps folder 
 build/*
 build-device/
+build-device/SourcePackages/
+build-device/DerivedData/
 build-ios-rpc/
 build-mac/
 engine/*
