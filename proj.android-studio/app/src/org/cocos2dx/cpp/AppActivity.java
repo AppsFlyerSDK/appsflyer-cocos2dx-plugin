@@ -23,6 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.cpp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.appsflyer.cocos2dx.rpc.AppsFlyerCocosRpcBridge;
@@ -36,6 +37,19 @@ public class AppActivity extends Cocos2dxActivity {
         // Before Cocos runs native applicationDidFinishLaunching (GL init), RPC needs Activity/app context.
         AppsFlyerCocosRpcBridge.onActivityCreated(this);
         super.onCreate(savedInstanceState);
+    }
+
+    /**
+     * Deep links that reopen an already-running activity arrive here (e.g. singleTask).
+     * Cocos2dxActivity does not call setIntent(), so getIntent() would otherwise stay
+     * on the original launch intent. AppsFlyer reads the activity intent around onResume;
+     * we only refresh it here and let the native SDK handle UDL — no performDeepLinking
+     * from this hook (avoids racing automatic resolution).
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     @Override

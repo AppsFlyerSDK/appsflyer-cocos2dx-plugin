@@ -15,6 +15,7 @@
 - Schema transforms: `setLogLevel` → `androidLogLevel`; `validateAndLogInAppPurchase` → `PurchaseType`, `InAppPurchaseDetails`, and Android/iOS RPC wire encoding (`androidPurchaseType` / `iosPurchaseType`).
 - Consolidate RPC bridge into `Classes/AppsFlyer/AppsFlyerRpc.{h,cpp}` (replaces former `rpc/` transport split and related headers).
 - Canonical plugin semver for internal `setPluginInfo`: `version/plugin-version.json` → `AppsFlyerPluginMetadata.generated.h` (Codegen `af-schema-compiler`).
+- **Android:** Sample `AppActivity` overrides `onNewIntent` and calls `setIntent` for warm-start deep links (native SDK UDL on resume).
 
 ## 6.18.0
     - update Android SDK to 6.18.0

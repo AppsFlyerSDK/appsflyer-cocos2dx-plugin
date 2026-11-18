@@ -81,6 +81,7 @@ Native emits JSON on `rpcEvent`. C++ demuxes by top-level `"event"` and parses `
 
 - **GAP-010:** No iOS cold-start attribution queue / `handleOpenURL` RPC glue in-plugin.
 - **GAP-007:** Android RPC Kotlin remains in the sample app module (not a published AAR).
+- **Android warm-start deep links:** sample `AppActivity` uses `onNewIntent` + `setIntent` only; cold-start / iOS URL forwarding is still integrator-owned where noted in platform READMEs.
 - Nested JSON in event payloads may require future parser hardening.
 
 ---
