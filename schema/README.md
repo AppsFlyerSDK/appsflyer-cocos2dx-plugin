@@ -7,7 +7,7 @@
 
 Maintainers with Google Artifact Registry read access can refresh the contract with local `gcloud` credentials:
 
-1. Authenticate: `gcloud auth login` (or export `AR_TOKEN`; optional overrides in `schema/gar.local.env` — see `gar.env.example`).
+1. Authenticate: `gcloud auth login` (or export `AR_TOKEN`; optional overrides in `gar.local.env` — see `gar.env.example`).
 2. From repo root:
 
 ```bash
@@ -16,7 +16,7 @@ Maintainers with Google Artifact Registry read access can refresh the contract w
 
 By default this resolves **Maven latest** for `com.appsflyer.plugins:appsflyer-plugins-rpc-schema` from `europe-west1-maven.pkg.dev/af-artifacts-prd/maven-internal`. Pin a specific release with `RPC_SCHEMA_VERSION=1.2.0`.
 
-3. Update `schema/rpc-schema.version` to match the JSON `schemaVersion`, then:
+3. Update `rpc-schema.version` to match the JSON `schemaVersion`, then:
 
 ```bash
 ./scripts/codegen/run.sh
@@ -31,7 +31,7 @@ By default this resolves **Maven latest** for `com.appsflyer.plugins:appsflyer-p
 ./scripts/codegen/run.sh
 ```
 
-Builds `tools/af-schema-compiler` (CMake + nlohmann/json via FetchContent) and writes:
+Builds `tools/af-schema-compiler` (see [`../tools/af-schema-compiler/README.md`](../tools/af-schema-compiler/README.md)) and writes:
 
 - `Classes/AppsFlyer/generated/AppsFlyerRpcSchema.generated.{h,cpp}` — `appsflyer::` task APIs
 - `Classes/AppsFlyer/generated/AppsFlyerXSchemaMethods.generated.h` — inline `AppsFlyerX::` wrappers (included from `AppsFlyerX.h`)

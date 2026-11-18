@@ -6,7 +6,9 @@ For startup order, threading, and when RPC runs relative to Cocos2d-x, see [SDK7
 
 ## Sample project
 
-iOS sample sources live under `proj.ios_mac/ios/`. Generate the app with CMake (`scripts/build-ios-cmake.sh`), then run `scripts/setup-ios-rpc-pods.sh` and open the `.xcworkspace` in Xcode.
+iOS sample sources live under `proj.ios_mac/ios/`. **Do not** open a pre-checked-in `.xcodeproj` under `proj.ios_mac/`.
+
+Generate the app with CMake (`scripts/build-ios-cmake.sh`), run `scripts/setup-ios-rpc-pods.sh <build-dir>`, then open **`<build-dir>/AppsFlyerCocos2dX.xcworkspace`** in Xcode (not the `.xcodeproj`).
 
 ## SDK 7 (RPC)
 

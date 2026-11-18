@@ -13,4 +13,8 @@ Build-time C++ tool that reads `schema/appsflyer-plugins-rpc-schema.json` and wr
 
 Requires CMake 3.16+, a C++17 compiler, and network on first configure (FetchContent for nlohmann/json).
 
-Sources: `src/main.cpp`, `src/schema_model.{hpp,cpp}`, `src/generator.{hpp,cpp}` (`afcodegen::generateAll`).
+Sources: `src/main.cpp`, `schema_model.{hpp,cpp}`, `generator.{hpp,cpp}` (`afcodegen::generateAll`).
+
+Plugin version metadata for internal `setPluginInfo` is emitted from `version/plugin-version.json` into `AppsFlyerPluginMetadata.generated.h`.
+
+Fetching and pinning the JSON contract: [`../../schema/README.md`](../../schema/README.md).

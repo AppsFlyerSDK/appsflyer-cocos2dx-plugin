@@ -2,7 +2,7 @@
 
 # Cocos2dX AppsFlyer plugin for Android and iOS.
 
-> **SDK 7 (RPC):** The sample app and new integrations use schema-generated `AppsFlyerX` methods (`AppsFlyerTask`, `*Params` types under `Classes/AppsFlyer/generated/`). Much of this README still describes the **6.x** void API for reference. For init order, listener registration, and removed helpers (`AFSDKXPurchaseDetails`, `AFXAdRevenueData`, `AppsFlyerXConsent`, etc.), see **[`doc/migration-guide.md`](doc/migration-guide.md)**.
+> **SDK 7 (RPC):** The sample app and new integrations use schema-generated `AppsFlyerX` methods (`AppsFlyerTask`, `*Params` types under `Classes/AppsFlyer/generated/`). Much of this README still describes the **6.x** void API for reference. For init order, listener registration, and removed helpers (`AFSDKXPurchaseDetails`, `AFXAdRevenueData`, `AppsFlyerXConsent`, etc.), see **[`docs/migration-guide.md`](docs/migration-guide.md)**.
 
 ----------
 
@@ -61,7 +61,7 @@ To do so, please follow [this article](https://support.appsflyer.com/hc/en-us/ar
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-The **SDK 7 RPC** line (see `docs/iOS_README.md`, `docs/Android_README.md`, and `docs/SDK7_LIFECYCLE.md`) targets:
+The **SDK 7 RPC** line (see [`docs/README.md`](docs/README.md), [`docs/iOS_README.md`](docs/iOS_README.md), [`docs/Android_README.md`](docs/Android_README.md), and [`docs/SDK7_LIFECYCLE.md`](docs/SDK7_LIFECYCLE.md)) targets:
 
 - Android: **af-android-sdk BOM 7.0.4**, **af-android-plugin-bridge 7.0.13**
 - iOS: **AppsFlyerFramework 7.0.4**, **AppsFlyerRPC 7.0.41** (CocoaPods)
@@ -215,7 +215,7 @@ ___
 
 ##### <a id="validate_and_log_2.0"> **`Validate and log (SDK 7)`**
 
-SDK 7 exposes a single RPC method. Build `ValidateAndLogInAppPurchaseParams` with typed **`InAppPurchaseDetails`** (`PurchaseType`, `productId`, and `purchaseToken` on Android or `transactionId` on iOS) plus optional **`additionalParameters`**. Codegen maps to native RPC wire (see [`doc/migration-guide.md`](doc/migration-guide.md)).
+SDK 7 exposes a single RPC method. Build `ValidateAndLogInAppPurchaseParams` with typed **`InAppPurchaseDetails`** (`PurchaseType`, `productId`, and `purchaseToken` on Android or `transactionId` on iOS) plus optional **`additionalParameters`**. Codegen maps to native RPC wire (see [`docs/migration-guide.md`](docs/migration-guide.md)).
 
 *Example (Android):*
 ```cpp
@@ -230,7 +230,7 @@ AppsFlyerX::validateAndLogInAppPurchase(params).whenComplete([](const AppsFlyerR
 });
 ```
 
-6.x `AFSDKXPurchaseDetails` and per-platform overloads were **removed** — see [`doc/migration-guide.md`](doc/migration-guide.md).
+6.x `AFSDKXPurchaseDetails` and per-platform overloads were **removed** — see [`docs/migration-guide.md`](docs/migration-guide.md).
 
 ---
 
@@ -249,7 +249,7 @@ params.revenue = 7.99;
 AppsFlyerX::logAdRevenue(params);
 ```
 
-The 6.x **`AFXAdRevenueData`** helper class was removed — see [`doc/migration-guide.md`](doc/migration-guide.md).
+The 6.x **`AFXAdRevenueData`** helper class was removed — see [`docs/migration-guide.md`](docs/migration-guide.md).
 
 
 ---
@@ -485,7 +485,7 @@ AppsFlyerX::setUseUninstallSandbox(true);
 
 ##### <a id="validateAndLogInAppPurchase"> **`validateAndLogInAppPurchase` (SDK 7)**
 
-Android and iOS share one method. Fill **`ValidateAndLogInAppPurchaseParams::purchase`** (`InAppPurchaseDetails`) per platform. See [Validate and log (SDK 7)](#validate_and_log_2.0) and [`doc/migration-guide.md`](doc/migration-guide.md). Legacy Android/iOS-specific overloads were removed.
+Android and iOS share one method. Fill **`ValidateAndLogInAppPurchaseParams::purchase`** (`InAppPurchaseDetails`) per platform. See [Validate and log (SDK 7)](#validate_and_log_2.0) and [`docs/migration-guide.md`](docs/migration-guide.md). Legacy Android/iOS-specific overloads were removed.
 
 ---
 
@@ -773,7 +773,7 @@ on iOS you need to implement IDFA request pop up and add AppTrackTransparency fr
 
 ## <a id="dma_support"> Send consent for DMA compliance 
 
-**SDK 7:** Pass **`SetConsentDataParams`** to **`AppsFlyerX::setConsentData`** (returns `AppsFlyerTask`). The **`AppsFlyerXConsent`** class was removed — see [`doc/migration-guide.md`](doc/migration-guide.md).
+**SDK 7:** Pass **`SetConsentDataParams`** to **`AppsFlyerX::setConsentData`** (returns `AppsFlyerTask`). The **`AppsFlyerXConsent`** class was removed — see [`docs/migration-guide.md`](docs/migration-guide.md).
 
 For a general introduction to DMA consent data, see [here](https://dev.appsflyer.com/hc/docs/send-consent-for-dma-compliance).<be> 
 The SDK offers two alternative methods for gathering consent data:<br> 

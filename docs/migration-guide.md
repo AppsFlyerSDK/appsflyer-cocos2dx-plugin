@@ -35,13 +35,15 @@ AppsFlyerX::initSdk(); // batched listener RPCs + init
 AppsFlyerX::registerDeepLinkListener([](appsflyer::DeepLinkData data) { /* data.status, data.deepLink */ })
     .whenComplete([](const AppsFlyerResult& r) {
         if (!r.success) return;
-        AppsFlyerX::InitParams p;
-        p.devKey = "...";
-        p.appId = "..."; // iOS
-        p.isDebug = true;
-        AppsFlyerX::init(p).whenComplete([](const AppsFlyerResult& r2) {
-            if (!r2.success) return;
-            AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
+        AppsFlyerX::enableDebug(true).whenComplete([](const AppsFlyerResult& rDbg) {
+            if (!rDbg.success) return;
+            AppsFlyerX::InitParams p;
+            p.devKey = "...";
+            p.appId = "..."; // iOS
+            AppsFlyerX::init(p).whenComplete([](const AppsFlyerResult& r2) {
+                if (!r2.success) return;
+                AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
+            });
         });
     });
 ```

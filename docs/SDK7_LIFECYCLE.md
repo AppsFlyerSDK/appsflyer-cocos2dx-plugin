@@ -1,6 +1,6 @@
 # Cocos2d-x lifecycle and AppsFlyer SDK 7
 
-Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). For migration from 6.x or batched `initSdk()`, see [`../doc/migration-guide.md`](../doc/migration-guide.md).
+Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). For migration from 6.x or batched `initSdk()`, see [migration-guide.md](migration-guide.md).
 
 **Platforms:** Android and iOS only ([`CHANGELOG.md`](../CHANGELOG.md)).
 
