@@ -1,6 +1,6 @@
 # Cocos2d-x lifecycle and AppsFlyer SDK 7
 
-Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). For migration from 6.x or batched `initSdk()`, see [Migration-Guide.md](Migration-Guide.md).
+Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenComplete`). Upgrading from **plugin 6.x**? See [Migration-Guide.md](Migration-Guide.md) for packaging and API changes.
 
 **Platforms:** Android and iOS only ([`CHANGELOG.md`](../CHANGELOG.md)).
 
@@ -52,7 +52,7 @@ On the **game thread** during `applicationDidFinishLaunching()`:
 3. **`registerConversionListener`** → **`registerSessionReadyListener`**.
 4. In session-ready callback → **`start(awaitResponse)`** / **`logEvent`**.
 
-**Do not** call `initSdk()` or legacy void listener setters (`setOnConversionDataSuccess`, `setDidResolveDeepLink`). Use listener register tasks instead.
+Use **`registerDeepLinkListener`**, **`registerConversionListener`**, and **`registerSessionReadyListener`** — not ad hoc listener setters outside the generated API.
 
 **Internal:** `setPluginInfo` runs automatically on the worker immediately before the first `init` / `initialize` RPC.
 

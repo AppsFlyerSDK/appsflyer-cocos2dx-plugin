@@ -2,7 +2,7 @@
 
 # Cocos2dX iOS integration (SDK 7)
 
-Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift Package Manager** on your Xcode **app** target. Minimum **iOS 15.0** (this repo’s CMake sample uses **15.6**).
+Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift Package Manager** on your Xcode **app** target. Minimum deployment target: **`minimumIos`** in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json) (**15.0** today).
 
 > **Deep links / cold start:** the plugin does **not** ship full iOS URL / universal-link forwarding ([SDK7-Lifecycle — Limitations](SDK7-Lifecycle.md#5-limitations)). Plan native hooks in your app if you rely on deferred deep linking at launch.
 
@@ -11,7 +11,7 @@ Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift
 | Requirement | Notes |
 | --- | --- |
 | **macOS + Xcode 15+** | Swift 5.9+, SPM |
-| **iOS deployment target ≥ 15.0** | Match [`version/ios-spm-versions.json`](../version/ios-spm-versions.json) |
+| **iOS Deployment Target** | **≥ `minimumIos`** in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json) (App Store / Xcode app target and Cocos iOS binary) |
 | **App target with Swift enabled** | SPM + `AppsFlyerCocosRpcBridge.swift` on the **app**, not lib-only |
 | **Network** | First package resolve needs GitHub access |
 
@@ -24,7 +24,7 @@ Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift
 
 | More detail | Document |
 | --- | --- |
-| 6.x → 7 packaging & API | [Migration-Guide.md](Migration-Guide.md) |
+| Migrating from 6.x → 7 (packaging & API) | [Migration-Guide.md](Migration-Guide.md) |
 | Init order & threading | [SDK7-Lifecycle.md](SDK7-Lifecycle.md) |
 | Version pins | [`version/ios-spm-versions.json`](../version/ios-spm-versions.json) |
 
@@ -111,10 +111,12 @@ There is no checked-in `.xcodeproj` under `proj.ios_mac/`. From the plugin repo 
 **Manual steps** (same result without compiling):
 
 ```bash
+# CMAKE_OSX_DEPLOYMENT_TARGET must be >= minimumIos in version/ios-spm-versions.json.
+# This repo's CMake cache may use cmakeDeploymentTarget (sample-only pin) — integrators can use 15.0+.
 cmake -B build-device -GXcode \
   -DCMAKE_SYSTEM_NAME=iOS \
   -DCMAKE_OSX_SYSROOT=iphoneos \
-  -DCMAKE_OSX_DEPLOYMENT_TARGET=15.6
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0
 ./scripts/setup-ios-spm.sh build-device
 ```
 
@@ -228,7 +230,7 @@ Add both products under **Frameworks, Libraries, and Embedded Content** for the 
 
 | Setting | Value |
 | --- | --- |
-| iOS Deployment Target | **≥ 15.0** |
+| iOS Deployment Target | **≥ `minimumIos`** ([`version/ios-spm-versions.json`](../version/ios-spm-versions.json)) |
 | Swift Language Version | **5.9+** |
 | Objective-C Bridging Header | e.g. `proj.ios_mac/ios/YourGame-Bridging-Header.h` |
 | Product Module Name | Drives `<Module>-Swift.h` (sample: `AppsFlyerCocos2dX`) |
@@ -287,17 +289,6 @@ This plugin does not replace Apple’s ATT UI — you implement `ATTrackingManag
 | **Build flag** | Default | Add `AFSDK_NO_IDFA=1` on the app target when AppsFlyer docs require it for Strict |
 
 Choose the variant when you **link** the SDK, not via `setDisableAdvertisingIdentifiers` alone. Overview: [Migration-Guide.md — Main vs Strict](Migration-Guide.md#main-vs-strict-ios-native-binaries).
-
----
-
-## Migrating from SDK 6.x (iOS)
-
-| SDK 6.x | SDK 7 |
-| --- | --- |
-| Vendored `libAppsFlyer` in the plugin repo | Remove; use SPM |
-| `Classes/Strict` header tree | Remove; use Strict SPM products if needed |
-| Old ObjC glue | `proj.ios_mac/ios/rpc/*` + Swift bridge |
-| `AppsFlyerX` void API / `initSdk()` | `AppsFlyerTask` + [Migration-Guide.md](Migration-Guide.md) |
 
 ---
 

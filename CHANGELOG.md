@@ -15,6 +15,7 @@
 - Schema transforms: `setLogLevel` → `androidLogLevel`; `validateAndLogInAppPurchase` → `PurchaseType`, `InAppPurchaseDetails`, and Android/iOS RPC wire encoding (`androidPurchaseType` / `iosPurchaseType`).
 - Consolidate RPC bridge into `Classes/AppsFlyer/AppsFlyerRpc.{h,cpp}` (replaces former `rpc/` transport split and related headers).
 - Canonical plugin semver for internal `setPluginInfo`: `version/plugin-version.json` → `AppsFlyerPluginMetadata.generated.h` (Codegen `af-schema-compiler`).
+- **Docs:** SDK 7 API reference in [`docs/API.md`](docs/API.md); documentation index in root `README.md` only; Android integration guide rewritten for SDK 7 (`docs/Android-README.md`). Platform minimums documented via `version/android-sdk-versions.json` (API 21) and `version/ios-spm-versions.json` (`minimumIos`), not sample app `minSdk`/CMake pins.
 - **Android:** Sample `AppActivity` overrides `onNewIntent` and calls `setIntent` for warm-start deep links (native SDK UDL on resume).
 
 ## 6.18.0

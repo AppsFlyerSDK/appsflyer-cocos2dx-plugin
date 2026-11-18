@@ -1,38 +1,43 @@
 # Migration guide — AppsFlyer Cocos2d-x 6.x → SDK 7 (RPC)
 
+For games already on the **Cocos2d-x plugin 6.x** line (AppsFlyer native SDK **6.x**), this guide explains what changes when you move to **SDK 7**. New integrations can use the same material as the canonical SDK 7 description.
+
 This guide covers:
 
-1. **How the plugin is packaged** and how you pull in native SDK dependencies (iOS uses **Swift Package Manager**).
-2. **SDK 7** API changes on **`AppsFlyerX`** (schema-generated methods in `Classes/AppsFlyer/generated/`; transport in `AppsFlyerRpc.{h,cpp}`).
+1. **Packaging** — how native SDK dependencies are pulled in on SDK 7 (iOS: **Swift Package Manager**; Android: **Maven BOM + RPC bridge**).
+2. **`AppsFlyerX` on SDK 7** — schema-generated methods in `Classes/AppsFlyer/generated/`; transport in `AppsFlyerRpc.{h,cpp}`.
 
 | Topic | Document |
 | --- | --- |
+| **`AppsFlyerX` API reference** | [API.md](API.md) |
 | **iOS — step-by-step + checklist** | [iOS-README.md](iOS-README.md) |
 | **Init order, threading, bridges** | [SDK7-Lifecycle.md](SDK7-Lifecycle.md) |
-| **Android Gradle** | [Android-README.md](Android-README.md), `proj.android-studio/app/build.gradle` |
+| **Android — Gradle, copy manifest, Activity hook** | [Android-README.md](Android-README.md) |
 
 ## How the plugin is distributed (game developers)
 
-The Cocos2d-x AppsFlyer plugin has **never been a standalone registry package** (no npm, CocoaPods spec, or Maven artifact for the bridge itself). You **copy source trees into your game** and wire your **existing** Android Studio / Xcode projects.
+The Cocos2d-x AppsFlyer plugin is **not** a standalone registry package (no npm, CocoaPods spec, or Maven artifact for the bridge itself). You **copy source trees into your game** and wire your **existing** Android Studio / Xcode projects.
 
-### SDK 6.x (what shipped on GitHub until 6.18.x)
+### Migrating from plugin 6.x — packaging (high level)
 
-| Piece | What you did |
+| Area | Plugin 6.x (typical) | SDK 7 |
+| --- | --- | --- |
+| **iOS native AppsFlyer SDK** | Static library / headers shipped with or alongside the old plugin tree | **SPM**: `AppsFlyerRPC` + `AppsFlyerLib-Static` on the app target ([iOS-README.md](iOS-README.md)) |
+| **Android native AppsFlyer SDK** | Single Maven `af-android-sdk` coordinate or local JAR in `libs/` | **BOM** + unversioned **`af-android-sdk`** + **`af-android-plugin-bridge`** + Install Referrer ([Android-README.md](Android-README.md)) |
+| **C++ bridge sources** | Hand-maintained `AppsFlyerX` implementation in the game tree | `AppsFlyerRpc` / `AppsFlyerTask` + `generated/` (refresh `Classes/AppsFlyer/` from this repo) |
+| **Platform glue** | Obj‑C++/Java patterns from older samples | Kotlin `AppsFlyerCocosRpcBridge` (Android), `proj.ios_mac/ios/rpc/*` (iOS) |
+| **macOS** | Supported on some 6.x lines | **Not supported** |
+
+### SDK 7 layout (reference)
+
+| Piece | What you do on SDK 7 |
 | --- | --- |
-| **Plugin bridge (C++)** | Copy `Classes/AppsFlyer/` into the game; add files to `CMakeLists.txt`, `Android.mk`, or the IDE project. |
-| **iOS native SDK** | **Vendored inside the plugin repo**: prebuilt `libAppsFlyer` + public headers (and an optional **`Classes/Strict`** tree for kids / ad-ID-less variants). You linked the static library in Xcode and included Obj‑C++/C++ glue from the plugin. |
-| **iOS project** | Sample used a **checked-in** `proj.ios_mac/…xcodeproj` or your own Xcode target; no separate package manager for AppsFlyer on iOS in the published flow. |
-| **Android native SDK** | **Your** `build.gradle` / `implementation` line (Maven) or a copied `.jar` — the plugin did not ship the AAR inside `Classes/`. |
-| **macOS desktop** | Supported in older lines; **removed in SDK 7**. |
-
-### SDK 7 (this line)
-
-| Piece | What you do now |
-| --- | --- |
-| **Plugin bridge** | Still **manual copy**: `Classes/AppsFlyer/` (incl. `generated/`, `AppsFlyerRpc.*`, `AppsFlyerTask.*`) + platform bridges. |
-| **iOS native SDK** | **Not vendored.** Add **Swift Package Manager** dependencies in Xcode on the **app** target (see below). Minimum **iOS 15.0** (sample CMake uses **15.6**). |
-| **Android native SDK** | **Maven** BOM + RPC bridge artifact in Gradle (see sample `proj.android-studio/app/build.gradle`), same pattern as other AppsFlyer mobile plugins. |
-| **Codegen** | Optional maintainer flow: `./scripts/codegen/run.sh` after schema changes. Games normally consume committed `generated/` output. |
+| **Plugin bridge (C++)** | Copy `Classes/AppsFlyer/` (incl. `generated/`, `AppsFlyerRpc.*`, `AppsFlyerTask.*`) into the game; add sources to `CMakeLists.txt`, `Android.mk`, or the IDE project. |
+| **iOS native SDK** | **Swift Package Manager** on the **app** target — not bundled in this repo. Minimum **iOS** = `minimumIos` in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json). |
+| **Android native SDK** | **Maven** BOM + RPC bridge in Gradle ([`version/android-sdk-versions.json`](../version/android-sdk-versions.json)); **minSdk ≥ API 21** on the app target. |
+| **Platform bridges** | Kotlin RPC adapter (Android) and Obj‑C++/Swift bridge (iOS) — see platform READMEs. |
+| **Codegen** | Maintainers: `./scripts/codegen/run.sh` after schema changes. Games normally consume committed `generated/` output. |
+| **macOS desktop** | **Not supported** on SDK 7. |
 
 ### CMake vs non-CMake (iOS)
 
@@ -48,7 +53,7 @@ AppsFlyer ships the iOS SDK in two **compile-time** variants:
 | **Main (regular)** | Standard apps; can use ATT / IDFA when allowed | Default SPM products **`AppsFlyerRPC`** + **`AppsFlyerLib-Static`** from the public GitHub packages (pins in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json)). |
 | **Strict** (user-data–private / kids binary) | Apps that must ship AppsFlyer’s **Strict** native binary and **privacy manifest** (IDFA-related APIs compiled out) | In Xcode, depend on the **Strict** Swift package products for the same RPC/Framework versions (not `AppsFlyerLib-Static` Main). Add `AFSDK_NO_IDFA=1` on the app target. Product names change with SDK releases — use the [iOS SDK install guide](https://dev.appsflyer.com/hc/docs/install-ios-sdk#strict-mode-sdk). |
 
-**Runtime** APIs such as `setDisableAdvertisingIdentifier` only change behavior inside **whichever binary you linked**; they do **not** switch Main ↔ Strict. Pick the variant at **link time**.
+**Runtime** APIs such as `setDisableAdvertisingIdentifiers` only change behavior inside **whichever binary you linked**; they do **not** switch Main ↔ Strict. Pick the variant at **link time**.
 
 Android does not use Main/Strict the same way as iOS; use Gradle BOM + bridge and follow Android SDK privacy docs.
 
@@ -62,17 +67,29 @@ Summary only:
 - Repo sample: `./scripts/build-ios-cmake.sh` runs `cmake`, then `setup-ios-spm.sh`, then `xcodebuild` (pass `DEVELOPMENT_TEAM=<id>` as an extra xcodebuild setting when signing).
 - After any manual `cmake -B`, run `./scripts/setup-ios-spm.sh` again before building.
 
-## Breaking changes (summary)
+## Migrating from plugin 6.x — API model
 
-| 6.x / transitional RPC batching | SDK 7 (`AppsFlyerX` task methods; internal transport in `Classes/AppsFlyer/AppsFlyerRpc.h`) |
+| Topic | Plugin 6.x (typical) | SDK 7 |
+| --- | --- | --- |
+| Calls | Synchronous-style `void` methods on `AppsFlyerX` | Methods return **`AppsFlyerTask`**; use **`whenComplete`** → **`AppsFlyerResult`** |
+| Listeners | Setter functions on `AppsFlyerX` | **`registerDeepLinkListener`**, **`registerConversionListener`**, **`registerSessionReadyListener`** (separate RPCs) |
+| Initialization | Dev key / app ID setters + implicit or batched startup | **`init(InitParams)`** after listener registration; **`start`** from session-ready callback |
+| Deep links | Platform-specific result types in older samples | **`appsflyer::DeepLinkData`** in the deep-link listener |
+| Purchases, ad revenue, consent | Dedicated helper types in the old tree | Schema **`…Params`** structs (`ValidateAndLogInAppPurchaseParams`, `LogAdRevenueParams`, `SetConsentDataParams`, …) — see [API.md](API.md) |
+
+### SDK 7 API model (detail)
+
+| Topic | SDK 7 behavior |
 | --- | --- |
-| `void` methods, fire-and-forget worker | Schema-generated methods return **`AppsFlyerTask`** |
-| Listener setters + batched `initSdk()` | **Immediate** native RPC per `register*Listener`; **`init`** is separate |
-| Errors logged only (`[AppsFlyer]`) | **`AppsFlyerResult`** / **`AppsFlyerError`** via **`whenComplete`** |
-| Fixed `awaitResponse: false` on start/logEvent | **`StartParams` / `LogEventParams`** pass **`awaitResponse`** through |
-| `AppsFlyerXDeepLinkResult` + legacy getters | **`appsflyer::DeepLinkData`** (`DeepLinkStatus`, `error`, `deepLink` map — same contract as js-core **`DeepLinkData`**) |
+| Method shape | Schema-generated methods return **`AppsFlyerTask`**; handle results with **`whenComplete`** → **`AppsFlyerResult`** / **`AppsFlyerError`**. |
+| Listeners | **`registerDeepLinkListener`**, **`registerConversionListener`**, **`registerSessionReadyListener`** — each is its own RPC; register **before** **`init`**. |
+| Init | **`init(InitParams)`** with `devKey` and `appId` (iOS). |
+| Start / events | **`start(awaitResponse)`**, **`logEvent(LogEventParams)`** with configurable **`awaitResponse`**. |
+| Deep links | **`appsflyer::DeepLinkData`** in the deep-link listener callback. |
 
 Public names do **not** include `Rpc`. Internal transport lives in `AppsFlyerRpc.cpp` (`executeRpc` / `executeBlocking`).
+
+Full method list: [API.md](API.md).
 
 ## Recommended init sequence (SDK 7)
 
@@ -80,16 +97,6 @@ Public names do **not** include `Rpc`. Internal transport lives in `AppsFlyerRpc
 2. On init success → **`registerConversionListener`** → **`registerSessionReadyListener`**
 3. In session-ready callback → **`start(awaitResponse)`** → **`logEvent`**
 4. Internal **`setPluginInfo`** is sent by the plugin immediately before the first **`init`** wire — do not call it from game code.
-
-### Before (batched `initSdk()`)
-
-```cpp
-AppsFlyerX::setDidResolveDeepLink(didResolveDeepLink);
-AppsFlyerX::registerSessionReadyListener(onSessionReadyStartSdk);
-AppsFlyerX::initSdk(); // batched listener RPCs + init
-```
-
-### After (SDK 7 — `whenComplete` chain)
 
 ```cpp
 AppsFlyerX::registerDeepLinkListener([](appsflyer::DeepLinkData data) { /* data.status, data.deepLink */ })
@@ -108,22 +115,7 @@ AppsFlyerX::registerDeepLinkListener([](appsflyer::DeepLinkData data) { /* data.
     });
 ```
 
-See `Classes/AppDelegate.cpp` for the full sample chain.
-
-## Legacy `AppsFlyerX::initSdk()`
-
-Still present for transitional callers but **no longer registers listeners**. Prefer `AppsFlyerX::init` and explicit listener tasks.
-
-## Removed SDK 6 helper classes
-
-These types were removed from the plugin tree; use generated parameter structs on `AppsFlyerX` instead.
-
-| Removed (6.x) | SDK 7 replacement |
-| --- | --- |
-| `AFSDKXPurchaseDetails`, platform-specific `validateAndLogInAppPurchase` overloads | `ValidateAndLogInAppPurchaseParams` + `validateAndLogInAppPurchase(…).whenComplete(…)` |
-| `AFXAdRevenueData`, `AppsFlyerXAdRevenueMediationNetworkType` | `LogAdRevenueParams` + `AppsFlyerX::MediationNetwork::*` schema keys (wire mapping is codegen’d from schema `valueMap`) |
-| `AppsFlyerXConsent`, `forGDPRUser` / `forNonGDPRUser` | `SetConsentDataParams` + `setConsentData(…)` |
-| `setUserEmails(vector, EmailCryptTypeX)` | `setUserEmail(const std::string& email)` (single email per call) |
+See `Classes/AppDelegate.cpp` for the full sample chain and [SDK7-Lifecycle.md](SDK7-Lifecycle.md) for ordering rules.
 
 ### Purchase validation (SDK 7)
 
@@ -184,5 +176,5 @@ AppsFlyerX::setConsentData(consent);
 Android smoke build:
 
 ```bash
-cd proj.android-studio && ./gradlew :app:testDebugUnitTest :app:assembleDebug
+cd proj.android-studio && ./gradlew :AppsFlyerCocos2dX:assembleDebug :AppsFlyerCocos2dX:testDebugUnitTest
 ```
