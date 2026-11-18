@@ -182,6 +182,7 @@ AppsFlyerTask appendParametersToDeepLinkingURL(const AppendParametersToDeepLinki
 AppsFlyerTask clearUserPii(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask collectDataFromLauncherActivity(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask disableAppSetId(AppsFlyerCompletion onComplete = {});
+AppsFlyerTask disableAutomaticDeferredDeepLink(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask enableFacebookDeferredApplinks(bool isEnabled, AppsFlyerCompletion onComplete = {});
 AppsFlyerTask enableTCFDataCollection(bool shouldCollect, AppsFlyerCompletion onComplete = {});
 AppsFlyerTask generateInviteLink(const GenerateInviteLinkParams& params, AppsFlyerCompletion onComplete = {});
@@ -205,6 +206,7 @@ AppsFlyerTask logLocation(const LogLocationParams& params, AppsFlyerCompletion o
 AppsFlyerTask logSession(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask onPause(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask performDeepLinking(const PerformDeepLinkingParams& params, AppsFlyerCompletion onComplete = {});
+AppsFlyerTask performDeferredDeepLinking(AppsFlyerCompletion onComplete = {});
 AppsFlyerTask registerConversionListener(void (*onSuccess)(cocos2d::ValueMap),
                                          void (*onFail)(cocos2d::ValueMap),
                                          AppsFlyerCompletion onComplete = {});

@@ -59,6 +59,11 @@ AppsFlyerTask disableAppSetId(AppsFlyerCompletion onComplete) {
     return executeRpc("disableAppSetId", paramsJson, std::move(onComplete));
 }
 
+AppsFlyerTask disableAutomaticDeferredDeepLink(AppsFlyerCompletion onComplete) {
+    const std::string paramsJson = "{}";
+    return executeRpc("disableAutomaticDeferredDeepLink", paramsJson, std::move(onComplete));
+}
+
 AppsFlyerTask enableFacebookDeferredApplinks(bool isEnabled, AppsFlyerCompletion onComplete) {
     std::ostringstream oss;
     oss << "{";
@@ -256,6 +261,11 @@ AppsFlyerTask performDeepLinking(const PerformDeepLinkingParams& params, AppsFly
     oss << "}";
     const std::string paramsJson = oss.str();
     return executeRpc("performDeepLinking", paramsJson, std::move(onComplete));
+}
+
+AppsFlyerTask performDeferredDeepLinking(AppsFlyerCompletion onComplete) {
+    const std::string paramsJson = "{}";
+    return executeRpc("performDeferredDeepLinking", paramsJson, std::move(onComplete));
 }
 
 AppsFlyerTask sendPushNotificationData(const SendPushNotificationDataParams& params, AppsFlyerCompletion onComplete) {

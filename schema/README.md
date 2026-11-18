@@ -2,18 +2,28 @@
 
 - **Committed contract:** `appsflyer-plugins-rpc-schema.json` (`schemaVersion` must match `rpc-schema.version`).
 - **Pin:** `rpc-schema.version` — Maven artifact version for `com.appsflyer.plugins:appsflyer-plugins-rpc-schema` (currently **1.2.0**).
-- **Refresh from GAR** (repo root; requires `AR_TOKEN` — OAuth token with read access to `maven-internal`; CI uses `appsflyerrnd/setup-ar-auth`, local dev often `export AR_TOKEN="$(gcloud auth print-access-token)"`):
 
-  Maven: `com.appsflyer.plugins:appsflyer-plugins-rpc-schema` → `schema/appsflyer-plugins-rpc-schema.json` via `scripts/download_rpc_schema_from_gar.sh` (defaults: project `af-artifacts-prd`, repo `europe-west1-maven.pkg.dev/.../maven-internal`).
+## Refresh from Maven (maintainers)
+
+Maintainers with Google Artifact Registry read access can refresh the contract with local `gcloud` credentials:
+
+1. Authenticate: `gcloud auth login` (or export `AR_TOKEN`; optional overrides in `schema/gar.local.env` — see `gar.env.example`).
+2. From repo root:
 
 ```bash
-RPC_SCHEMA_VERSION="$(tr -d '[:space:]' < schema/rpc-schema.version)" \
-  ./scripts/download_rpc_schema_from_gar.sh
+./scripts/download_rpc_schema_from_gar.sh
 ```
 
-After download, confirm `schemaVersion` in the JSON matches `rpc-schema.version`, then run `./scripts/codegen/run.sh` and `./scripts/verify-schema-codegen.sh`.
+By default this resolves **Maven latest** for `com.appsflyer.plugins:appsflyer-plugins-rpc-schema` from `europe-west1-maven.pkg.dev/af-artifacts-prd/maven-internal`. Pin a specific release with `RPC_SCHEMA_VERSION=1.2.0`.
 
-**No GAR access?** Use the committed JSON in the repo. Schema bumps require a maintainer with GAR read access to fetch the pinned Maven artifact, regenerate (`./scripts/codegen/run.sh`), and commit the updated JSON plus `Classes/AppsFlyer/generated/`.
+3. Update `schema/rpc-schema.version` to match the JSON `schemaVersion`, then:
+
+```bash
+./scripts/codegen/run.sh
+./scripts/verify-schema-codegen.sh
+```
+
+**No registry access?** Use the committed JSON in the repo. Schema bumps are done by maintainers who fetch from Maven, regenerate, and commit the updated JSON plus `Classes/AppsFlyer/generated/`.
 
 ## C++ codegen
 

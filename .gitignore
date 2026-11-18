@@ -132,3 +132,6 @@ tools/af-schema-compiler/build/
 
 # Local engineering notes (phase tech designs, Notion drafts); not shipped in the plugin repo.
 internal-docs/
+
+# Local GAR / Maven fetch credentials and registry overrides (see schema/gar.env.example).
+schema/gar.local.env

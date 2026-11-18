@@ -37,6 +37,10 @@
         return appsflyer::disableAppSetId(std::move(onComplete));
     }
 
+    static AppsFlyerTask disableAutomaticDeferredDeepLink(AppsFlyerCompletion onComplete = {}) {
+        return appsflyer::disableAutomaticDeferredDeepLink(std::move(onComplete));
+    }
+
     static AppsFlyerTask enableFacebookDeferredApplinks(bool isEnabled, AppsFlyerCompletion onComplete = {}) {
         return appsflyer::enableFacebookDeferredApplinks(isEnabled, std::move(onComplete));
     }
@@ -136,6 +140,10 @@
     using PerformDeepLinkingParams = appsflyer::PerformDeepLinkingParams;
     static AppsFlyerTask performDeepLinking(const PerformDeepLinkingParams& params, AppsFlyerCompletion onComplete = {}) {
         return appsflyer::performDeepLinking(params, std::move(onComplete));
+    }
+
+    static AppsFlyerTask performDeferredDeepLinking(AppsFlyerCompletion onComplete = {}) {
+        return appsflyer::performDeferredDeepLinking(std::move(onComplete));
     }
 
     static AppsFlyerTask registerConversionListener(void (*onSuccess)(cocos2d::ValueMap), void (*onFail)(cocos2d::ValueMap),
