@@ -29,21 +29,41 @@ static void showSampleDialog(const char* title, const char* message) {
     cocos2d::ccMessageBox(message, title);
 }
 
-static void onSessionReadyStartSdk() {
-    AppsFlyerX::start(true)
-        .whenComplete([](const AppsFlyerResult& r) {
-            char message[128];
-            std::snprintf(message, sizeof(message),
-                          "start(awaitResponse:true) finished\nRPC success: %s", r.success ? "yes" : "no");
-            showSampleDialog("AppsFlyer", message);
-            CCLOG("[AppsFlyer] start awaitResponse complete, success=%d", r.success ? 1 : 0);
-            if (!r.success) {
-                return;
+static void runAutoPostStartFlow() {
+    AppsFlyerX::LogEventParams event;
+    event.eventName = "af_auto_launch";
+    ValueMap autoValues;
+    autoValues["source"] = "AppDelegate";
+    event.eventValues = autoValues;
+    event.awaitResponse = false;
+    AppsFlyerX::logEvent(event).whenComplete([](const AppsFlyerResult& rLog) {
+        CCLOG("[AppsFlyer] auto logEvent finished success=%d", rLog.success ? 1 : 0);
+        AppsFlyerX::fetchAppsFlyerUID().whenComplete([](const AppsFlyerResult& rUid) {
+            if (rUid.success) {
+                CCLOG("[AppsFlyer] auto fetchAppsFlyerUID: %s", rUid.dataJson.c_str());
+            } else {
+                CCLOG("[AppsFlyer] auto fetchAppsFlyerUID failed");
             }
-            AppsFlyerX::LogEventParams event;
-            event.eventName = "test_event";
-            AppsFlyerX::logEvent(event);
+            AppsFlyerX::isSessionReady().whenComplete([](const AppsFlyerResult& rReady) {
+                CCLOG("[AppsFlyer] auto isSessionReady: success=%d data=%s", rReady.success ? 1 : 0,
+                      rReady.dataJson.c_str());
+            });
         });
+    });
+}
+
+static void onSessionReadyStartSdk() {
+    AppsFlyerX::start(true).whenComplete([](const AppsFlyerResult& r) {
+        char message[128];
+        std::snprintf(message, sizeof(message),
+                      "start(awaitResponse:true) finished\nRPC success: %s", r.success ? "yes" : "no");
+        showSampleDialog("AppsFlyer", message);
+        CCLOG("[AppsFlyer] start awaitResponse complete, success=%d", r.success ? 1 : 0);
+        if (!r.success) {
+            return;
+        }
+        runAutoPostStartFlow();
+    });
 }
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
@@ -179,6 +199,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
                         CCLOG("[AppsFlyer] init failed");
                         return;
                     }
+                    AppsFlyerX::setCurrencyCode("USD").whenComplete([](const AppsFlyerResult& rCur) {
+                        CCLOG("[AppsFlyer] auto setCurrencyCode success=%d", rCur.success ? 1 : 0);
+                    });
+                    AppsFlyerX::setCustomerUserId("cocos2dx-qa-auto").whenComplete(
+                        [](const AppsFlyerResult& rCuid) {
+                            CCLOG("[AppsFlyer] auto setCustomerUserId success=%d", rCuid.success ? 1 : 0);
+                        });
+                    ValueMap additional;
+                    additional["auto_init"] = true;
+                    AppsFlyerX::setAdditionalData(additional);
                     AppsFlyerX::registerConversionListener(onConversionDataSuccess,
                                                            onConversionDataFail)
                         .whenComplete([](const AppsFlyerResult& rConv) {
