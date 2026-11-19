@@ -1,6 +1,6 @@
 #include "AppsFlyerCocosRpcBridge.h"
 
-#include "AppsFlyer/rpc/AppsFlyerCocosRpcBridgePlatform.h"
+#include "AppsFlyer/AppsFlyerRpc.h"
 
 #import <Foundation/Foundation.h>
 

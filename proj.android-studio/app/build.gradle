@@ -144,13 +144,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libcocos2dx')
 
-    // SDK 7 (POC): bridge owns native SDK version — do not pin af-android-sdk separately.
     implementation platform('com.appsflyer:af-android-sdk-bom:7.0.4')
-    def bridgeDep = 'com.appsflyer:af-android-plugin-bridge:7.0.13'
-    implementation(bridgeDep) {
-        version { strictly bridgeDep.tokenize(':').last() }
-    }
-
+    implementation 'com.appsflyer:af-android-sdk'
+    implementation 'com.appsflyer:af-android-plugin-bridge:7.0.13'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
     implementation platform('com.google.firebase:firebase-bom:33.7.0')

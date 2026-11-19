@@ -58,28 +58,17 @@ endif()
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
-     Classes/AppsFlyer/AFSDKXPurchaseDetails.cpp
-     Classes/AppsFlyer/AFSDKXValidateAndLogResult.cpp
-     Classes/AppsFlyer/AFXAdRevenueData.cpp
-     Classes/AppsFlyer/AppsFlyerX.cpp
-     Classes/AppsFlyer/AppsFlyerXConsent.cpp
-     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerCocosThread.cpp
-     Classes/AppsFlyer/rpc/AppsFlyerRpcClient.cpp
-     Classes/AppsFlyer/AppsFlyerXCore.cpp
+     Classes/AppsFlyer/AppsFlyerRpc.cpp
+     Classes/AppsFlyer/generated/AppsFlyerRpcSchema.generated.cpp
+     Classes/AppsFlyer/AppsFlyerTask.cpp
 )
 
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
-     Classes/AppsFlyer/AFSDKXPurchaseDetails.h
-     Classes/AppsFlyer/AFSDKXValidateAndLogResult.h
-     Classes/AppsFlyer/AFXAdRevenueData.h
      Classes/AppsFlyer/AppsFlyerX.h
-     Classes/AppsFlyer/AppsFlyerXCore.h
-     Classes/AppsFlyer/AppsFlyerXDeepLinkResult.h
+     Classes/AppsFlyer/AppsFlyerDeepLinkData.h
      Classes/AppsFlyer/AppsFlyerXMacro.h
-     Classes/AppsFlyer/EmailCryptTypeX.h
 )
 
 if(ANDROID)
@@ -112,6 +101,7 @@ elseif(APPLE)
     list(APPEND GAME_SOURCE
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+         proj.ios_mac/ios/rpc/AppsFlyerCocosAttribution.swift
          )
     list(APPEND GAME_HEADER
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.h
@@ -146,6 +136,7 @@ if(APPLE AND IOS)
     set(CMAKE_Swift_LANGUAGE_VERSION 5.9)
     set(_ios_swift_rpc_sources
         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+        proj.ios_mac/ios/rpc/AppsFlyerCocosAttribution.swift
         proj.ios_mac/ios/SwiftBridge.swift
     )
     set_source_files_properties(${_ios_swift_rpc_sources} PROPERTIES LANGUAGE Swift)
@@ -168,7 +159,7 @@ if(APPLE AND IOS)
     target_include_directories(${APP_NAME} PRIVATE proj.ios_mac/ios/rpc)
 endif()
 
-# iOS SDK 7 RPC (AppsFlyerRPC via CocoaPods — run scripts/setup-ios-rpc-pods.sh after cmake)
+# iOS SDK 7 RPC (AppsFlyerRPC via SwiftPM — run scripts/setup-ios-spm.sh after cmake)
 if(APPLE AND IOS)
     target_link_libraries(${APP_NAME}
         "-framework AdSupport"
@@ -186,14 +177,13 @@ if(APPLE AND IOS)
         XCODE_ATTRIBUTE_OTHER_LDFLAGS "$(inherited) -ObjC"
     )
 
-    # CocoaPods sets baseConfigurationReference on `pod install`; do not override via CMake.
+    # SwiftPM package wiring is applied by scripts/setup-ios-spm.sh after CMake generates the project.
 endif()
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})
 if(APPLE)
-    # Do not set DERIVED_DATA_PATH on iOS when using CocoaPods — it splits Pod
-    # framework output from the app linker search paths (Pods_AppsFlyerCocos2dX not found).
+    # Prefer -clonedSourcePackagesDirPath under the build dir when resolving SPM (setup-ios-spm.sh).
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
     if(IOS)
         #cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
@@ -202,7 +192,9 @@ if(APPLE)
         set_xcode_property(${APP_NAME} CODE_SIGN_STYLE "Automatic")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "Apple Development")
+        set_xcode_property(${APP_NAME} CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/AppsFlyerCocos2dX-mobile.entitlements")
         set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
+        set_xcode_property(${APP_NAME} INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/ios/Info.plist")
 
         # Info.plist fields
         set_target_properties(${APP_NAME} PROPERTIES
