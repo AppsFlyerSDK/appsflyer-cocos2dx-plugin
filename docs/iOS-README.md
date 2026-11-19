@@ -4,7 +4,7 @@
 
 Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift Package Manager** on your Xcode **app** target. Minimum deployment target: **`minimumIos`** in [`version/ios-spm-versions.json`](../version/ios-spm-versions.json) (**15.0** today).
 
-> **Deep links / cold start:** the plugin does **not** ship full iOS URL / universal-link forwarding ([SDK7-Lifecycle — Limitations](SDK7-Lifecycle.md#5-limitations)). Plan native hooks in your app if you rely on deferred deep linking at launch.
+> **Deep links / cold start:** copy `AppsFlyerCocosAttribution.swift` and patch `AppController` as in the sample ([Native entry hook](#native-entry-hook)). UIKit may deliver a link before C++ `init()`; attribution buffers until `initialize` succeeds.
 
 ### Prerequisites
 
@@ -19,7 +19,7 @@ Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift
 
 1. **Copy** `Classes/AppsFlyer/` and the iOS bridge files under `proj.ios_mac/ios/` (see [Copy manifest](#copy-manifest)).
 2. **Add** Swift packages **AppsFlyerRPC** + **AppsFlyerLib-Static** ([SPM](#swift-package-manager-app-target)).
-3. **Patch** `AppController.mm` — `installEventPipeline` before `Application::run()` ([Native entry hook](#native-entry-hook)).
+3. **Patch** `AppController.mm` — event pipeline + URL lifecycle hooks before `Application::run()` ([Native entry hook](#native-entry-hook)).
 4. **Init** AppsFlyer from C++ (`AppDelegate.cpp`) — [minimal snippet](snippets/ios-minimal-init.cpp) · [lifecycle diagram](SDK7-Lifecycle.md#ios-startup-timeline-cocos2d-x).
 
 | More detail | Document |
@@ -37,13 +37,13 @@ Native AppsFlyer iOS SDKs are **not** in this repo — you add them with **Swift
 Use this order for **manual Xcode** (Case B/C). CMake sample (Case A): run [`./scripts/build-ios-cmake.sh`](../scripts/build-ios-cmake.sh) — [Case A](#case-a--cmake-sample).
 
 - [ ] **1. Copy** [`Classes/AppsFlyer/`](../Classes/AppsFlyer/) → `<game>/Classes/AppsFlyer/` (include `generated/`).
-- [ ] **2. Copy** iOS bridge: `proj.ios_mac/ios/rpc/*`, `SwiftBridge.swift`, bridging header → your iOS tree ([paths](#copy-manifest)).
+- [ ] **2. Copy** iOS bridge: `proj.ios_mac/ios/rpc/*` (including `AppsFlyerCocosAttribution.swift`), `SwiftBridge.swift`, bridging header → your iOS tree ([paths](#copy-manifest)).
 - [ ] **3. Xcode — Compile sources** on app target: `AppsFlyerRpc.cpp`, `AppsFlyerTask.cpp`, `generated/AppsFlyerRpcSchema.generated.cpp`, bridge `.mm` + `.swift`.
 - [ ] **4. Xcode — Header Search Paths:** your `Classes` folder; folder with `AppsFlyerCocosRpcBridge.h`.
 - [ ] **5. SPM** on app target: **AppsFlyerRPC** + **AppsFlyerLib-Static** at exact versions from `version/ios-spm-versions.json` → **Resolve Package Versions** ([SPM](#swift-package-manager-app-target)).
 - [ ] **6. Link** system frameworks: **AdSupport**, **AdServices**, **StoreKit**.
 - [ ] **7. Build settings:** bridging header path, **Always Embed Swift Standard Libraries** = Yes, **Other Linker Flags** `-ObjC`, runpath `@executable_path/Frameworks` ([build settings](#build-settings-app-target)).
-- [ ] **8. `AppController.mm`:** `installEventPipeline` **before** `Application::run()` ([hook](#native-entry-hook)).
+- [ ] **8. `AppController.mm`:** `installEventPipeline`, `handleLaunchOptions`, `openURL`, and `continueUserActivity` ([hook](#native-entry-hook)).
 - [ ] **9. `AppDelegate.cpp`:** SDK 7 listener → `init` → `start` chain ([minimal snippet](snippets/ios-minimal-init.cpp), [full sample](../Classes/AppDelegate.cpp)).
 - [ ] **10. `Info.plist`:** ATT / privacy keys if needed ([ATT & privacy](#att-tracking-and-privacy-plist)).
 - [ ] **11. Build & run** — verify [success criteria](#success-criteria) below.
@@ -68,7 +68,7 @@ If something fails, see [Troubleshooting](#troubleshooting).
 
 | File | Runs on | Your AppsFlyer responsibility |
 | --- | --- | --- |
-| **`AppController.mm`** (`UIApplicationDelegate`) | UIKit / main, **before** the game loop | `[AppsFlyerCocosRpcBridge installEventPipeline]` before `Application::run()` — wires native → C++ events |
+| **`AppController.mm`** (`UIApplicationDelegate`) | UIKit / main, **before** the game loop | `installEventPipeline`, `handleLaunchOptions`, `openURL`, `continueUserActivity` — event pipeline + deep-link forwarding into `AppsFlyerLib` |
 | **`AppDelegate.cpp`** (`cocos2d::Application`) | **Game thread** after `run()` | `registerDeepLinkListener` → `init` → conversion / session listeners → `start` ([SDK7-Lifecycle](SDK7-Lifecycle.md)) |
 
 If `installEventPipeline` is missing, RPC may run but **listeners never fire**. If C++ `init` is missing, the pipeline has nothing to talk to.
@@ -204,6 +204,7 @@ YourGame/
 │   ├── SwiftBridge.swift
 │   ├── YourGame-Bridging-Header.h
 │   └── rpc/
+│       ├── AppsFlyerCocosAttribution.swift
 │       ├── AppsFlyerCocosRpcBridge.h
 │       ├── AppsFlyerCocosRpcBridge.mm
 │       └── AppsFlyerCocosRpcBridge.swift
@@ -260,8 +261,29 @@ Inside `application:didFinishLaunchingWithOptions:`, **before** `app->run()`:
 ```objc
 #if __has_include("YourModule-Swift.h")
     [AppsFlyerCocosRpcBridge installEventPipeline];
+    [[AppsFlyerCocosAttribution shared] handleLaunchOptions:launchOptions];
 #endif
 ```
+
+Also implement (same `#if` guard):
+
+```objc
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    [[AppsFlyerCocosAttribution shared] handleOpen:url options:options];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+    [[AppsFlyerCocosAttribution shared] continueUserActivity:userActivity restorationHandler:nil];
+    return YES;
+}
+```
+
+`AppsFlyerCocosAttribution` buffers `openURL` / universal links until C++ `AppsFlyerX::init` completes successfully (native `initialize` RPC), then forwards to `AppsFlyerLib` — same pattern as Capacitor/React Native.
 
 Reference implementation: [`proj.ios_mac/ios/AppController.mm`](../proj.ios_mac/ios/AppController.mm).
 
@@ -303,7 +325,7 @@ Choose the variant when you **link** the SDK, not via `setDisableAdvertisingIden
 | SPM missing after cmake | Re-run `./scripts/setup-ios-spm.sh` |
 | RPC/Framework version mismatch | Update **both** pins in `version/ios-spm-versions.json` |
 
-Known product gaps (e.g. cold-start URL forwarding): [SDK7-Lifecycle.md — Limitations](SDK7-Lifecycle.md#5-limitations).
+Known product gaps: [SDK7-Lifecycle.md — Limitations](SDK7-Lifecycle.md#5-limitations)
 
 ---
 

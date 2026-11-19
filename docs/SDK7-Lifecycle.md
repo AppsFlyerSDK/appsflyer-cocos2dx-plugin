@@ -11,7 +11,7 @@ Integrator flow for **schema-generated** `AppsFlyerX` (`AppsFlyerTask` + `whenCo
 | Platform | Hook |
 |----------|------|
 | **Android** | `AppActivity.onCreate` → `AppsFlyerCocosRpcBridge.onActivityCreated(this)` **before** `super.onCreate()` |
-| **iOS** | `AppController` → `[AppsFlyerCocosRpcBridge installEventPipeline]` **before** `Application::run()` |
+| **iOS** | `AppController` → `installEventPipeline` + `AppsFlyerCocosAttribution` URL hooks **before** `Application::run()` |
 
 iOS file copy, SwiftPM, checklist, and Xcode settings: [iOS-README.md](iOS-README.md).
 
@@ -28,9 +28,13 @@ sequenceDiagram
     participant AF as AppsFlyerX / native RPC
 
     UI->>Pipe: installEventPipeline()
+    UI->>UI: handleLaunchOptions (immediate)
+    Note over UI: openURL / continueUserActivity buffer until init
     UI->>Cocos: run()
     Cocos->>Game: applicationDidFinishLaunching()
     Game->>AF: registerDeepLinkListener → init → …
+    AF-->>Pipe: initialize success → bridgeReady
+    Pipe-->>UI: flush buffered deep links
     AF-->>Game: whenComplete (game thread)
     Game->>AF: registerSessionReadyListener
   Note over AF,Game: session-ready callback
@@ -79,9 +83,9 @@ Native emits JSON on `rpcEvent`. C++ demuxes by top-level `"event"` and parses `
 
 ## 5. Limitations
 
-- **GAP-010:** No iOS cold-start attribution queue / `handleOpenURL` RPC glue in-plugin.
 - **GAP-007:** Android RPC Kotlin remains in the sample app module (not a published AAR).
-- **Android warm-start deep links:** sample `AppActivity` uses `onNewIntent` + `setIntent` only; cold-start / iOS URL forwarding is still integrator-owned where noted in platform READMEs.
+- **Android warm-start deep links:** sample `AppActivity` uses `onNewIntent` + `setIntent` only.
+- **iOS deep links:** sample `AppController` forwards `handleLaunchOptions` / `openURL` / `continueUserActivity` into `AppsFlyerCocosAttribution` (buffer until successful `initialize` RPC). UIScene-only hosts may need extra scene delegates (not in sample).
 - Nested JSON in event payloads may require future parser hardening.
 
 ---
@@ -95,4 +99,4 @@ Native emits JSON on `rpcEvent`. C++ demuxes by top-level `"event"` and parses `
 | Transport | `Classes/AppsFlyer/AppsFlyerRpc.{h,cpp}` |
 | Codegen | `schema/`, `scripts/codegen/run.sh`, `tools/af-schema-compiler/` |
 | Android bridge | `proj.android-studio/.../AppsFlyerCocosRpcBridge.kt` |
-| iOS bridge | `proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.*` |
+| iOS bridge | `proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.*`, `AppsFlyerCocosAttribution.swift` |

@@ -25,10 +25,6 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static void showSampleDialog(const char* title, const char* message) {
-    cocos2d::ccMessageBox(message, title);
-}
-
 static void runAutoPostStartFlow() {
     AppsFlyerX::LogEventParams event;
     event.eventName = "af_auto_launch";
@@ -54,10 +50,7 @@ static void runAutoPostStartFlow() {
 
 static void onSessionReadyStartSdk() {
     AppsFlyerX::start(true).whenComplete([](const AppsFlyerResult& r) {
-        char message[128];
-        std::snprintf(message, sizeof(message),
-                      "start(awaitResponse:true) finished\nRPC success: %s", r.success ? "yes" : "no");
-        showSampleDialog("AppsFlyer", message);
+        HelloWorld::appendAfResult("start", r);
         CCLOG("[AppsFlyer] start awaitResponse complete, success=%d", r.success ? 1 : 0);
         if (!r.success) {
             return;
@@ -66,10 +59,8 @@ static void onSessionReadyStartSdk() {
     });
 }
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+// Portrait-friendly logical size (iPhone-class). FIXED_WIDTH keeps the QA panel readable on tall devices.
+static cocos2d::Size designResolutionSize = cocos2d::Size(390, 844);
 
 AppDelegate::AppDelegate() {}
 
@@ -98,69 +89,22 @@ static int register_all_packages() {
 
 static void onConversionDataSuccess(cocos2d::ValueMap installData) {
     CCLOG("%s", "AppDelegate.cpp got conversion data!");
-    std::string gcd = "Conversion Data : ";
-
     for (auto& t : installData) {
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-        gcd.append(t.first.c_str());
-        gcd.append(" : ");
-        gcd.append(t.second.asString().c_str());
-        gcd.append("\n");
     }
-//    auto gcdStr = gcd;
-//    auto currentScene = Director::getInstance()->getRunningScene();
-//    auto size = Director::getInstance()->getVisibleSize();
-//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//    auto myLabel = Label::createWithSystemFont(gcd.c_str(), "Arial", 6);
-//    myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
-//    //myLabel->setHeight( origin.y + size.height - 180);
-//    //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-//    currentScene->addChild(myLabel,1);
+    HelloWorld::appendConversionData("Conversion data", installData);
 }
 
 static void onConversionDataFail(cocos2d::ValueMap map) {
     for (auto& t : map) {
         CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
     }
+    HelloWorld::appendConversionData("Conversion data (fail)", map);
 }
 
 static void didResolveDeepLink(appsflyer::DeepLinkData result) {
     CCLOG("%s", "AppDelegate.cpp got ddl!");
-    std::string ddl = "Deep link data is \n";
-    switch (result.status) {
-    case appsflyer::DeepLinkStatus::NotFound:
-        CCLOG("deep link not found");
-        break;
-    case appsflyer::DeepLinkStatus::Found:
-        if (!result.deepLink.empty()) {
-            const std::string mediaSource = result.deepLinkStringField("media_source");
-            if (!mediaSource.empty()) {
-                CCLOG("Media source is %s", mediaSource.c_str());
-            }
-            for (auto& t : result.deepLink) {
-                CCLOG("%s - %s", t.first.c_str(), t.second.asString().c_str());
-                ddl.append(t.first.c_str());
-                ddl.append(" : ");
-                ddl.append(t.second.asString().c_str());
-                ddl.append("\n");
-            }
-            auto currentScene = Director::getInstance()->getRunningScene();
-            auto child = currentScene->getChildByTag(1);
-            if (child != NULL) {
-                currentScene->removeChildByTag(1);
-            }
-            auto size = Director::getInstance()->getVisibleSize();
-            Vec2 origin = Director::getInstance()->getVisibleOrigin();
-            auto myLabel = Label::createWithSystemFont(ddl.c_str(), "Arial", 6);
-            myLabel->setPosition(Vec2(origin.x + 80, origin.y + size.height - 180));
-            //myLabel->setHeight( origin.y + size.height - 180);
-            //myLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-            currentScene->addChild(myLabel, 1, 1);
-        }
-        break;
-    default:
-        break;
-    }
+    HelloWorld::appendDeepLink(result);
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -195,6 +139,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
                 params.appId = "942960987";
 #endif
                 AppsFlyerX::init(params).whenComplete([](const AppsFlyerResult& rInit) {
+                    HelloWorld::appendAfResult("init", rInit);
                     if (!rInit.success) {
                         CCLOG("[AppsFlyer] init failed");
                         return;
@@ -243,28 +188,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);
 
-    // Set the design resolution
+    const auto frameSize = glview->getFrameSize();
+    const float designAspect = designResolutionSize.width / designResolutionSize.height;
+    const float frameAspect = frameSize.width / frameSize.height;
+    const auto policy = (frameAspect > designAspect) ? ResolutionPolicy::FIXED_HEIGHT
+                                                     : ResolutionPolicy::FIXED_WIDTH;
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height,
-                                    ResolutionPolicy::NO_BORDER);
-    auto frameSize = glview->getFrameSize();
-    // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height) {
-        director->setContentScaleFactor(
-            MIN(largeResolutionSize.height / designResolutionSize.height,
-                largeResolutionSize.width / designResolutionSize.width));
-    }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height) {
-        director->setContentScaleFactor(
-            MIN(mediumResolutionSize.height / designResolutionSize.height,
-                mediumResolutionSize.width / designResolutionSize.width));
-    }
-    // if the frame's height is smaller than the height of medium size.
-    else {
-        director->setContentScaleFactor(
-            MIN(smallResolutionSize.height / designResolutionSize.height,
-                smallResolutionSize.width / designResolutionSize.width));
-    }
+                                    policy);
 
     register_all_packages();
 

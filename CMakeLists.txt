@@ -101,6 +101,7 @@ elseif(APPLE)
     list(APPEND GAME_SOURCE
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.mm
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+         proj.ios_mac/ios/rpc/AppsFlyerCocosAttribution.swift
          )
     list(APPEND GAME_HEADER
          proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.h
@@ -135,6 +136,7 @@ if(APPLE AND IOS)
     set(CMAKE_Swift_LANGUAGE_VERSION 5.9)
     set(_ios_swift_rpc_sources
         proj.ios_mac/ios/rpc/AppsFlyerCocosRpcBridge.swift
+        proj.ios_mac/ios/rpc/AppsFlyerCocosAttribution.swift
         proj.ios_mac/ios/SwiftBridge.swift
     )
     set_source_files_properties(${_ios_swift_rpc_sources} PROPERTIES LANGUAGE Swift)
@@ -190,7 +192,9 @@ if(APPLE)
         set_xcode_property(${APP_NAME} CODE_SIGN_STYLE "Automatic")
         set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
         set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "Apple Development")
+        set_xcode_property(${APP_NAME} CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/AppsFlyerCocos2dX-mobile.entitlements")
         set_xcode_property(${APP_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.appsflyer.AppsFlyerCocos2dX")
+        set_xcode_property(${APP_NAME} INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/ios/Info.plist")
 
         # Info.plist fields
         set_target_properties(${APP_NAME} PROPERTIES
