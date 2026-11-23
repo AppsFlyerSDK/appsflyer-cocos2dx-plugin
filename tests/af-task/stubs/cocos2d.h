@@ -15,7 +15,7 @@ using ValueVector = std::vector<Value>;
 
 class Value {
 public:
-    enum class Type { STRING, BOOLEAN, INTEGER, FLOAT, DOUBLE, MAP, NULLTYPE };
+    enum class Type { STRING, BOOLEAN, INTEGER, FLOAT, DOUBLE, MAP, VECTOR, NULLTYPE };
 
     Value() : type_(Type::NULLTYPE) {}
     explicit Value(const std::string& s) : type_(Type::STRING), str_(s) {}
@@ -23,6 +23,9 @@ public:
     explicit Value(int i) : type_(Type::INTEGER), int_(i) {}
     explicit Value(double d) : type_(Type::DOUBLE), dbl_(d) {}
     explicit Value(const ValueMap& map) : type_(Type::MAP), map_(map) {}
+    explicit Value(const ValueVector& vec) : type_(Type::VECTOR), vec_(vec) {}
+    explicit Value(ValueMap&& map) : type_(Type::MAP), map_(std::move(map)) {}
+    explicit Value(ValueVector&& vec) : type_(Type::VECTOR), vec_(std::move(vec)) {}
 
     Type getType() const { return type_; }
     bool isNull() const { return type_ == Type::NULLTYPE; }
@@ -31,6 +34,7 @@ public:
     int asInt() const { return int_; }
     double asDouble() const { return dbl_; }
     const ValueMap& asValueMap() const { return map_; }
+    const ValueVector& asValueVector() const { return vec_; }
 
 private:
     Type type_ = Type::NULLTYPE;
@@ -39,6 +43,7 @@ private:
     int int_ = 0;
     double dbl_ = 0;
     ValueMap map_;
+    ValueVector vec_;
 };
 
 class Director {

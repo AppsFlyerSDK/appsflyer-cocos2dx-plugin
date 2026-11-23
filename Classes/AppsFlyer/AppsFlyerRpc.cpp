@@ -7,6 +7,10 @@
 
 #include <atomic>
 #include <cctype>
+#include <cerrno>
+#include <climits>
+#include <cstdlib>
+#include <exception>
 #include <functional>
 #include <mutex>
 #include <sstream>
@@ -235,7 +239,19 @@ std::string unescapeJsonString(const std::string& value) {
     return out;
 }
 
-size_t findMatchingBrace(const std::string& s, size_t openIndex) {
+size_t findMatchingBracket(const std::string& s, size_t openIndex) {
+    if (openIndex >= s.size()) {
+        return std::string::npos;
+    }
+    const char open = s[openIndex];
+    char close = '\0';
+    if (open == '{') {
+        close = '}';
+    } else if (open == '[') {
+        close = ']';
+    } else {
+        return std::string::npos;
+    }
     int depth = 0;
     bool inString = false;
     for (size_t i = openIndex; i < s.size(); ++i) {
@@ -254,9 +270,9 @@ size_t findMatchingBrace(const std::string& s, size_t openIndex) {
             inString = true;
             continue;
         }
-        if (c == '{') {
+        if (c == open) {
             ++depth;
-        } else if (c == '}') {
+        } else if (c == close) {
             --depth;
             if (depth == 0) {
                 return i;
@@ -264,6 +280,170 @@ size_t findMatchingBrace(const std::string& s, size_t openIndex) {
         }
     }
     return std::string::npos;
+}
+
+size_t findMatchingBrace(const std::string& s, size_t openIndex) {
+    if (openIndex >= s.size() || s[openIndex] != '{') {
+        return std::string::npos;
+    }
+    return findMatchingBracket(s, openIndex);
+}
+
+bool parseJsonStringLiteral(const std::string& s, size_t& i, std::string& out) {
+    if (i >= s.size() || s[i] != '"') {
+        return false;
+    }
+    ++i;
+    const size_t valStart = i;
+    while (i < s.size() && s[i] != '"') {
+        if (s[i] == '\\' && i + 1 < s.size()) {
+            i += 2;
+        } else {
+            ++i;
+        }
+    }
+    if (i >= s.size()) {
+        return false;
+    }
+    out = unescapeJsonString(s.substr(valStart, i - valStart));
+    ++i;
+    return true;
+}
+
+cocos2d::Value valueFromJsonNumberToken(const std::string& num) {
+    const char* str = num.c_str();
+    char* end = nullptr;
+    if (num.find_first_of(".eE") == std::string::npos) {
+        errno = 0;
+        const long long v = std::strtoll(str, &end, 10);
+        if (errno == 0 && end != str && *end == '\0' && v >= INT_MIN && v <= INT_MAX) {
+            return cocos2d::Value(static_cast<int>(v));
+        }
+    }
+    errno = 0;
+    end = nullptr;
+    const double d = std::strtod(str, &end);
+    if (errno == 0 && end != str && *end == '\0') {
+        return cocos2d::Value(d);
+    }
+    return cocos2d::Value(num);
+}
+
+bool parseJsonValue(const std::string& s, size_t& i, cocos2d::Value& out);
+
+bool parseJsonObjectContents(const std::string& s, size_t& i, cocos2d::ValueMap& map) {
+    i = skipWs(s, i);
+    if (i < s.size() && s[i] == '}') {
+        ++i;
+        return true;
+    }
+    while (i < s.size()) {
+        std::string key;
+        if (!parseJsonStringLiteral(s, i, key)) {
+            return false;
+        }
+        i = skipWs(s, i);
+        if (i >= s.size() || s[i] != ':') {
+            return false;
+        }
+        ++i;
+        cocos2d::Value val;
+        if (!parseJsonValue(s, i, val)) {
+            return false;
+        }
+        map[std::move(key)] = std::move(val);
+        i = skipWs(s, i);
+        if (i < s.size() && s[i] == ',') {
+            ++i;
+            continue;
+        }
+        if (i < s.size() && s[i] == '}') {
+            ++i;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+bool parseJsonValue(const std::string& s, size_t& i, cocos2d::Value& out) {
+    i = skipWs(s, i);
+    if (i >= s.size()) {
+        return false;
+    }
+    const char c = s[i];
+    if (c == '"') {
+        std::string str;
+        if (!parseJsonStringLiteral(s, i, str)) {
+            return false;
+        }
+        out = cocos2d::Value(std::move(str));
+        return true;
+    }
+    if (c == '{') {
+        cocos2d::ValueMap map;
+        ++i;
+        if (!parseJsonObjectContents(s, i, map)) {
+            return false;
+        }
+        out = cocos2d::Value(std::move(map));
+        return true;
+    }
+    if (c == '[') {
+        cocos2d::ValueVector vec;
+        ++i;
+        i = skipWs(s, i);
+        if (i < s.size() && s[i] == ']') {
+            ++i;
+            out = cocos2d::Value(std::move(vec));
+            return true;
+        }
+        while (i < s.size()) {
+            cocos2d::Value elem;
+            if (!parseJsonValue(s, i, elem)) {
+                return false;
+            }
+            vec.push_back(std::move(elem));
+            i = skipWs(s, i);
+            if (i < s.size() && s[i] == ',') {
+                ++i;
+                continue;
+            }
+            if (i < s.size() && s[i] == ']') {
+                ++i;
+                break;
+            }
+            return false;
+        }
+        out = cocos2d::Value(std::move(vec));
+        return true;
+    }
+    if (c == 't' && i + 4 <= s.size() && s.compare(i, 4, "true") == 0) {
+        i += 4;
+        out = cocos2d::Value(true);
+        return true;
+    }
+    if (c == 'f' && i + 5 <= s.size() && s.compare(i, 5, "false") == 0) {
+        i += 5;
+        out = cocos2d::Value(false);
+        return true;
+    }
+    if (c == 'n' && i + 4 <= s.size() && s.compare(i, 4, "null") == 0) {
+        i += 4;
+        out = cocos2d::Value();
+        return true;
+    }
+    if (std::isdigit(static_cast<unsigned char>(c)) != 0 || c == '-') {
+        const size_t valStart = i;
+        while (i < s.size() &&
+               (std::isdigit(static_cast<unsigned char>(s[i])) != 0 || s[i] == '.' || s[i] == '-' ||
+                s[i] == 'e' || s[i] == 'E' || s[i] == '+')) {
+            ++i;
+        }
+        out = valueFromJsonNumberToken(s.substr(valStart, i - valStart));
+        return true;
+    }
+    return false;
 }
 
 } // namespace
@@ -286,95 +466,18 @@ std::string extractJsonObjectField(const std::string& json, const char* fieldNam
 }
 
 cocos2d::ValueMap decodeJsonObjectToValueMap(const std::string& jsonObject) {
-    cocos2d::ValueMap map;
     if (jsonObject.empty()) {
-        return map;
+        return {};
     }
-  size_t i = skipWs(jsonObject, 0);
-    if (i >= jsonObject.size() || jsonObject[i] != '{') {
-        return map;
+    size_t i = skipWs(jsonObject, 0);
+    cocos2d::Value root;
+    if (!parseJsonValue(jsonObject, i, root)) {
+        return {};
     }
-    ++i;
-    while (i < jsonObject.size()) {
-        i = skipWs(jsonObject, i);
-        if (i < jsonObject.size() && jsonObject[i] == '}') {
-            break;
-        }
-        if (jsonObject[i] != '"') {
-            break;
-        }
-        ++i;
-        size_t keyStart = i;
-        while (i < jsonObject.size() && jsonObject[i] != '"') {
-            if (jsonObject[i] == '\\' && i + 1 < jsonObject.size()) {
-                i += 2;
-            } else {
-                ++i;
-            }
-        }
-        if (i >= jsonObject.size()) {
-            break;
-        }
-        const std::string keyRaw = jsonObject.substr(keyStart, i - keyStart);
-        ++i;
-        i = skipWs(jsonObject, i);
-        if (i >= jsonObject.size() || jsonObject[i] != ':') {
-            break;
-        }
-        ++i;
-        i = skipWs(jsonObject, i);
-        if (i >= jsonObject.size()) {
-            break;
-        }
-        const char v0 = jsonObject[i];
-        if (v0 == '"') {
-            ++i;
-            const size_t valStart = i;
-            while (i < jsonObject.size() && jsonObject[i] != '"') {
-                if (jsonObject[i] == '\\' && i + 1 < jsonObject.size()) {
-                    i += 2;
-                } else {
-                    ++i;
-                }
-            }
-            map[unescapeJsonString(keyRaw)] =
-                cocos2d::Value(unescapeJsonString(jsonObject.substr(valStart, i - valStart)));
-            ++i;
-        } else if (v0 == 't' || v0 == 'f') {
-            const bool val = (jsonObject.compare(i, 4, "true") == 0);
-            map[unescapeJsonString(keyRaw)] = cocos2d::Value(val);
-            i += val ? 4 : 5;
-        } else if (v0 == 'n') {
-            map[unescapeJsonString(keyRaw)] = cocos2d::Value();
-            i += 4;
-        } else if (std::isdigit(static_cast<unsigned char>(v0)) || v0 == '-') {
-            const size_t valStart = i;
-            while (i < jsonObject.size() &&
-                   (std::isdigit(static_cast<unsigned char>(jsonObject[i])) != 0 || jsonObject[i] == '.' ||
-                    jsonObject[i] == '-' || jsonObject[i] == 'e' || jsonObject[i] == 'E' ||
-                    jsonObject[i] == '+')) {
-                ++i;
-            }
-            const std::string num = jsonObject.substr(valStart, i - valStart);
-            if (num.find('.') != std::string::npos || num.find('e') != std::string::npos ||
-                num.find('E') != std::string::npos) {
-                map[unescapeJsonString(keyRaw)] = cocos2d::Value(std::stod(num));
-            } else {
-                map[unescapeJsonString(keyRaw)] = cocos2d::Value(std::stoi(num));
-            }
-        } else {
-            break;
-        }
-        i = skipWs(jsonObject, i);
-        if (i < jsonObject.size() && jsonObject[i] == ',') {
-            ++i;
-            continue;
-        }
-        if (i < jsonObject.size() && jsonObject[i] == '}') {
-            break;
-        }
+    if (root.getType() != cocos2d::Value::Type::MAP) {
+        return {};
     }
-    return map;
+    return root.asValueMap();
 }
 
 std::string escapeJsonString(const std::string& value) {
@@ -536,16 +639,42 @@ RpcResult platformExecuteBlocking(const std::string& method, const std::string& 
         return result;
     }
 
+    JNIEnv* env = methodInfo.env;
     const std::string requestJson = buildRequestJson(method, paramsJsonObject);
-    jstring jRequest = methodInfo.env->NewStringUTF(requestJson.c_str());
-    jstring jResponse = (jstring)methodInfo.env->CallStaticObjectMethod(
-        methodInfo.classID, methodInfo.methodID, jRequest);
-    methodInfo.env->DeleteLocalRef(jRequest);
-
-    const std::string responseJson = jstringToStd(methodInfo.env, jResponse);
-    if (jResponse) {
-        methodInfo.env->DeleteLocalRef(jResponse);
+    jstring jRequest = env->NewStringUTF(requestJson.c_str());
+    if (jRequest == nullptr || env->ExceptionCheck()) {
+        if (env->ExceptionCheck()) {
+            env->ExceptionDescribe();
+            env->ExceptionClear();
+        }
+        if (jRequest != nullptr) {
+            env->DeleteLocalRef(jRequest);
+        }
+        env->DeleteLocalRef(methodInfo.classID);
+        result.success = false;
+        result.errorCode = 500;
+        result.errorMessage = "JNI NewStringUTF failed for RPC request";
+        return result;
     }
+    jstring jResponse =
+        (jstring)env->CallStaticObjectMethod(methodInfo.classID, methodInfo.methodID, jRequest);
+    if (env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+        env->DeleteLocalRef(jRequest);
+        env->DeleteLocalRef(methodInfo.classID);
+        result.success = false;
+        result.errorCode = 500;
+        result.errorMessage = "Java exception in AppsFlyerCocosRpcBridge.executeRpcBlocking";
+        return result;
+    }
+    env->DeleteLocalRef(jRequest);
+
+    const std::string responseJson = jstringToStd(env, jResponse);
+    if (jResponse) {
+        env->DeleteLocalRef(jResponse);
+    }
+    env->DeleteLocalRef(methodInfo.classID);
 
     result.success = responseJson.find("\"success\":true") != std::string::npos;
     if (!result.success) {
@@ -697,6 +826,7 @@ void ensureRpcEventHandlerInstalled() {
     }
     gListeners.rpcEventHandlerInstalled = true;
     rpc::setRpcEventHandler([](const std::string& eventJson) {
+        try {
         const std::string eventName = extractJsonStringField(eventJson, "event");
         CCLOG("[AppsFlyer] event (game thread): %s", eventJson.c_str());
 
@@ -750,6 +880,11 @@ void ensureRpcEventHandlerInstalled() {
             } else if (onDeepLinkFn) {
                 onDeepLinkFn(result);
             }
+        }
+        } catch (const std::exception& ex) {
+            CCLOG("[AppsFlyer] rpc event handler error: %s", ex.what());
+        } catch (...) {
+            CCLOG("[AppsFlyer] rpc event handler error: unknown");
         }
     });
 }

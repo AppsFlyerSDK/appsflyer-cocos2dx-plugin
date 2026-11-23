@@ -154,6 +154,63 @@ static void test_decode_conversion_event_payload() {
     EXPECT(map.at("campaign").asString() == "c1");
 }
 
+static void test_decode_json_object_numbers_and_nesting() {
+    {
+        const cocos2d::ValueMap map =
+            appsflyer::detail::decodeJsonObjectToValueMap(R"({"a":42,"status":"FOUND"})");
+        EXPECT(map.size() == 2);
+        EXPECT(map.at("a").getType() == cocos2d::Value::Type::INTEGER);
+        EXPECT(map.at("a").asInt() == 42);
+        EXPECT(map.at("status").asString() == "FOUND");
+    }
+    {
+        const cocos2d::ValueMap map = appsflyer::detail::decodeJsonObjectToValueMap(
+            R"({"install_time_ms":1700000000000,"af_status":"Organic"})");
+        EXPECT(map.size() == 2);
+        EXPECT(map.at("install_time_ms").getType() == cocos2d::Value::Type::DOUBLE);
+        EXPECT(map.at("install_time_ms").asDouble() == 1700000000000.0);
+    }
+    {
+        const cocos2d::ValueMap map =
+            appsflyer::detail::decodeJsonObjectToValueMap(R"({"n":2147483648})");
+        EXPECT(map.at("n").getType() == cocos2d::Value::Type::DOUBLE);
+    }
+    {
+        const cocos2d::ValueMap map = appsflyer::detail::decodeJsonObjectToValueMap(R"({"n":-})");
+        EXPECT(map.at("n").getType() == cocos2d::Value::Type::STRING);
+        EXPECT(map.at("n").asString() == "-");
+    }
+    {
+        const cocos2d::ValueMap map =
+            appsflyer::detail::decodeJsonObjectToValueMap(R"({"d":1e999})");
+        EXPECT(map.at("d").getType() == cocos2d::Value::Type::STRING);
+        EXPECT(map.at("d").asString() == "1e999");
+    }
+    {
+        const cocos2d::ValueMap map = appsflyer::detail::decodeJsonObjectToValueMap(
+            R"({"deepLink":{"x":1},"status":"FOUND"})");
+        EXPECT(map.size() == 2);
+        EXPECT(map.at("status").asString() == "FOUND");
+        EXPECT(map.at("deepLink").getType() == cocos2d::Value::Type::MAP);
+        EXPECT(map.at("deepLink").asValueMap().at("x").asInt() == 1);
+    }
+    {
+        const cocos2d::ValueMap map =
+            appsflyer::detail::decodeJsonObjectToValueMap(R"({"tags":["a"],"status":"FOUND"})");
+        EXPECT(map.size() == 2);
+        EXPECT(map.at("status").asString() == "FOUND");
+        EXPECT(map.at("tags").getType() == cocos2d::Value::Type::VECTOR);
+        EXPECT(map.at("tags").asValueVector().at(0).asString() == "a");
+    }
+    {
+        const cocos2d::ValueMap map = appsflyer::detail::decodeJsonObjectToValueMap(
+            R"({"a":"}","b":[1,{"c":2}],"status":"FOUND"})");
+        EXPECT(map.size() == 3);
+        EXPECT(map.at("status").asString() == "FOUND");
+        EXPECT(map.at("b").asValueVector().size() == 2);
+    }
+}
+
 static void test_start_await_response_wires_param() {
     appsflyer::detail::resetTestHooks();
     g_rpcCallOrder.clear();
@@ -321,6 +378,7 @@ int main() {
     test_deep_link_status_normalization();
     test_set_plugin_info_params_match_metadata();
     test_decode_conversion_event_payload();
+    test_decode_json_object_numbers_and_nesting();
     test_start_await_response_wires_param();
     test_log_ad_revenue_mediation_network_schema_value_map();
     test_set_log_level_android_wire_transform();
