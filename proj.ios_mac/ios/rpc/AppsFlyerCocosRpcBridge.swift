@@ -42,6 +42,9 @@ public final class AppsFlyerCocosRpcBridge: NSObject {
 
         AFCocosRPCBridge.executeJson(envelope) { raw in
             responseJson = AppsFlyerCocosRpcResponse.normalizeBridgeResponse(raw)
+            if wireMethod == "initialize" {
+                AppsFlyerCocosRpcBridge.markAttributionBridgeReadyIfSucceeded(responseJson)
+            }
             semaphore.signal()
         }
 
@@ -65,6 +68,23 @@ public final class AppsFlyerCocosRpcBridge: NSObject {
 
     private static func nativeDeliverRpcEvent(_ eventJson: String) {
         eventJson.withCString { AppsFlyerCocosRpcNativeDeliverEvent($0) }
+    }
+
+    /// Aligns with Capacitor/RN: drain buffered UIKit links only after `initialize` succeeds.
+    static func markAttributionBridgeReadyIfSucceeded(_ normalizedResponseJson: String) {
+        guard responseIndicatesSuccess(normalizedResponseJson) else { return }
+        DispatchQueue.main.async {
+            AppsFlyerCocosAttribution.shared.bridgeReady = true
+        }
+    }
+
+    private static func responseIndicatesSuccess(_ json: String) -> Bool {
+        guard let data = json.data(using: .utf8),
+              let parsed = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let success = parsed["success"] as? Bool else {
+            return false
+        }
+        return success
     }
 }
 

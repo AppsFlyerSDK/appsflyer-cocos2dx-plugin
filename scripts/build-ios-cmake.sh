@@ -7,14 +7,18 @@ cmake -B "${BUILD_DIR}" -GXcode \
   -DCMAKE_SYSTEM_NAME=iOS \
   -DCMAKE_OSX_SYSROOT=iphoneos \
   -DCMAKE_OSX_DEPLOYMENT_TARGET=15.6
-if [[ ! -f "${BUILD_DIR}/AppsFlyerCocos2dX.xcworkspace/contents.xcworkspacedata" ]]; then
-  echo "Missing ${BUILD_DIR}/AppsFlyerCocos2dX.xcworkspace — run ./scripts/setup-ios-rpc-pods.sh build-device first." >&2
-  exit 1
-fi
 
-xcodebuild -workspace "${BUILD_DIR}/AppsFlyerCocos2dX.xcworkspace" \
+# CMake regenerates project.pbxproj (drops SPM + re-enables legacy build dirs).
+"${ROOT}/scripts/setup-ios-spm.sh" "${BUILD_DIR}"
+
+DERIVED_DATA="${BUILD_DIR}/DerivedData"
+mkdir -p "${DERIVED_DATA}"
+
+xcodebuild -project "${BUILD_DIR}/AppsFlyerCocos2dX.xcodeproj" \
   -scheme AppsFlyerCocos2dX \
   -configuration Debug \
   -sdk iphoneos \
   -destination 'generic/platform=iOS' \
+  -derivedDataPath "${DERIVED_DATA}" \
+  -clonedSourcePackagesDirPath "${BUILD_DIR}/SourcePackages" \
   "$@"

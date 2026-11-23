@@ -58,7 +58,14 @@ object AppsFlyerCocosRpcBridge {
      * for slow / blocking RPCs.
      */
     @JvmStatic
-    fun executeRpcBlocking(requestJson: String): String {
+    fun executeRpcBlocking(requestJson: String): String = try {
+        executeRpcBlockingUnsafe(requestJson)
+    } catch (t: Throwable) {
+        Log.e(AF_PLUGIN_TAG, "executeRpcBlocking failed", t)
+        normalizeRpcError(500, t.message ?: "Unexpected RPC failure")
+    }
+
+    private fun executeRpcBlockingUnsafe(requestJson: String): String {
         val request = JSONObject(requestJson)
         val method = request.getString("method")
         val params = request.optJSONObject("params") ?: JSONObject()

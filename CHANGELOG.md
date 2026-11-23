@@ -2,8 +2,22 @@
 
 ## Unreleased (SDK 7)
 - **BREAKING:** macOS desktop is no longer supported. The plugin targets Android and iOS only with SDK 7 and AppsFlyer RPC.
-- Remove vendored SDK 6 `libAppsFlyer` static library and headers, legacy `Classes/Strict` tree, unused `AppsFlyerProxyX`, Swift compatibility stubs for the static lib, and the manual `proj.ios_mac/AppsFlyerCocos2dX.xcodeproj` (use CMake-generated Xcode + CocoaPods).
+- Remove vendored SDK 6 `libAppsFlyer` static library and headers, legacy `Classes/Strict` tree, unused `AppsFlyerProxyX`, Swift compatibility stubs for the static lib, and the manual `proj.ios_mac/AppsFlyerCocos2dX.xcodeproj` (use CMake-generated Xcode + SwiftPM).
+- **iOS:** Swift Package Manager for **AppsFlyerRPC** + **AppsFlyerLib-Static** (iOS **15.0+**; pins in `version/ios-spm-versions.json`). Sample/CI: `./scripts/setup-ios-spm.sh` after `cmake`, build with `-derivedDataPath` (see `docs/Migration-Guide.md`).
 - Drop CI workflow that validated vendored iOS header imports.
+- **BREAKING:** `AppsFlyerX` public API is schema-generated: methods return **`AppsFlyerTask`** with optional **`whenComplete`**. Removed **`initSdk()`** batching, legacy void listener setters, and hand-maintained `AppsFlyerXCore`. Use **`InitParams`**, **`register*Listener`**, and explicit init order (see `docs/Migration-Guide.md`).
+- Schema-driven codegen: `tools/af-schema-compiler`, **79** Cocos RPC methods, pinned `schema/appsflyer-plugins-rpc-schema.json`.
+- Inbound `rpcEvent` payloads parsed into `ValueMap` / `appsflyer::DeepLinkData` where `data` is present.
+- **BREAKING:** Replace `AppsFlyerXDeepLinkResult` with header-only `appsflyer::DeepLinkData` (js-core / Flutter–aligned status normalization; use `deepLink` map fields such as `deep_link_value`, `media_source`).
+- Refresh `AppsFlyerXMacro.h` against iOS `AppsFlyerLib.h` and Android `AFInAppEventType` / `AFInAppEventParameterName` (7.x); fix duplicate/typo macros; omit ad-revenue param keys (use `logAdRevenue`).
+- Remove unused SDK 6 helper types (`AFSDKXPurchaseDetails`, `AFSDKXValidateAndLogResult`, `AFXAdRevenueData`, `AppsFlyerXConsent`, `EmailCryptTypeX`). Use schema `*Params` structs from `Classes/AppsFlyer/generated/` (see `docs/Migration-Guide.md`).
+- Schema-first `logAdRevenue.mediationNetwork`: `enum class MediationNetwork` and platform `valueMap` resolution in `AppsFlyerRpcSchema.generated.*` (aligned with Cordova/js-core).
+- Schema transforms: `setLogLevel` → `androidLogLevel`; `validateAndLogInAppPurchase` → `PurchaseType`, `InAppPurchaseDetails`, and Android/iOS RPC wire encoding (`androidPurchaseType` / `iosPurchaseType`).
+- Consolidate RPC bridge into `Classes/AppsFlyer/AppsFlyerRpc.{h,cpp}` (replaces former `rpc/` transport split and related headers).
+- Canonical plugin semver for internal `setPluginInfo`: `version/plugin-version.json` → `AppsFlyerPluginMetadata.generated.h` (Codegen `af-schema-compiler`).
+- **Docs:** SDK 7 API reference in [`docs/API.md`](docs/API.md); documentation index in root `README.md` only; Android integration guide rewritten for SDK 7 (`docs/Android-README.md`). Platform minimums documented via `version/android-sdk-versions.json` (API 21) and `version/ios-spm-versions.json` (`minimumIos`), not sample app `minSdk`/CMake pins.
+- **Android:** Sample `AppActivity` overrides `onNewIntent` and calls `setIntent` for warm-start deep links (native SDK UDL on resume).
+- **iOS:** `AppsFlyerCocosAttribution` buffers `openURL` / universal links until `initialize` succeeds; sample `AppController` forwards launch options and URL lifecycle hooks.
 
 ## 6.18.0
     - update Android SDK to 6.18.0

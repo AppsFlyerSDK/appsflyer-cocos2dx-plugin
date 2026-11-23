@@ -46,6 +46,7 @@ static AppDelegate s_sharedApplication;
 
 #if __has_include("AppsFlyerCocos2dX-Swift.h")
     [AppsFlyerCocosRpcBridge installEventPipeline];
+    [[AppsFlyerCocosAttribution shared] handleLaunchOptions:launchOptions];
 #endif
 
     cocos2d::Application *app = cocos2d::Application::getInstance();
@@ -133,12 +134,23 @@ static AppDelegate s_sharedApplication;
      See also applicationDidEnterBackground:.
      */
 }
-/*
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
-    NSLog(@"*** *** *** *** ***");
+
+#if __has_include("AppsFlyerCocos2dX-Swift.h")
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    [[AppsFlyerCocosAttribution shared] handleOpen:url options:options];
     return YES;
 }
-*/
+
+- (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+    // Buffered deliveries omit restorationHandler.
+    [[AppsFlyerCocosAttribution shared] continueUserActivity:userActivity restorationHandler:nil];
+    return YES;
+}
+#endif
 #pragma mark -
 #pragma mark Memory management
 
@@ -149,7 +161,7 @@ static AppDelegate s_sharedApplication;
 }
 
 - (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    // Phase 2+: forward deviceToken to AppsFlyer via RPC (registerUninstall).
+    // TODO: forward deviceToken to AppsFlyer via RPC when registerUninstall is wired.
     (void)deviceToken;
 }
 

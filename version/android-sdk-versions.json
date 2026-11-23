@@ -1,0 +1,6 @@
+{
+  "minimumAndroidApi": 21,
+  "appsflyerAndroidSdkBom": "7.0.4",
+  "appsflyerAndroidPluginBridge": "7.0.13",
+  "installReferrer": "2.2"
+}

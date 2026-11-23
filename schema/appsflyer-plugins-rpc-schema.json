@@ -1,6 +1,6 @@
 {
     "$schema": "https://schemas.appsflyer.com/plugins/plugin-api.schema.json",
-    "schemaVersion": "1.2.0",
+    "schemaVersion": "1.3.0",
     "methods": [
       {
         "name": "addPushNotificationDeepLinkPath",
@@ -418,6 +418,48 @@
         },
         "mappings": {
           "android": {}
+        }
+      },
+      {
+        "name": "disableAutomaticDeferredDeepLink",
+        "rpc": {
+          "android": {
+            "method": "disableAutomaticDeferredDeepLink",
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "result": {
+              "type": "null"
+            }
+          },
+          "ios": {
+            "method": "disableAutomaticDeferredDeepLink",
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "result": {
+              "type": "null"
+            }
+          }
+        },
+        "publicApi": {
+          "delivery": "awaitable",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 0
+          },
+          "result": {
+            "type": "null"
+          }
+        },
+        "mappings": {
+          "android": {},
+          "ios": {}
         }
       },
       {
@@ -2466,6 +2508,48 @@
               "from": "url"
             }
           }
+        }
+      },
+      {
+        "name": "performDeferredDeepLinking",
+        "rpc": {
+          "android": {
+            "method": "performDeferredDeepLinking",
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "result": {
+              "type": "null"
+            }
+          },
+          "ios": {
+            "method": "performDeferredDeepLinking",
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "result": {
+              "type": "null"
+            }
+          }
+        },
+        "publicApi": {
+          "delivery": "awaitable",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 0
+          },
+          "result": {
+            "type": "null"
+          }
+        },
+        "mappings": {
+          "android": {},
+          "ios": {}
         }
       },
       {

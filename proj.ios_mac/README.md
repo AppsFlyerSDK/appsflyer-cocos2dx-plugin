@@ -1,7 +1,8 @@
-# iOS sample sources
+# iOS sample sources (`proj.ios_mac`)
 
-Application sources for the sample live under `ios/`. **Do not** open a pre-checked-in `.xcodeproj` here.
+Runtime and UI sources for the sample app live under **`ios/`** (e.g. `AppController.mm`, `SwiftBridge.swift`, `ios/rpc/`).
 
-Generate the Xcode project with CMake from the repo root (`scripts/build-ios-cmake.sh`), run `scripts/setup-ios-rpc-pods.sh`, then open the **`.xcworkspace`** in the CMake build directory.
+There is **no** checked-in `.xcodeproj` here. To build the sample:
 
-See `docs/iOS_README.md` and `docs/SDK7_LIFECYCLE.md`.
+1. From the repo root, follow **Case A** in [`docs/iOS-README.md`](../docs/iOS-README.md) (`cmake` + `setup-ios-spm.sh` or `./scripts/build-ios-cmake.sh`).
+2. For init order and the C++ startup chain, see [`docs/SDK7-Lifecycle.md`](../docs/SDK7-Lifecycle.md).
