@@ -129,6 +129,8 @@ void AppDelegate::applicationDidEnterBackground() {
 
 Register listeners **before** `init` (see sample). Each `register*` issues its own native RPC.
 
+`unregister*Listener` clears the C++ callback **synchronously on the calling thread before** any native unsubscribe RPC runs. After the returned `AppsFlyerTask` completes successfully, your handler will not be invoked again — including events already queued for the game thread. On iOS there is no native unsubscribe for deep link / conversion listeners; clearing the C++ registry is what stops callbacks.
+
 ```cpp
 AppsFlyerX::registerConversionListener(
     [](cocos2d::ValueMap data) { CCLOG("conversion: ok"); },

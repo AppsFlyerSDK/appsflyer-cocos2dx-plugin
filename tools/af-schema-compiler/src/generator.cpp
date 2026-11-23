@@ -12,6 +12,11 @@ void appendExecuteRpcReturn(std::ostringstream& out, const std::string& wireMeth
     out << "    return executeRpc(\"" << wireMethod << "\", paramsJson, std::move(onComplete));\n";
 }
 
+bool isHandWrittenUnregisterMethod(const std::string& name) {
+    return name == "unregisterDeepLinkListener" || name == "unregisterConversionListener" ||
+           name == "unregisterSessionReadyListener";
+}
+
 std::string wireJsonKey(const SchemaMethod& method, const std::string& publicField) {
     for (const char* plat : {"android", "ios"}) {
         if (!method.mappings.contains(plat) || !method.mappings.at(plat).is_object()) {
@@ -198,13 +203,15 @@ std::string emitAppsflyerMethodImpl(const SchemaMethod& method) {
 
     std::string android;
     std::string ios;
-    if (method.rpc.contains("android") && method.rpc.at("android").is_object()) {
+    const bool hasAndroid = method.rpc.contains("android") && method.rpc.at("android").is_object();
+    const bool hasIos = method.rpc.contains("ios") && method.rpc.at("ios").is_object();
+    if (hasAndroid) {
         android = method.rpc.at("android").value("method", "");
     }
-    if (method.rpc.contains("ios") && method.rpc.at("ios").is_object()) {
+    if (hasIos) {
         ios = method.rpc.at("ios").value("method", "");
     }
-    const bool splitWire = !android.empty() && !ios.empty() && android != ios;
+    const bool splitWire = hasAndroid && hasIos && android != ios;
 
     std::ostringstream body;
     body << "AppsFlyerTask " << method.name << "(";
@@ -220,16 +227,24 @@ std::string emitAppsflyerMethodImpl(const SchemaMethod& method) {
         body << "    const std::string paramsJson = \"{}\";\n";
     }
 
-    if (splitWire) {
+    if (hasAndroid && hasIos) {
+        if (splitWire) {
+            body << "#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)\n";
+            appendExecuteRpcReturn(body, android);
+            body << "#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)\n";
+            appendExecuteRpcReturn(body, ios);
+            body << "#endif\n";
+        } else {
+            appendExecuteRpcReturn(body, android);
+        }
+    } else if (hasAndroid) {
         body << "#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)\n";
         appendExecuteRpcReturn(body, android);
-        body << "#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)\n";
+        body << "#else\n    return detail::unsupportedPlatformTask(std::move(onComplete));\n#endif\n";
+    } else if (hasIos) {
+        body << "#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)\n";
         appendExecuteRpcReturn(body, ios);
         body << "#else\n    return detail::unsupportedPlatformTask(std::move(onComplete));\n#endif\n";
-    } else if (!android.empty()) {
-        appendExecuteRpcReturn(body, android);
-    } else if (!ios.empty()) {
-        appendExecuteRpcReturn(body, ios);
     } else {
         body << "    return detail::unsupportedPlatformTask(std::move(onComplete));\n";
     }
@@ -871,7 +886,7 @@ namespace appsflyer {
 )";
 
     for (const auto& m : methods) {
-        if (m.isListener) {
+        if (m.isListener || isHandWrittenUnregisterMethod(m.name)) {
             continue;
         }
         if (m.name == "validateAndLogInAppPurchase") {

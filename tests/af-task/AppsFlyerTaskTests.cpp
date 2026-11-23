@@ -154,6 +154,89 @@ static void test_decode_conversion_event_payload() {
     EXPECT(map.at("campaign").asString() == "c1");
 }
 
+static void test_unregister_deep_link_clears_cpp_handler() {
+    appsflyer::detail::resetTestHooks();
+    appsflyer::detail::setGameThreadPosterForTests(syncGameThread);
+    appsflyer::detail::setRpcExecutorForTests(
+        [](const std::string& method, const std::string&) -> appsflyer::rpc::RpcResult {
+            return successEnvelope();
+        });
+
+    std::atomic<int> handlerCalls{0};
+    std::atomic<bool> registered{false};
+    std::atomic<bool> unregistered{false};
+
+    appsflyer::registerDeepLinkListener([&](appsflyer::DeepLinkData) { handlerCalls++; })
+        .whenComplete([&registered](const AppsFlyerResult& r) {
+            EXPECT(r.success);
+            registered = true;
+        });
+
+    for (int i = 0; i < 300 && !registered.load(); ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(registered.load());
+
+    appsflyer::unregisterDeepLinkListener([&unregistered](const AppsFlyerResult& r) {
+        EXPECT(r.success);
+        unregistered = true;
+    });
+
+    for (int i = 0; i < 300 && !unregistered.load(); ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(unregistered.load());
+
+    const std::string event =
+        R"({"event":"onDeepLinking","data":{"status":"FOUND","deepLink":{"media_source":"qa"}}})";
+    appsflyer::rpc::onNativeRpcEventFromBridge(event);
+
+    for (int i = 0; i < 50; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(handlerCalls.load() == 0);
+}
+
+static void test_unregister_conversion_clears_cpp_handler() {
+    appsflyer::detail::resetTestHooks();
+    appsflyer::detail::setGameThreadPosterForTests(syncGameThread);
+    appsflyer::detail::setRpcExecutorForTests(
+        [](const std::string&, const std::string&) -> appsflyer::rpc::RpcResult { return successEnvelope(); });
+
+    static std::atomic<int> successCalls{0};
+    successCalls = 0;
+    std::atomic<bool> unregistered{false};
+    std::atomic<bool> registered{false};
+    appsflyer::registerConversionListener(
+        [](cocos2d::ValueMap) { successCalls++; }, [](cocos2d::ValueMap) {})
+        .whenComplete([&registered](const AppsFlyerResult& r) {
+            EXPECT(r.success);
+            registered = true;
+        });
+
+    for (int i = 0; i < 400 && !registered.load(); ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(registered.load());
+
+    appsflyer::unregisterConversionListener([&unregistered](const AppsFlyerResult& r) {
+        EXPECT(r.success);
+        unregistered = true;
+    });
+    for (int i = 0; i < 300 && !unregistered.load(); ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(unregistered.load());
+
+    appsflyer::rpc::onNativeRpcEventFromBridge(
+        R"({"event":"onConversionDataSuccess","data":{"af_status":"Organic"}})");
+
+    for (int i = 0; i < 50; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    EXPECT(successCalls.load() == 0);
+}
+
 static void test_decode_json_object_numbers_and_nesting() {
     {
         const cocos2d::ValueMap map =
@@ -338,6 +421,26 @@ static void test_validate_purchase_android_wire_transform() {
     EXPECT(capturedParams.find("\"purchaseToken\":\"token_qa\"") != std::string::npos);
 }
 
+static void test_rpc_envelope_data_unwrap() {
+    appsflyer::rpc::RpcResult rpc;
+    rpc.success = true;
+    rpc.dataJson = R"({"success":true,"data":"af_uid_123"})";
+    const AppsFlyerResult result = appsflyer::detail::toAppsFlyerResult(rpc);
+    EXPECT(result.success);
+    EXPECT(result.dataJson == R"("af_uid_123")");
+
+    rpc.dataJson = R"({"success":true,"data":null})";
+    const AppsFlyerResult voidResult = appsflyer::detail::toAppsFlyerResult(rpc);
+    EXPECT(voidResult.success);
+    EXPECT(voidResult.dataJson == "null");
+}
+
+static void test_extract_json_raw_field() {
+    const std::string envelope = R"({"success":true,"data":{"ready":true}})";
+    const std::string raw = appsflyer::detail::extractJsonRawField(envelope, "data");
+    EXPECT(raw == R"({"ready":true})");
+}
+
 static void test_set_plugin_info_params_match_metadata() {
     appsflyer::detail::resetTestHooks();
     g_rpcCallOrder.clear();
@@ -378,11 +481,15 @@ int main() {
     test_deep_link_status_normalization();
     test_set_plugin_info_params_match_metadata();
     test_decode_conversion_event_payload();
+    test_unregister_deep_link_clears_cpp_handler();
+    test_unregister_conversion_clears_cpp_handler();
     test_decode_json_object_numbers_and_nesting();
     test_start_await_response_wires_param();
     test_log_ad_revenue_mediation_network_schema_value_map();
     test_set_log_level_android_wire_transform();
     test_validate_purchase_android_wire_transform();
+    test_rpc_envelope_data_unwrap();
+    test_extract_json_raw_field();
     std::printf("All AppsFlyer task tests passed.\n");
     return 0;
 }

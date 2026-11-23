@@ -52,16 +52,8 @@ def already_has_spm(text: str) -> bool:
 def strip_legacy_build_locations(text: str) -> str:
     """CMake Xcode generator sets SYMROOT/CONFIGURATION_BUILD_DIR; SPM requires default locations."""
     text = re.sub(r"\n\t\t\t\tSYMROOT = [^;]+;", "", text)
-    text = re.sub(
-        r"\n\t\t\t\tCONFIGURATION_BUILD_DIR = [^;]*bin/AppsFlyerCocos2dX/[^;]+;",
-        "",
-        text,
-    )
-    text = re.sub(
-        r"\n\t\t\t\tTARGET_TEMP_DIR = [^;]*AppsFlyerCocos2dX\.build/[^;]+;",
-        "",
-        text,
-    )
+    text = re.sub(r"\n\t\t\t\tCONFIGURATION_BUILD_DIR = [^;]+;", "", text)
+    text = re.sub(r"\n\t\t\t\tTARGET_TEMP_DIR = [^;]+;", "", text)
     return text
 
 
@@ -70,7 +62,7 @@ WORKSPACE_SETTINGS = """<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0">
 <dict>
 \t<key>BuildLocationStyle</key>
-\t<string>UseAppPreferences</string>
+\t<string>Default</string>
 \t<key>DerivedDataLocationStyle</key>
 \t<string>Default</string>
 \t<key>IssueFilterStyle</key>
@@ -88,8 +80,12 @@ def ensure_workspace_build_settings(xcodeproj: Path) -> None:
     ws = xcodeproj / "project.xcworkspace/xcshareddata"
     ws.mkdir(parents=True, exist_ok=True)
     settings = ws / "WorkspaceSettings.xcsettings"
-    if not settings.is_file():
-        settings.write_text(WORKSPACE_SETTINGS, encoding="utf-8")
+    settings.write_text(WORKSPACE_SETTINGS, encoding="utf-8")
+    # xcuserdata can pin "UseTargetSettings" and break SwiftPM on the command line.
+    userdata_root = xcodeproj / "project.xcworkspace/xcuserdata"
+    if userdata_root.is_dir():
+        for user_settings in userdata_root.glob("*/WorkspaceSettings.xcsettings"):
+            user_settings.write_text(WORKSPACE_SETTINGS, encoding="utf-8")
 
 
 def find_app_target(text: str) -> re.Match[str] | None:

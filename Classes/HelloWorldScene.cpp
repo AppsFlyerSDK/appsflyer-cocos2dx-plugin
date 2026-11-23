@@ -127,20 +127,24 @@ void HelloWorld::refreshEventLogView() {
 }
 
 void HelloWorld::appendAfResult(const char* action, const AppsFlyerResult& r) {
-  char buf[640];
+  std::string line;
   if (r.success) {
-    if (!r.dataJson.empty()) {
-      std::snprintf(buf, sizeof(buf), "✓ %s\n%s", action, r.dataJson.c_str());
+    line = std::string("✓ ") + action;
+    if (r.dataJson.empty()) {
+      line += "\n(no RPC payload)";
+    } else if (r.dataJson == "null") {
+      line += "\ncompleted (void RPC)";
     } else {
-      std::snprintf(buf, sizeof(buf), "✓ %s", action);
+      line += "\n";
+      line += r.dataJson;
     }
   } else if (r.hasError) {
-    std::snprintf(buf, sizeof(buf), "✗ %s (%d): %s", action, r.error.code, r.error.message.c_str());
+    line = std::string("✗ ") + action + " (" + std::to_string(r.error.code) + "): " + r.error.message;
   } else {
-    std::snprintf(buf, sizeof(buf), "✗ %s failed", action);
+    line = std::string("✗ ") + action + " failed";
   }
-  appendEventLog(buf);
-  CCLOG("[AppsFlyer][QA] %s", buf);
+  appendEventLog(line);
+  CCLOG("[AppsFlyer][QA] %s", line.c_str());
 }
 
 void HelloWorld::appendDeepLink(const appsflyer::DeepLinkData& data) {
@@ -285,7 +289,21 @@ bool HelloWorld::init() {
          map["qa_source"] = "helloworld_button";
          logParams.eventValues = map;
          logParams.awaitResponse = true;
-         runQaRpc("logEvent", AppsFlyerX::logEvent(logParams));
+         std::move(AppsFlyerX::logEvent(logParams))
+             .whenComplete([logParams](const AppsFlyerResult& r) {
+               HelloWorld::appendAfResult("logEvent", r);
+               if (r.success) {
+                 std::string detail = "  eventName=" + logParams.eventName;
+                 detail += ", awaitResponse=true";
+                 for (const auto& entry : logParams.eventValues) {
+                   detail += "\n  ";
+                   detail += entry.first;
+                   detail += "=";
+                   detail += entry.second.asString();
+                 }
+                 HelloWorld::appendEventLog(detail);
+               }
+             });
        }});
 
   actions.emplace_back(QaAction{
@@ -353,6 +371,18 @@ bool HelloWorld::init() {
   actions.emplace_back(
       QaAction{"Device language", []() { runQaRpc("setCurrentDeviceLanguage", AppsFlyerX::setCurrentDeviceLanguage("en")); }});
 #endif
+
+  actions.emplace_back(QaAction{
+      "Unregister deep link",
+      []() { runQaRpc("unregisterDeepLinkListener", AppsFlyerX::unregisterDeepLinkListener()); }});
+  actions.emplace_back(QaAction{
+      "Unregister conversion",
+      []() { runQaRpc("unregisterConversionListener", AppsFlyerX::unregisterConversionListener()); }});
+  actions.emplace_back(QaAction{
+      "Unregister session ready",
+      []() {
+        runQaRpc("unregisterSessionReadyListener", AppsFlyerX::unregisterSessionReadyListener());
+      }});
 
   actions.emplace_back(QaAction{"Quit", []() { Director::getInstance()->end(); }, true});
 

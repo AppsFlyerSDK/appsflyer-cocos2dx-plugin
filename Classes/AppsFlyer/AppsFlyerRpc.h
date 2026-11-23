@@ -52,6 +52,8 @@ void setGameThreadPosterForTests(GameThreadPoster poster);
 void setRpcExecutorForTests(RpcExecutor executor);
 void resetTestHooks();
 
+AppsFlyerResult toAppsFlyerResult(const rpc::RpcResult& rpc);
+
 std::string escapeJsonString(const std::string& value);
 std::string encodeStringArrayJson(const std::vector<std::string>& values);
 std::string encodeValueMapJson(const cocos2d::ValueMap& map);
@@ -59,8 +61,12 @@ std::string encodeValueMapJson(const cocos2d::ValueMap& map);
 cocos2d::ValueMap decodeJsonObjectToValueMap(const std::string& jsonObject);
 
 std::string extractJsonObjectField(const std::string& json, const char* fieldName);
+/// Raw JSON text of a field value (object, array, string, number, bool, or null).
+std::string extractJsonRawField(const std::string& json, const char* fieldName);
 
 AppsFlyerTask unsupportedPlatformTask(AppsFlyerCompletion onComplete);
+/// Completes successfully on the game thread (used when native RPC is a no-op after local listener cleanup).
+AppsFlyerTask immediateSuccessTask(AppsFlyerCompletion onComplete);
 
 } // namespace detail
 

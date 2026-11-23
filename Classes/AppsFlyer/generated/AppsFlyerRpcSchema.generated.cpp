@@ -51,12 +51,20 @@ AppsFlyerTask clearUserPii(AppsFlyerCompletion onComplete) {
 
 AppsFlyerTask collectDataFromLauncherActivity(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("collectDataFromLauncherActivity", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask disableAppSetId(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("disableAppSetId", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask disableAutomaticDeferredDeepLink(AppsFlyerCompletion onComplete) {
@@ -100,7 +108,11 @@ AppsFlyerTask getAppsFlyerUID(AppsFlyerCompletion onComplete) {
 
 AppsFlyerTask getAttributionId(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("getAttributionId", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask getHostName(AppsFlyerCompletion onComplete) {
@@ -115,7 +127,11 @@ AppsFlyerTask getHostPrefix(AppsFlyerCompletion onComplete) {
 
 AppsFlyerTask getOutOfStore(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("getOutOfStore", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask getSdkVersion(AppsFlyerCompletion onComplete) {
@@ -129,7 +145,11 @@ AppsFlyerTask handlePushNotification(const cocos2d::ValueMap& pushPayload, AppsF
     oss << "\"pushPayload\":" << appsflyer::detail::encodeValueMapJson(pushPayload);
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("handlePushNotification", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask init(const InitParams& params, AppsFlyerCompletion onComplete) {
@@ -144,14 +164,16 @@ AppsFlyerTask init(const InitParams& params, AppsFlyerCompletion onComplete) {
     return executeRpc("init", paramsJson, std::move(onComplete));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("initialize", paramsJson, std::move(onComplete));
-#else
-    return detail::unsupportedPlatformTask(std::move(onComplete));
 #endif
 }
 
 AppsFlyerTask isPreInstalledApp(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("isPreInstalledApp", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask isSessionReady(AppsFlyerCompletion onComplete) {
@@ -244,12 +266,20 @@ AppsFlyerTask logLocation(const LogLocationParams& params, AppsFlyerCompletion o
 
 AppsFlyerTask logSession(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("logSession", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask onPause(AppsFlyerCompletion onComplete) {
     const std::string paramsJson = "{}";
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("onPause", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask performDeepLinking(const PerformDeepLinkingParams& params, AppsFlyerCompletion onComplete) {
@@ -280,7 +310,11 @@ AppsFlyerTask sendPushNotificationData(const SendPushNotificationDataParams& par
     oss << "\"pid\":\"" << appsflyer::detail::escapeJsonString(params.pid) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("sendPushNotificationData", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setAdditionalData(const cocos2d::ValueMap& customData, AppsFlyerCompletion onComplete) {
@@ -298,7 +332,11 @@ AppsFlyerTask setAppId(const std::string& appId, AppsFlyerCompletion onComplete)
     oss << "\"appId\":\"" << appsflyer::detail::escapeJsonString(appId) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setAppId", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setAppInviteOneLink(const std::string& oneLinkId, AppsFlyerCompletion onComplete) {
@@ -316,7 +354,11 @@ AppsFlyerTask setCollectAndroidID(bool isCollect, AppsFlyerCompletion onComplete
     oss << "\"isCollect\":" << (isCollect ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setCollectAndroidID", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setConsentData(const SetConsentDataParams& params, AppsFlyerCompletion onComplete) {
@@ -349,7 +391,11 @@ AppsFlyerTask setCurrentDeviceLanguage(const std::string& language, AppsFlyerCom
     oss << "\"language\":\"" << appsflyer::detail::escapeJsonString(language) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setCurrentDeviceLanguage", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setCustomerUserId(const std::string& customerId, AppsFlyerCompletion onComplete) {
@@ -394,7 +440,11 @@ AppsFlyerTask setDisableAppleAdsAttribution(bool disable, AppsFlyerCompletion on
     oss << "\"disable\":" << (disable ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setDisableAppleAdsAttribution", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setDisableCollectASA(bool disable, AppsFlyerCompletion onComplete) {
@@ -403,7 +453,11 @@ AppsFlyerTask setDisableCollectASA(bool disable, AppsFlyerCompletion onComplete)
     oss << "\"disable\":" << (disable ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setDisableCollectASA", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setDisableIDFVCollection(bool disable, AppsFlyerCompletion onComplete) {
@@ -412,7 +466,11 @@ AppsFlyerTask setDisableIDFVCollection(bool disable, AppsFlyerCompletion onCompl
     oss << "\"disable\":" << (disable ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setDisableIDFVCollection", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setDisableNetworkData(bool isDisable, AppsFlyerCompletion onComplete) {
@@ -421,7 +479,11 @@ AppsFlyerTask setDisableNetworkData(bool isDisable, AppsFlyerCompletion onComple
     oss << "\"isDisable\":" << (isDisable ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setDisableNetworkData", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setDisableSKAdNetwork(bool disable, AppsFlyerCompletion onComplete) {
@@ -430,7 +492,11 @@ AppsFlyerTask setDisableSKAdNetwork(bool disable, AppsFlyerCompletion onComplete
     oss << "\"disable\":" << (disable ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setDisableSKAdNetwork", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setFacebookDeferredAppLink(const std::string& url, AppsFlyerCompletion onComplete) {
@@ -439,7 +505,11 @@ AppsFlyerTask setFacebookDeferredAppLink(const std::string& url, AppsFlyerComple
     oss << "\"url\":\"" << appsflyer::detail::escapeJsonString(url) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setFacebookDeferredAppLink", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setHost(const SetHostParams& params, AppsFlyerCompletion onComplete) {
@@ -468,7 +538,11 @@ AppsFlyerTask setIsUpdate(bool isUpdate, AppsFlyerCompletion onComplete) {
     oss << "\"isUpdate\":" << (isUpdate ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setIsUpdate", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setLogLevel(LogLevel logLevel, AppsFlyerCompletion onComplete) {
@@ -477,7 +551,11 @@ AppsFlyerTask setLogLevel(LogLevel logLevel, AppsFlyerCompletion onComplete) {
     oss << "\"logLevel\":\"" << appsflyer::detail::escapeJsonString(appsflyer::detail::resolveTransform_androidLogLevel(appsflyer::detail::schemaKey_LogLevel(logLevel))) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setLogLevel", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setMinTimeBetweenSessions(int64_t seconds, AppsFlyerCompletion onComplete) {
@@ -504,7 +582,11 @@ AppsFlyerTask setOutOfStore(const std::string& sourceName, AppsFlyerCompletion o
     oss << "\"sourceName\":\"" << appsflyer::detail::escapeJsonString(sourceName) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setOutOfStore", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setImeiData(const std::string& imei, AppsFlyerCompletion onComplete) {
@@ -513,7 +595,11 @@ AppsFlyerTask setImeiData(const std::string& imei, AppsFlyerCompletion onComplet
     oss << "\"imei\":\"" << appsflyer::detail::escapeJsonString(imei) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setImeiData", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setOaidData(const std::string& oaid, AppsFlyerCompletion onComplete) {
@@ -522,7 +608,11 @@ AppsFlyerTask setOaidData(const std::string& oaid, AppsFlyerCompletion onComplet
     oss << "\"oaid\":\"" << appsflyer::detail::escapeJsonString(oaid) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setOaidData", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setAndroidIdData(const std::string& androidId, AppsFlyerCompletion onComplete) {
@@ -531,7 +621,11 @@ AppsFlyerTask setAndroidIdData(const std::string& androidId, AppsFlyerCompletion
     oss << "\"androidId\":\"" << appsflyer::detail::escapeJsonString(androidId) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setAndroidIdData", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setPartnerData(const SetPartnerDataParams& params, AppsFlyerCompletion onComplete) {
@@ -555,7 +649,11 @@ AppsFlyerTask setPreinstallAttribution(const SetPreinstallAttributionParams& par
     oss << "\"siteId\":\"" << appsflyer::detail::escapeJsonString(params.siteId) << "\"";
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     return executeRpc("setPreinstallAttribution", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setResolveDeepLinkURLs(const std::vector<std::string>& urls, AppsFlyerCompletion onComplete) {
@@ -582,7 +680,11 @@ AppsFlyerTask setShouldCollectDeviceName(bool collect, AppsFlyerCompletion onCom
     oss << "\"collect\":" << (collect ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setShouldCollectDeviceName", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setUseReceiptValidationSandbox(bool sandbox, AppsFlyerCompletion onComplete) {
@@ -591,7 +693,11 @@ AppsFlyerTask setUseReceiptValidationSandbox(bool sandbox, AppsFlyerCompletion o
     oss << "\"sandbox\":" << (sandbox ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setUseReceiptValidationSandbox", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask setUserEmail(const std::string& email, AppsFlyerCompletion onComplete) {
@@ -647,7 +753,11 @@ AppsFlyerTask setUseUninstallSandbox(bool sandbox, AppsFlyerCompletion onComplet
     oss << "\"sandbox\":" << (sandbox ? "true" : "false");
     oss << "}";
     const std::string paramsJson = oss.str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("setUseUninstallSandbox", paramsJson, std::move(onComplete));
+#else
+    return detail::unsupportedPlatformTask(std::move(onComplete));
+#endif
 }
 
 AppsFlyerTask start(bool awaitResponse, AppsFlyerCompletion onComplete) {
@@ -668,21 +778,6 @@ AppsFlyerTask stop(bool shouldStop, AppsFlyerCompletion onComplete) {
     return executeRpc("stop", paramsJson, std::move(onComplete));
 }
 
-AppsFlyerTask unregisterConversionListener(AppsFlyerCompletion onComplete) {
-    const std::string paramsJson = "{}";
-    return executeRpc("unregisterConversionListener", paramsJson, std::move(onComplete));
-}
-
-AppsFlyerTask unregisterSessionReadyListener(AppsFlyerCompletion onComplete) {
-    const std::string paramsJson = "{}";
-    return executeRpc("unregisterSessionReadyListener", paramsJson, std::move(onComplete));
-}
-
-AppsFlyerTask unregisterDeepLinkListener(AppsFlyerCompletion onComplete) {
-    const std::string paramsJson = "{}";
-    return executeRpc("unsubscribeForDeepLink", paramsJson, std::move(onComplete));
-}
-
 AppsFlyerTask updateServerUninstallToken(const std::string& token, AppsFlyerCompletion onComplete) {
     std::ostringstream oss;
     oss << "{";
@@ -693,8 +788,6 @@ AppsFlyerTask updateServerUninstallToken(const std::string& token, AppsFlyerComp
     return executeRpc("updateServerUninstallToken", paramsJson, std::move(onComplete));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     return executeRpc("registerUninstall", paramsJson, std::move(onComplete));
-#else
-    return detail::unsupportedPlatformTask(std::move(onComplete));
 #endif
 }
 

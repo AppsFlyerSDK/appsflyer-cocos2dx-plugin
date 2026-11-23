@@ -118,6 +118,8 @@ GameThreadPoster g_testGameThreadPoster;
 std::atomic<bool> g_useTestRpc{false};
 RpcExecutor g_testRpcExecutor;
 
+std::string extractJsonRawFieldImpl(const std::string& json, const char* fieldName);
+
 } // namespace
 
 bool rpcTestHookActive() {
@@ -158,7 +160,12 @@ void postOnGameThread(const std::function<void()>& fn) {
 AppsFlyerResult toAppsFlyerResult(const rpc::RpcResult& rpc) {
     AppsFlyerResult result;
     result.success = rpc.success;
-    result.dataJson = rpc.dataJson;
+    if (rpc.success && !rpc.dataJson.empty() && rpc.dataJson.find("\"data\"") != std::string::npos) {
+        const std::string payload = extractJsonRawFieldImpl(rpc.dataJson, "data");
+        result.dataJson = payload.empty() ? rpc.dataJson : payload;
+    } else {
+        result.dataJson = rpc.dataJson;
+    }
     if (!rpc.success) {
         result.hasError = true;
         result.error.code = rpc.errorCode != 0 ? rpc.errorCode : 500;
@@ -190,6 +197,18 @@ AppsFlyerTask unsupportedPlatformTask(AppsFlyerCompletion onComplete) {
     result.hasError = true;
     result.error.code = 501;
     result.error.message = "RPC supported on Android/iOS only";
+    auto state = std::make_shared<AppsFlyerTaskState>();
+    AppsFlyerTask task(state);
+    if (onComplete) {
+        task.whenComplete(std::move(onComplete));
+    }
+    postOnGameThread([state, result]() { state->finish(result); });
+    return task;
+}
+
+AppsFlyerTask immediateSuccessTask(AppsFlyerCompletion onComplete) {
+    AppsFlyerResult result;
+    result.success = true;
     auto state = std::make_shared<AppsFlyerTaskState>();
     AppsFlyerTask task(state);
     if (onComplete) {
@@ -446,6 +465,24 @@ bool parseJsonValue(const std::string& s, size_t& i, cocos2d::Value& out) {
     return false;
 }
 
+std::string extractJsonRawFieldImpl(const std::string& json, const char* fieldName) {
+    const std::string needle = std::string("\"") + fieldName + "\":";
+    const size_t keyPos = json.find(needle);
+    if (keyPos == std::string::npos) {
+        return {};
+    }
+    size_t i = skipWs(json, keyPos + needle.size());
+    if (i >= json.size()) {
+        return {};
+    }
+    const size_t valueStart = i;
+    cocos2d::Value dummy;
+    if (!parseJsonValue(json, i, dummy)) {
+        return {};
+    }
+    return json.substr(valueStart, i - valueStart);
+}
+
 } // namespace
 
 std::string extractJsonObjectField(const std::string& json, const char* fieldName) {
@@ -463,6 +500,10 @@ std::string extractJsonObjectField(const std::string& json, const char* fieldNam
         return {};
     }
     return json.substr(pos, end - pos + 1);
+}
+
+std::string extractJsonRawField(const std::string& json, const char* fieldName) {
+    return extractJsonRawFieldImpl(json, fieldName);
 }
 
 cocos2d::ValueMap decodeJsonObjectToValueMap(const std::string& jsonObject) {
@@ -994,6 +1035,40 @@ AppsFlyerTask registerConversionListener(void (*onSuccess)(cocos2d::ValueMap),
     };
     return registerListenerRpc("registerConversionListener", "{}", install, restore,
                                std::move(onComplete));
+}
+
+AppsFlyerTask unregisterDeepLinkListener(AppsFlyerCompletion onComplete) {
+    {
+        std::lock_guard<std::mutex> lock(gListeners.mutex);
+        gListeners.onDeepLinkingHandler = {};
+        gListeners.onDeepLinkingFn = nullptr;
+    }
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    return executeRpc("unsubscribeForDeepLink", "{}", std::move(onComplete));
+#else
+    return detail::immediateSuccessTask(std::move(onComplete));
+#endif
+}
+
+AppsFlyerTask unregisterConversionListener(AppsFlyerCompletion onComplete) {
+    {
+        std::lock_guard<std::mutex> lock(gListeners.mutex);
+        gListeners.onConversionSuccess = nullptr;
+        gListeners.onConversionFail = nullptr;
+    }
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    return executeRpc("unregisterConversionListener", "{}", std::move(onComplete));
+#else
+    return detail::immediateSuccessTask(std::move(onComplete));
+#endif
+}
+
+AppsFlyerTask unregisterSessionReadyListener(AppsFlyerCompletion onComplete) {
+    {
+        std::lock_guard<std::mutex> lock(gListeners.mutex);
+        gListeners.onSessionReady = nullptr;
+    }
+    return executeRpc("unregisterSessionReadyListener", "{}", std::move(onComplete));
 }
 
 #if defined(AF_RPC_HEADLESS_TEST)
