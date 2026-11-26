@@ -16,6 +16,3 @@
 #   public *;
 #}
 -dontwarn com.appsflyer.**
--keep public class com.google.firebase.iid.FirebaseInstanceId {
-    public *;
-}

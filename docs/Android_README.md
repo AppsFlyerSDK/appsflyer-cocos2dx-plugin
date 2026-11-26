@@ -81,3 +81,7 @@ In v6.8.0 of the AppsFlyer SDK, we added the normal permission com.google.androi
 to allow the SDK to collect the Android Advertising ID on apps targeting API 33.
 If your app is targeting children, you may need to revoke this permission to comply with Google's Data policy.
 You can read more about it [here](https://support.appsflyer.com/hc/en-us/articles/7569900844689).
+
+### Optional: Android uninstall measurement
+
+The sample app under `proj.android-studio` does not include Firebase or `google-services.json`. Uninstall tracking requires your own FCM setup (Firebase project, `google-services.json`, and the AppsFlyer uninstall integration). See [Android uninstall tracking](https://support.appsflyer.com/hc/en-us/articles/208004986-Android-Uninstall-Tracking) and use `registerUninstall` / `updateServerUninstallToken` from the plugin API.
