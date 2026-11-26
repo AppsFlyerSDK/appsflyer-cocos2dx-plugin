@@ -178,15 +178,7 @@ Your game may use slightly different AGP versions; stay on AGP **8.9+**, Gradle 
 
 ### Optional: FCM / uninstall measurement
 
-The sample adds Firebase for push-token APIs used with `updateServerUninstallToken`:
-
-```gradle
-implementation platform('com.google.firebase:firebase-bom:33.7.0')
-implementation 'com.google.firebase:firebase-messaging'
-apply plugin: 'com.google.gms.google-services'
-```
-
-Only add this if you use uninstall tracking or the sample’s `FirebaseMessagingServiceListener` pattern.
+The sample under `proj.android-studio` does **not** ship Firebase or `google-services.json`. For uninstall tracking, add your own FCM setup (Firebase project, `google-services.json`, `firebase-messaging`, and `com.google.gms.google-services`) and wire uninstall APIs (`updateServerUninstallToken`, `FirebaseMessagingServiceListener` if you use AppsFlyer’s listener pattern). See [Android uninstall tracking](https://support.appsflyer.com/hc/en-us/articles/208004986-Android-Uninstall-Tracking).
 
 ---
 
@@ -282,7 +274,7 @@ Runtime toggles such as `setDisableAdvertisingIdentifiers` / `disableAppSetId` c
 
 ### ProGuard / R8
 
-If `minifyEnabled true`, keep AppsFlyer and Firebase rules as needed. Sample [`proguard-rules.pro`](../proj.android-studio/app/proguard-rules.pro):
+If `minifyEnabled true`, keep AppsFlyer rules as needed. Sample [`proguard-rules.pro`](../proj.android-studio/app/proguard-rules.pro):
 
 ```proguard
 -dontwarn com.appsflyer.**

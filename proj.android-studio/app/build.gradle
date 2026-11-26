@@ -149,11 +149,6 @@ dependencies {
     implementation 'com.appsflyer:af-android-plugin-bridge:7.0.13'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
-    implementation platform('com.google.firebase:firebase-bom:33.7.0')
-    implementation 'com.google.firebase:firebase-messaging'
-
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.json:json:20240303'
 }
-
-apply plugin: 'com.google.gms.google-services' // ADD THIS LINE AT THE BOTTOM OF THIS FILE
